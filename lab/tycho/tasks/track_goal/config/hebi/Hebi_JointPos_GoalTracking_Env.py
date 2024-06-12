@@ -128,7 +128,7 @@ class IdealPDHebi_JointPos_GoalTracking_Env(ManagerBasedRLEnvCfg):
     scene: ObjectSceneCfg = IdealPDHebi_ObjectSceneCfg(num_envs=1, env_spacing=2.5, replicate_physics=False)
     # Basic settings
     observations: ObservationsCfg = ObservationsCfg()
-    actions: ActionsCfg = MISSING
+    actions: ActionsCfg = MISSING  # type: ignore
     commands: CommandsCfg = CommandsCfg()
     # MDP settings
     rewards: RewardsCfg = RewardsCfg()
@@ -163,14 +163,7 @@ class ImplicitMotorHebi_JointPos_GoalTracking_Env(IdealPDHebi_JointPos_GoalTrack
         self.scene: ObjectSceneCfg = ImplicitMotorHebi_ObjectSceneCfg(num_envs=1, env_spacing=2.5, replicate_physics=False)
 
 
-@configclass
-class EmptyRewardsCfg():
-    """Reward terms for the MDP."""
-    pass
-
-
 class ImplicitMotorOriginHebi_JointPos_GoalTracking_Env(IdealPDHebi_JointPos_GoalTracking_Env):
     def __post_init__(self):
         super().__post_init__()
         self.scene: ObjectSceneCfg = ImplicitMotorOriginHebi_ObjectSceneCfg(num_envs=1, env_spacing=2.5, replicate_physics=False)
-        self.rewards = EmptyRewardsCfg()

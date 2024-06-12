@@ -27,7 +27,7 @@
             "name": "Python: Train Environment",
             "type": "debugpy",
             "request": "launch",
-            "args" : ["--task", "IkDeltaDls-ImplicitMotorHebi-JointPos-LiftCube-v0", "--num_envs", "1"],
+            "args" : ["--task", "IkDeltaDls-ImplicitMotorHebi-JointPos-Meat-v0", "--num_envs", "1"],
             "program": "${workspaceFolder}/workflows/rsl_rl/train.py",
             "console": "integratedTerminal",
             "envFile": "${workspaceFolder}/.vscode/.python.env",

@@ -22,7 +22,7 @@ for base_env in base_envs:
         _id = f"{action_class_id}_{base_env_id}_v0".replace("_", "-")
         gym.register(
             id=_id,
-            entry_point="envs.hebi_rl_task_env:HebiRLTaskEnv",
+            entry_point="octilab.envs.hebi_rl_task_env:HebiRLTaskEnv",
             kwargs={
                 "env_cfg_entry_point": create_hebi_env(
                                             base_env_cfg=base_env,
@@ -31,8 +31,8 @@ for base_env in base_envs:
                 "rsl_rl_cfg_entry_point": agents.rsl_rl_hebi_agent_cfg.Base_PPORunnerCfg,
                 "sb3_cfg_entry_point": f"{agents.__name__}:sb3_sac_cfg.yaml",
                 "d3rlpy_cfg_entry_point": f"{agents.__name__}:d3rlpy_cfg.yaml",
-                "robomimic_bc_cfg_entry_point": os.path.join(agents.__path__[0], "robomimic/bc.json"),
-                "robomimic_bcq_cfg_entry_point": os.path.join(agents.__path__[0], "robomimic/bcq.json"),
+                "robomimic_bc_cfg_entry_point": os.path.join(agents.__path__[0], "robomimic/bc.json"),  # type: ignore
+                "robomimic_bcq_cfg_entry_point": os.path.join(agents.__path__[0], "robomimic/bcq.json"),  # type: ignore
                 "diversity_skill_entry_point": f"{agents.__name__}:diversity_skill_cfg.yaml"
             },
             disable_env_checker=True,

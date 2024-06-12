@@ -1,7 +1,10 @@
 import gymnasium as gym
 from octilab.envs.create_env import create_hebi_env
 import lab.tycho.cfgs.robots.hebi.robot_dynamics as rd
-from .Hebi_JointPos_GoalTracking_Env import ImplicitMotorOriginHebi_JointPos_GoalTracking_Env, PwmMotorHebi_JointPos_GoalTracking_Env, IdealPDHebi_JointPos_GoalTracking_Env, ImplicitMotorHebi_JointPos_GoalTracking_Env
+from .Hebi_JointPos_GoalTracking_Env import (ImplicitMotorOriginHebi_JointPos_GoalTracking_Env,
+                                             PwmMotorHebi_JointPos_GoalTracking_Env,
+                                             IdealPDHebi_JointPos_GoalTracking_Env,
+                                             ImplicitMotorHebi_JointPos_GoalTracking_Env)
 from . import agents
 
 base_envs = [PwmMotorHebi_JointPos_GoalTracking_Env, 
@@ -22,7 +25,7 @@ for base_env in base_envs:
         _id = f"{action_class_id}_{base_env_id}_v0".replace("_", "-")
         gym.register(
             id=_id,
-            entry_point="envs.hebi_rl_task_env:HebiRLTaskEnv",
+            entry_point="octilab.envs.hebi_rl_task_env:HebiRLTaskEnv",
             kwargs={
                 "env_cfg_entry_point": create_hebi_env(
                                             base_env_cfg=base_env,

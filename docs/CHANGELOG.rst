@@ -7,6 +7,6 @@ Changelog
 Added
 ^^^^^
 
-* Performed tycho migration. Done with Tasks: cake, liftcube, clock
-* Need to check: Goal Tracking
-* Plan to do: Learn a mujoco motor model, test out dreamerv3, refactorization continue 
+* Performed tycho migration. Done with Tasks: cake, liftcube, clock, meat, Goal Tracking
+* Need to check: meat seems to have a bit of issue
+* Plan to do: Learn a mujoco motor model, test out dreamerv3, refactorization continue
