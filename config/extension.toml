@@ -4,33 +4,33 @@
 version = "0.1.0"
 
 # Description
-category = "orbit"
+category = "lab"
 readme  = "README.md"
 
 # TODO: Change your package specifications
 # -----------------------------------------------------------------
 title = "Extension Template"
-author = "ORBIT Project Developers"
-maintainer = "Nico Burger"
-maintainer_email = "nburger@theaiinstitute.com"
-description="Extension Template for Orbit"
-repository = "https://github.com/isaac-orbit/orbit.ext_template.git"
-keywords = ["extension", "template", "orbit"]
+author = "Zhengyu Zhang + Isaac Lab/Orbit Project Developers"
+maintainer = "Zhengyu Zhang"
+maintainer_email = "zzyoctopus@gmail.com"
+description="Extension Template for Tycho + Issac lab"
+repository = "git@github.com:zoctipus/IsaacLab_Tycho.git"
+keywords = ["extension", "template", "lab"]
 # -----------------------------------------------------------------
 
 [dependencies]
-"omni.isaac.orbit" = {}
-"omni.isaac.orbit_assets" = {}
-"omni.isaac.orbit_tasks" = {}
+"omni.isaac.lab" = {}
+"omni.isaac.lab_assets" = {}
+"omni.isaac.lab_tasks" = {}
 # NOTE: Add additional dependencies here
 
 [[python.module]]
 # TODO: Change your package name
 # -----------------------------------------------------------------
-name = "orbit.ext_template"
+name = "lab.tycho"
 # -----------------------------------------------------------------
 
-[orbit_settings]
+[lab_settings]
 # TODO: Uncomment and list any apt dependencies here.
 #       If none, leave it commented out.
 # apt_deps = ["example_package"]

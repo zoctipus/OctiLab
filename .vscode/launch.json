@@ -27,10 +27,11 @@
             "name": "Python: Train Environment",
             "type": "debugpy",
             "request": "launch",
-            "args" : ["--task", "Isaac-Velocity-Flat-Anymal-D-Template-v0", "--num_envs", "4096", "--headless"],
-            "program": "${workspaceFolder}/scripts/rsl_rl/train.py",
+            "args" : ["--task", "IkDeltaDls-ImplicitMotorHebi-JointPos-LiftCube-v0", "--num_envs", "1"],
+            "program": "${workspaceFolder}/workflows/rsl_rl/train.py",
             "console": "integratedTerminal",
             "envFile": "${workspaceFolder}/.vscode/.python.env",
+            "justMyCode": false
         },
         {
             "name": "Python: Play Environment",

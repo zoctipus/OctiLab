@@ -13,7 +13,7 @@
         {
             "id": "orbit_path",
             "description": "Absolute path to Orbit:",
-            "default": "",
+            "default": "/home/octipus/Projects/IsaacLab",
             "type": "promptString"
         },
     ]
