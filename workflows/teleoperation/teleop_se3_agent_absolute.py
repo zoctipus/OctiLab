@@ -35,9 +35,9 @@ import gymnasium as gym
 import torch
 import carb
 from omni.isaac.lab.devices import Se3Gamepad, Se3SpaceMouse
-from devices.se3_keyboard import Se3KeyboardAbsolute
+from octilab.devices.se3_keyboard import Se3KeyboardAbsolute
 import omni.isaac.lab_tasks  # noqa: F401
-import tasks  # noqa: F401
+import lab.tycho.tasks  # noqa: F401
 from omni.isaac.lab_tasks.utils import parse_env_cfg
 
 

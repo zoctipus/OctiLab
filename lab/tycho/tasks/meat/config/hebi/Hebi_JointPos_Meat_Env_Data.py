@@ -125,7 +125,7 @@ class IdealPDHebi_JointPos_Meat_Env(HebiRLTaskEnvCfg):
         self.sim.physx.friction_correlation_distance = 0.00625
         self.sim.physx.gpu_total_aggregate_pairs_capacity = 2 ** 22
         self.sim.physx.gpu_max_rigid_patch_count = 2 ** 20
-        self.scene.robot.init_state.rot = (0.70711, 0.0, 0.0, 0.70711)
+        self.scene.robot.init_state.rot = (0.70711, 0.0, 0.0, 0.70711)  # type: ignore
         self.sim.physx.gpu_max_rigid_patch_count = 2 ** 20
 
 

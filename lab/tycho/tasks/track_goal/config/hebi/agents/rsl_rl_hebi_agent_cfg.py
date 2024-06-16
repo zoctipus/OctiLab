@@ -15,11 +15,11 @@ from omni.isaac.lab_tasks.utils.wrappers.rsl_rl import (
 
 @configclass
 class Base_PPORunnerCfg(RslRlOnPolicyRunnerCfg):
-    num_steps_per_env = 12
+    num_steps_per_env = 96
     max_iterations = 30000
     save_interval = 50
-    resume=False
-    experiment_name = "Hebi_base_agent"
+    resume = False
+    experiment_name = "hebi_base_agent"
     empirical_normalization = False
     policy = RslRlPpoActorCriticCfg(
         init_noise_std=1.0,
@@ -42,13 +42,16 @@ class Base_PPORunnerCfg(RslRlOnPolicyRunnerCfg):
         max_grad_norm=1.0,
     )
 
+
 @configclass
 class Hebi_IkAbsoluteDls_PwmMotor_AbsoluteGoalTracking_PPORunnerCfg(Base_PPORunnerCfg):
     experiment_name = "Hebi_IkAbsoluteDls_PwmMotor_AbsoluteGoalTracking"
 
+
 @configclass
 class Hebi_IkDeltaDls_PwmMotor_DeltaGoalTracking_EnvPPORunnerCfg(Base_PPORunnerCfg):
     experiment_name = "Hebi_IkDeltaDls_PwmMotor_DeltaGoalTracking"
+
 
 @configclass
 class Hebi_IkAbsoluteDls_IdealPD_AbsoluteGoalTracking_EnvPPORunnerCfg(Base_PPORunnerCfg):

@@ -37,9 +37,9 @@ import torch
 import carb
 
 from omni.isaac.lab.devices import Se3Gamepad, Se3SpaceMouse
-from devices.se3_keyboard import Se3KeyboardDelta
+from octilab.devices.se3_keyboard import Se3KeyboardDelta
 import omni.isaac.lab_tasks  # noqa: F401
-import tasks  # noqa: F401
+import lab.tycho.tasks  # noqa: F401
 from omni.isaac.lab_tasks.utils import parse_env_cfg
 from omni.isaac.lab.utils.math import axis_angle_from_quat, quat_from_angle_axis
 
@@ -115,17 +115,17 @@ def main():
             # pre-process actions
             actions = pre_process_actions(delta_pose, gripper_command)
             # apply actions
-            actions = actions[:, :6]
-            rot_actions = delta_pose[:, 3:6]
-            angle = torch.linalg.vector_norm(rot_actions, dim=1)
-            axis = rot_actions / angle.unsqueeze(-1)
-            # change from axis-angle to quat convention
-            identity_quat = torch.tensor([1.0, 0.0, 0.0, 0.0], device=env.device).repeat(env.num_envs, 1)
-            rot_delta_quat = torch.where(
-                angle.unsqueeze(-1).repeat(1, 4) > 1.0e-6, quat_from_angle_axis(angle, axis), identity_quat
-            )
-            actions[:, 3:7] = rot_delta_quat
-            print(actions)
+            # actions = actions[:, :6]
+            # rot_actions = delta_pose[:, 3:6]
+            # angle = torch.linalg.vector_norm(rot_actions, dim=1)
+            # axis = rot_actions / angle.unsqueeze(-1)
+            # # change from axis-angle to quat convention
+            # identity_quat = torch.tensor([1.0, 0.0, 0.0, 0.0], device=env.device).repeat(env.num_envs, 1)
+            # rot_delta_quat = torch.where(
+            #     angle.unsqueeze(-1).repeat(1, 4) > 1.0e-6, quat_from_angle_axis(angle, axis), identity_quat
+            # )
+            # actions[:, 3:7] = rot_delta_quat
+            # print(actions)
             env.step(actions)
 
     # close the simulator

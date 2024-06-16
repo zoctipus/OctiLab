@@ -6,6 +6,7 @@ from omni.isaac.lab.managers import SceneEntityCfg
 from omni.isaac.lab.managers import TerminationTermCfg as DoneTerm
 from omni.isaac.lab.utils import configclass
 from omni.isaac.lab.managers import ObservationTermCfg as ObsTerm
+from math import pi
 import omni.isaac.lab.envs.mdp as orbit_mdp
 import lab.tycho.cfgs.robots.hebi.mdp as robot_mdp
 import octilab.envs.mdp as tycho_general_mdp
@@ -159,66 +160,66 @@ maxtorch = [23.3, 44.7632, 23.3, 2.66, 2.66, 2.66, 2.66]
 speed_24v = [4.4843, 2.3375, 4.4843, 14.12, 14.12, 14.12, 14.12]
 
 
-@configclass
-class RobotActionsCfg_HebiCustomIkDelta:
-    body_joint_pos = TychoControllerDifferentialInverseKinematicsActionCfg(
-        asset_name="robot",
-        joint_names=["HEBI_base_X8_9",
-                     "HEBI_shoulder_X8_16",
-                     "HEBI_elbow_X8_9",
-                     "HEBI_wrist1_X5_1",
-                     "HEBI_wrist2_X5_1",
-                     "HEBI_wrist3_X5_1",
-                     "HEBI_chopstick_X5_1"],
-        body_name="end_effector",
-        tycho_differential_controller=TychoDifferentialIKControllerCfg(
-            command_type="pose", use_relative_mode=True, ik_method="dls"
-        ),
-        scale=1,
-        body_offset=TychoControllerDifferentialInverseKinematicsActionCfg.OffsetCfg(
-            pos=(0.13018, 0.07598, 0.06429),
-            rot=(0.7070904, -0.7071232, 0, 0)
-        ),
-        tycho_controller=TychoControllerCfg(
-            gain_path="datasets/chopstick-gains-7D-all3.xml",
-            onlyPositionCtrl=False,
-            biasprm=[maxtorch, speed_24v])
-    )
+# @configclass
+# class RobotActionsCfg_HebiCustomIkDelta:
+#     body_joint_pos = TychoControllerDifferentialInverseKinematicsActionCfg(
+#         asset_name="robot",
+#         joint_names=["HEBI_base_X8_9",
+#                      "HEBI_shoulder_X8_16",
+#                      "HEBI_elbow_X8_9",
+#                      "HEBI_wrist1_X5_1",
+#                      "HEBI_wrist2_X5_1",
+#                      "HEBI_wrist3_X5_1",
+#                      "HEBI_chopstick_X5_1"],
+#         body_name="end_effector",
+#         tycho_differential_controller=TychoDifferentialIKControllerCfg(
+#             command_type="pose", use_relative_mode=True, ik_method="dls"
+#         ),
+#         scale=1,
+#         body_offset=TychoControllerDifferentialInverseKinematicsActionCfg.OffsetCfg(
+#             pos=(0.13018, 0.07598, 0.06429),
+#             rot=(0.7070904, -0.7071232, 0, 0)
+#         ),
+#         tycho_controller=TychoControllerCfg(
+#             gain_path="datasets/chopstick-gains-7D-all3.xml",
+#             onlyPositionCtrl=False,
+#             biasprm=[maxtorch, speed_24v])
+#     )
 
 
-@configclass
-class RobotActionsCfg_HebiCustomIkAbsolute:
-    body_joint_pos = TychoControllerDifferentialInverseKinematicsActionCfg(
-        asset_name="robot",
-        joint_names=["HEBI_base_X8_9",
-                     "HEBI_shoulder_X8_16",
-                     "HEBI_elbow_X8_9",
-                     "HEBI_wrist1_X5_1",
-                     "HEBI_wrist2_X5_1",
-                     "HEBI_wrist3_X5_1",
-                     "HEBI_chopstick_X5_1"],
-        body_name="end_effector",
-        tycho_differential_controller=TychoDifferentialIKControllerCfg(
-            command_type="pose",
-            use_relative_mode=False,
-            ik_method="dls",
-            operational_ee_range=[[-0.73, -0.6, 0, -1, -1, -1, -1, -0.6], [0.2, 0, 0.35, 1, 1, 1, 1, -0.2]]
-        ),
-        scale=1,
-        body_offset=TychoControllerDifferentialInverseKinematicsActionCfg.OffsetCfg(
-            pos=(0.13018, 0.07598, 0.06429), rot=(0.7070904, -0.7071232, 0, 0)
-        ),
-        tycho_controller=TychoControllerCfg(
-            gain_path="datasets/chopstick-gains-7D-all3.xml",
-            onlyPositionCtrl=False,
-            biasprm=[maxtorch, speed_24v])
-    )
-    # finger_joint_pos = BinaryJointPositionActionCfg(
-    #         asset_name="robot",
-    #         joint_names=["HEBI_chopstick_X5_1"],
-    #         open_command_expr={"HEBI_chopstick_X5_1": -0.175},
-    #         close_command_expr={"HEBI_chopstick_X5_1": -0.646},
-    #     )
+# @configclass
+# class RobotActionsCfg_HebiCustomIkAbsolute:
+#     body_joint_pos = TychoControllerDifferentialInverseKinematicsActionCfg(
+#         asset_name="robot",
+#         joint_names=["HEBI_base_X8_9",
+#                      "HEBI_shoulder_X8_16",
+#                      "HEBI_elbow_X8_9",
+#                      "HEBI_wrist1_X5_1",
+#                      "HEBI_wrist2_X5_1",
+#                      "HEBI_wrist3_X5_1",
+#                      "HEBI_chopstick_X5_1"],
+#         body_name="end_effector",
+#         tycho_differential_controller=TychoDifferentialIKControllerCfg(
+#             command_type="pose",
+#             use_relative_mode=False,
+#             ik_method="dls",
+#             operational_ee_range=[[-0.73, -0.6, 0, -1, -1, -1, -1, -0.6], [0.2, 0, 0.35, 1, 1, 1, 1, -0.2]]
+#         ),
+#         scale=1,
+#         body_offset=TychoControllerDifferentialInverseKinematicsActionCfg.OffsetCfg(
+#             pos=(0.13018, 0.07598, 0.06429), rot=(0.7070904, -0.7071232, 0, 0)
+#         ),
+#         tycho_controller=TychoControllerCfg(
+#             gain_path="datasets/chopstick-gains-7D-all3.xml",
+#             onlyPositionCtrl=False,
+#             biasprm=[maxtorch, speed_24v])
+#     )
+#         finger_joint_pos = BinaryJointPositionActionCfg(
+#                 asset_name="robot",
+#                 joint_names=["HEBI_chopstick_X5_1"],
+#                 open_command_expr={"HEBI_chopstick_X5_1": -0.175},
+#                 close_command_expr={"HEBI_chopstick_X5_1": -0.646},
+#             )
 
 
 @configclass
@@ -237,7 +238,7 @@ class RobotActionsCfg_HebiIkAbsoluteDls:
         # while specifying position offset will work for most of case, but since rotation fluctuate as rotation
         # chop rotates this will also causes position fluctuation if position offset is not 0.
         # the most stable way will be having position offset be 0
-        body_offset=DifferentialInverseKinematicsActionCfg.OffsetCfg(pos=(0.0, 0.0, 0.0), rot=(1.0, 0.0, 0, 0)),
+        body_offset=DifferentialInverseKinematicsActionCfg.OffsetCfg(pos=(0.0, 0.0, 0.0), rot=(1, 0, 0, 0)),
     )
     finger_joint_pos = BinaryJointPositionActionCfg(
         asset_name="robot",
@@ -323,7 +324,7 @@ ROBOT REWARDS CFG
 class RobotRewardsCfg:
     """Reward terms for the MDP."""
     # action penalty
-    action_rate = RewTerm(func=orbit_mdp.action_rate_l2, weight=-0.1)
+    action_rate = RewTerm(func=orbit_mdp.action_rate_l2, weight=-0.01)
 
     joint_vel = RewTerm(
         func=orbit_mdp.joint_vel_l2,

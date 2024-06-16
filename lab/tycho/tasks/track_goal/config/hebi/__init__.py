@@ -12,9 +12,8 @@ base_envs = [PwmMotorHebi_JointPos_GoalTracking_Env,
              ImplicitMotorHebi_JointPos_GoalTracking_Env]
 
 action_classes = [rd.RobotActionsCfg_HebiIkDeltaDls, 
-                rd.RobotActionsCfg_HebiIkAbsoluteDls, 
-                rd.RobotActionsCfg_HebiCustomIkAbsolute, 
-                rd.RobotActionsCfg_HebiCustomIkDelta]
+                rd.RobotActionsCfg_HebiIkAbsoluteDls,
+                rd.RobotActionsCfg_HebiJointPosition]
 
 
 # Loop through each configuration and register the environment

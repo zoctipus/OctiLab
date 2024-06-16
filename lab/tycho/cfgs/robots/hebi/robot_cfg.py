@@ -47,7 +47,7 @@ HEBI_DEFAULT_JOINTPOS = {
 
 HEBI_ORBIT_ARTICULATION = ArticulationCfg(
     spawn=sim_utils.UsdFileCfg(
-        usd_path="datasets/tycho_robot.usd",
+        usd_path="datasets/tycho_robot2.usd",
         activate_contact_sensors=True,
         rigid_props=sim_utils.RigidBodyPropertiesCfg(
             disable_gravity=True,
@@ -65,10 +65,10 @@ HEBI_ORBIT_ARTICULATION = ArticulationCfg(
 
 HEBI_CUSTOM_ARTICULATION = HebiArticulationCfg(
     spawn=sim_utils.UsdFileCfg(
-        usd_path="datasets/tycho_robot.usd",
+        usd_path="datasets/tycho_robot2.usd",
         activate_contact_sensors=True,
         rigid_props=sim_utils.RigidBodyPropertiesCfg(
-            disable_gravity=False,
+            disable_gravity=True,
             max_depenetration_velocity=5.0,
         ),
         articulation_props=sim_utils.ArticulationRootPropertiesCfg(
@@ -198,25 +198,23 @@ HEBI_PWM_MOTOR_CFG.actuators = {
     "HEBI": HebiMotorCfg(
         joint_names_expr=["HEBI_base_X8_9", "HEBI_elbow_X8_9", "HEBI_shoulder_X8_16",
                           "HEBI_wrist1_X5_1", "HEBI_wrist2_X5_1", "HEBI_wrist3_X5_1", "HEBI_chopstick_X5_1"],
-        stiffness=100.0,
-        damping=10,
+        stiffness=0.0,
+        damping=0.0,
         armature=0.001,
         friction=0.2,
         velocity_limit=50,
         effort_limit=1000,
         actuator_biasprm=[maxtorch, speed_24v],
-        gain_xml_path="datasets/chopstick-gains-7D-all3.xml",
-        only_position_control=False,
     ),
-    "HEBI_chopstick_X5_1": ImplicitActuatorCfg(
-        joint_names_expr=["HEBI_chopstick_X5_1"],
-        stiffness=50,
-        damping=10,
-        armature=0.01,
-        friction=0.2,
-        velocity_limit=50,
-        effort_limit=10000
-    )
+    # "HEBI_chopstick_X5_1": ImplicitActuatorCfg(
+    #     joint_names_expr=["HEBI_chopstick_X5_1"],
+    #     stiffness=50,
+    #     damping=10,
+    #     armature=0.01,
+    #     friction=0.2,
+    #     velocity_limit=50,
+    #     effort_limit=10000
+    # )
 }
 
 pd_stiffness_scalar = 50

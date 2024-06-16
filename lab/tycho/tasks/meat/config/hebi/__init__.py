@@ -10,9 +10,7 @@ base_envs = [PwmMotorHebi_JointPos_Meat_Env,
              ImplicitMotorHebi_JointPos_Meat_Env]
 
 action_classes = [rd.RobotActionsCfg_HebiIkDeltaDls, 
-                rd.RobotActionsCfg_HebiIkAbsoluteDls, 
-                rd.RobotActionsCfg_HebiCustomIkAbsolute, 
-                rd.RobotActionsCfg_HebiCustomIkDelta]
+                rd.RobotActionsCfg_HebiIkAbsoluteDls,]
 
 # Loop through each configuration and register the environment
 for base_env in base_envs:

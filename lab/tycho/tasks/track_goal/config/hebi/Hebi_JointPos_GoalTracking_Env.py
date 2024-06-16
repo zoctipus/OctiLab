@@ -99,7 +99,7 @@ class CommandsCfg(SceneCommandsCfg):
         ranges=orbit_mdp.UniformPoseCommandCfg.Ranges(
             # CAUTION: to use the hebi's ik solver the roll needs to be (0.0, 0.0) for upright vector to be correct
             # however, for the isaac sim ik solver, the roll needs to be (1.57075, 1.57075)
-            pos_x=(-0.45, -0.35), pos_y=(-0.4, -0.25), pos_z=(0.05, 0.14), roll=(1.57075, 1.57075), pitch=(3.14, 3.14), yaw=(0.5, 0.5)
+            pos_x=(-0.45, -0.15), pos_y=(-0.5, -0.15), pos_z=(0.02, 0.3), roll=(1.57075, 1.57075), pitch=(3.14, 3.14), yaw=(0.5, 0.5)
         ),
     )
 
@@ -138,12 +138,12 @@ class IdealPDHebi_JointPos_GoalTracking_Env(ManagerBasedRLEnvCfg):
     datas: DataCfg = DataCfg()
 
     def __post_init__(self):
-        self.decimation = 10
+        self.decimation = 20
         self.episode_length_s = episode_length
         # simulation settings
         self.sim.dt = 0.05 / self.decimation  # Agent: 20Hz, Motor: 500Hz
-        self.sim.physx.min_position_iteration_count = 32
-        self.sim.physx.min_velocity_iteration_count = 16
+        self.sim.physx.min_position_iteration_count = 16
+        self.sim.physx.min_velocity_iteration_count = 8
         self.sim.physx.bounce_threshold_velocity = 0.2
         self.sim.physx.bounce_threshold_velocity = 0.01
         self.sim.physx.gpu_found_lost_aggregate_pairs_capacity = 1024 * 1024 * 4
