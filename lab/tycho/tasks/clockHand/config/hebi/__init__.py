@@ -20,7 +20,7 @@ for base_env in base_envs:
         _id = f"{action_class_id}_{base_env_id}_v0".replace("_", "-")
         gym.register(
             id=_id,
-            entry_point="octilab.envs.hebi_rl_task_env:HebiRLTaskEnv",
+            entry_point="octilab.envs.octi_manager_based_rl:OctiManagerBasedRLEnv",
             kwargs={
                 "env_cfg_entry_point": create_hebi_env(
                                             base_env_cfg=base_env,

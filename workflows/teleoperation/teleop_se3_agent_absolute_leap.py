@@ -36,10 +36,13 @@ import gymnasium as gym
 import torch
 import carb
 from omni.isaac.lab.devices import Se3Gamepad, Se3SpaceMouse
-from octilab.devices.se3_keyboard import Se3KeyboardAbsolute
+from octilab.devices import Rokoko_Glove, Se3KeyboardAbsolute
+from omni.isaac.lab.markers import VisualizationMarkers
+from omni.isaac.lab.markers.config import FRAME_MARKER_CFG
 import omni.isaac.lab_tasks  # noqa: F401
 import lab.tycho.tasks  # noqa: F401
 import lab.manipulations  # noqa: F401
+from omni.isaac.lab.utils import math
 from omni.isaac.lab_tasks.utils import parse_env_cfg
 
 
@@ -65,7 +68,6 @@ def main():
     env_cfg = parse_env_cfg(
         args_cli.task, use_gpu=not args_cli.cpu, num_envs=args_cli.num_envs, use_fabric=not args_cli.disable_fabric
     )
-
     # modify configuration
     env_cfg.terminations.time_out = None
     # create environment
@@ -89,25 +91,72 @@ def main():
         teleop_interface = Se3Gamepad(
             pos_sensitivity=0.1 * args_cli.sensitivity, rot_sensitivity=0.1 * args_cli.sensitivity
         )
+    elif args_cli.device.lower() == "rokoko_smartglove":
+        teleop_interface = Rokoko_Glove(
+            pos_sensitivity=0.1 * args_cli.sensitivity, rot_sensitivity=0.1 * args_cli.sensitivity
+        )
     else:
         raise ValueError(f"Invalid device interface '{args_cli.device}'. Supported: 'keyboard', 'spacemouse'.")
     # add teleoperation key for env reset
     teleop_interface.add_callback("L", env.reset)
     # print helper for keyboard
     print(teleop_interface)
-
+    # force_tensor = torch.zeros((1, ))
     # reset environment
     env.reset()
     teleop_interface.reset()
+    num_bodys = env.unwrapped.scene["robot"].num_bodies
+    force_tensor = torch.zeros((1, num_bodys, 3), device=env.unwrapped.device)
+    moment_tensor = torch.zeros((1, num_bodys, 3), device=env.unwrapped.device)
+    frame_marker_cfg = FRAME_MARKER_CFG.copy()
+    frame_marker_cfg.markers["frame"].scale = (0.02, 0.02, 0.02)
+    wrist_marker = VisualizationMarkers(frame_marker_cfg.replace(prim_path="/Visuals/wrist"))
+    index_marker = VisualizationMarkers(frame_marker_cfg.replace(prim_path="/Visuals/index"))
+    middle_marker = VisualizationMarkers(frame_marker_cfg.replace(prim_path="/Visuals/middle"))
+    ring_marker = VisualizationMarkers(frame_marker_cfg.replace(prim_path="/Visuals/ring"))
+    thumb_marker = VisualizationMarkers(frame_marker_cfg.replace(prim_path="/Visuals/thumb"))
+
+    # absolute_pose = env.unwrapped.scene['robot'].data.default_root_state[0].clone()
+    # absolute_pose[0:7] = teleop_interface.advance()[10]
+    # absolute_pose[2] += 0.5
+    # absolute_pose[0] -= 0.1
+    # env.unwrapped.scene['robot'].write_root_state_to_sim(absolute_pose.unsqueeze(0))
     # simulate environment
     while simulation_app.is_running():
         # run everything in inference mode
         with torch.inference_mode():
             # get keyboard command
-            absolute_pose, gripper_command = teleop_interface.advance()
-            actions_clone = pre_process_actions(absolute_pose, gripper_command)
-            # print(actions_clone)
-            env.step(actions_clone)
+            absolute_pose = teleop_interface.advance()
+            # absolute_pose[:, :3] *= 1.8
+            hand_pos = absolute_pose[0:4]
+            absolute_pose[:, 0] = -absolute_pose[:, 0]
+            # absolute_pose[:, 3:] = absolute_pose[:, [6, 3, 5, 4]]
+            absolute_pose[:, 3:] = absolute_pose[:, [6, 3, 4, 5]]
+            absolute_pose[:, :3] = absolute_pose[:, [0, 2, 1]]
+            absolute_pose[:, 2] += 0.5
+            rot_actions = torch.tensor([[0.0, 0.0, 1.57]], device=env.unwrapped.device)
+            angle = torch.linalg.vector_norm(rot_actions, dim=1)
+            axis = rot_actions / angle.unsqueeze(-1)
+            # change from axis-angle to quat convention
+            identity_quat = torch.tensor([1.0, 0.0, 0.0, 0.0], device=env.unwrapped.device)
+            rot_delta_quat = torch.where(
+                angle.unsqueeze(-1).repeat(1, 4) > 1.0e-6, math.quat_from_angle_axis(angle, axis), identity_quat
+            ).repeat(len(absolute_pose), 1)
+            absolute_pose[:, 3:] = math.quat_mul(absolute_pose[:, 3:], rot_delta_quat)
+            # wrist_marker.visualize(absolute_pose[11][0:3].reshape(1, -1), absolute_pose[11][3:].reshape(1, -1))
+            # thumb_marker.visualize(
+            #     absolute_pose[5][0:3].reshape(1, -1), absolute_pose[5][3:].reshape(1, -1))
+            # index_marker.visualize(
+            #     absolute_pose[6][0:3].reshape(1, -1), absolute_pose[6][3:].reshape(1, -1))
+            # middle_marker.visualize(
+            #     absolute_pose[7][0:3].reshape(1, -1), absolute_pose[7][3:].reshape(1, -1))
+            # ring_marker.visualize(
+            #     absolute_pose[8][0:3].reshape(1, -1), absolute_pose[8][3:].reshape(1, -1))
+            absolute_pose[:, 0] = -absolute_pose[:, 0]
+            # absolute_pose[:, 2] = -absolute_pose[:, 2]
+            # env.step(hand_pos[:, :7][10].reshape(1, -1))
+            env.step(absolute_pose[[11, 6, 5, 7, 8], :3].reshape(1, -1))
+            # env.step(torch.tensor([[0,0.5,-0.8,1,0,0,0]], device=env.unwrapped.device))
     # close the simulator
     env.close()
 

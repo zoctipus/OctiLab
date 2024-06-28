@@ -10,5 +10,5 @@ class RslActionClipWrapper(RslRlVecEnvWrapper):
 
     def step(self, actions: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, dict]:
         # clip the action between -1.0 to 1.0.
-        actions = torch.tanh(actions) * 4
+        actions = torch.tanh(actions)
         return super().step(actions)

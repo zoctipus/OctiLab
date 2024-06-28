@@ -3,7 +3,7 @@ from omni.isaac.lab.assets import RigidObject
 from omni.isaac.lab.managers import SceneEntityCfg
 from omni.isaac.lab.sensors import FrameTransformer
 from omni.isaac.lab.utils.math import subtract_frame_transforms
-from octilab.envs.hebi_rl_task_env import HebiRLTaskEnv
+from octilab.envs import OctiManagerBasedRLEnv
 from omni.isaac.lab.utils import convert_dict_to_backend
 from omni.isaac.lab.envs import ManagerBasedRLEnv
 
@@ -26,7 +26,7 @@ def object_position_in_robot_root_frame(
 
 
 def position_in_robot_root_frame(
-    env: HebiRLTaskEnv,
+    env: OctiManagerBasedRLEnv,
     position_b: str
 ) -> torch.Tensor:
     """The position of the object in the robot's root frame."""
@@ -34,7 +34,7 @@ def position_in_robot_root_frame(
 
 
 def object_frame_position_in_robot_root_frame(
-    env: ManagerBasedRLEnv,
+    env: OctiManagerBasedRLEnv,
     robot_cfg: SceneEntityCfg = SceneEntityCfg("robot"),
     object_frame_cfg: SceneEntityCfg = SceneEntityCfg("object_frame"),
 ) -> torch.Tensor:
@@ -49,7 +49,7 @@ def object_frame_position_in_robot_root_frame(
 
 
 def end_effector_speed(
-    env: HebiRLTaskEnv,
+    env: OctiManagerBasedRLEnv,
     end_effector_speed_str: str
 ) -> torch.Tensor:
     """The position of the object in the robot's root frame."""

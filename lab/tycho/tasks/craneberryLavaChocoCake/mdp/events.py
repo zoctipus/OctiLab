@@ -5,12 +5,13 @@ from typing import TYPE_CHECKING
 from omni.isaac.lab.assets import RigidObject, Articulation
 from octilab.assets import Deformable
 import h5py
-from octilab.envs import HebiRLTaskEnv
+if TYPE_CHECKING:
+    from octilab.envs import OctiManagerBasedRLEnv
 
 
 def record_state_configuration(
-    env: HebiRLTaskEnv,
-    env_ids: torch.Tensor = None,
+    env: OctiManagerBasedRLEnv,
+    env_ids: torch.Tensor = slice(None, None, None),
 ):
     record = {}
     # only record those that has canberry in chop, or if it is starting state
@@ -36,7 +37,7 @@ def record_state_configuration(
 
 
 def reset_from_state_configuration(
-    env: HebiRLTaskEnv,
+    env: OctiManagerBasedRLEnv,
     env_ids: torch.Tensor,
 ):
     if not ("trajectory_memory" in env.trajectory_memory.keys()):
@@ -70,7 +71,7 @@ def reset_from_state_configuration(
 
 
 def reset_from_demostration(
-    env: HebiRLTaskEnv,
+    env: OctiManagerBasedRLEnv,
     env_ids: torch.Tensor,
 ):
     demostrations_state = []

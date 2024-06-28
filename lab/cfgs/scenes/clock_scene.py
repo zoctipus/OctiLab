@@ -16,7 +16,7 @@ from omni.isaac.lab.markers.config import FRAME_MARKER_CFG  # isort: skip
 
 RADIUS = 0.02
 
-marker_cfg = FRAME_MARKER_CFG.copy()
+marker_cfg = FRAME_MARKER_CFG.copy()  # type: ignore
 marker_cfg.markers["frame"].scale = (0.1, 0.1, 0.1)
 marker_cfg.prim_path = "/Visuals/RopeFrameTransformer"
 
@@ -77,7 +77,7 @@ class SceneEventCfg:
     """Configuration for randomization."""
     # pass
     reset_object_position = EventTerm(
-        func=orbit_mdp.reset_root_state_uniform2,
+        func=orbit_mdp.reset_root_state_uniform,
         mode="reset",
         params={
             "pose_range": {"x": (-0.0, 0.0), "y": (-0.0, 0.0), "z": (0.05, 0.05)},
@@ -87,7 +87,7 @@ class SceneEventCfg:
     )
 
     update_joint_position_target = EventTerm(
-        func=general_mdp.update_joint_positions,
+        func=general_mdp.update_joint_target_positions_to_current,
         mode="interval",
         interval_range_s=(0.02, 0.02),
         params={"asset_name": "object"},

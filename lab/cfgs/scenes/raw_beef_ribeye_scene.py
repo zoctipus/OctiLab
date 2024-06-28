@@ -149,7 +149,7 @@ class SceneEventCfg:
     )
 
     reset_cast_iron_skillet_position = EventTerm(
-        func=orbit_mdp.reset_root_state_uniform2,
+        func=orbit_mdp.reset_root_state_uniform,
         mode="reset",
         params={
             "pose_range": {},
@@ -159,7 +159,7 @@ class SceneEventCfg:
     )
 
     reset_wooden_board_position = EventTerm(
-        func=orbit_mdp.reset_root_state_uniform2,
+        func=orbit_mdp.reset_root_state_uniform,
         mode="reset",
         params={
             "pose_range": {},
@@ -169,7 +169,7 @@ class SceneEventCfg:
     )
 
     reset_induction_stove_position = EventTerm(
-        func=orbit_mdp.reset_root_state_uniform2,
+        func=orbit_mdp.reset_root_state_uniform,
         mode="reset",
         params={
             "pose_range": {},
@@ -179,7 +179,7 @@ class SceneEventCfg:
     )
 
     reset_rosemary2_position = EventTerm(
-        func=orbit_mdp.reset_root_state_uniform2,
+        func=orbit_mdp.reset_root_state_uniform,
         mode="reset",
         params={
             "pose_range": {},
@@ -189,7 +189,7 @@ class SceneEventCfg:
     )
 
     reset_rosemary1_position = EventTerm(
-        func=orbit_mdp.reset_root_state_uniform2,
+        func=orbit_mdp.reset_root_state_uniform,
         mode="reset",
         params={
             "pose_range": {},
@@ -199,7 +199,7 @@ class SceneEventCfg:
     )
 
     reset_onion_section_position = EventTerm(
-        func=orbit_mdp.reset_root_state_uniform2,
+        func=orbit_mdp.reset_root_state_uniform,
         mode="reset",
         params={
             "pose_range": {},

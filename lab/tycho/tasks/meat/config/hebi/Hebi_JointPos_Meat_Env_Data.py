@@ -12,10 +12,10 @@ from dataclasses import MISSING
 ##
 # Pre-defined configs
 ##
-from octilab.envs.hebi_rl_task_env import HebiRLTaskEnvCfg
-from lab.tycho.cfgs.scenes.raw_beef_ribeye_scene import SceneObjectSceneCfg, SceneCommandsCfg, SceneEventCfg, SceneRewardsCfg, SceneTerminationsCfg
-import lab.tycho.cfgs.robots.hebi.robot_dynamics as rd
-from lab.tycho.cfgs.robots.hebi.robot_cfg import FRAME_EE, CAMERA_WRIST, CAMERA_BASE  # noqa: F401
+from octilab.envs import OctiManagerBasedRLEnvCfg
+from lab.cfgs.scenes.raw_beef_ribeye_scene import SceneObjectSceneCfg, SceneCommandsCfg, SceneEventCfg, SceneRewardsCfg, SceneTerminationsCfg
+import lab.cfgs.robots.hebi.robot_dynamics as rd
+from lab.cfgs.robots.hebi.robot_cfg import FRAME_EE, CAMERA_WRIST, CAMERA_BASE  # noqa: F401
 
 
 class ObjectSceneCfg():
@@ -28,7 +28,7 @@ class IdealPDHebi_ObjectSceneCfg(SceneObjectSceneCfg, rd.RobotSceneCfg_IdealPD, 
 
 
 @configclass
-class PwmMotorHebi_ObjectSceneCfg(SceneObjectSceneCfg, rd.RobotSceneCfg_HebiPwmMotor, ObjectSceneCfg):
+class PwmMotorHebi_ObjectSceneCfg(SceneObjectSceneCfg, rd.RobotSceneCfg_HebiStrategy3Actuator, ObjectSceneCfg):
     ee_frame = FRAME_EE
 
 
@@ -97,7 +97,7 @@ class CurriculumCfg:
 
 
 @configclass
-class IdealPDHebi_JointPos_Meat_Env(HebiRLTaskEnvCfg):
+class IdealPDHebi_JointPos_Meat_Env(OctiManagerBasedRLEnvCfg):
     # Scene settings
     scene: ObjectSceneCfg = IdealPDHebi_ObjectSceneCfg(num_envs=1, env_spacing=2.5, replicate_physics=False)
     # Basic settings

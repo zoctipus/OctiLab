@@ -6,8 +6,8 @@ The following configurations are available:
 """
 
 import omni.isaac.lab.sim as sim_utils
-from omni.isaac.lab.actuators import ImplicitActuatorCfg, IdealPDActuatorCfg
-from octilab.actuators import HebiMotorCfg
+from omni.isaac.lab.actuators import ImplicitActuatorCfg, IdealPDActuatorCfg, DCMotorCfg
+from octilab.actuators import HebiStrategy3ActuatorCfg, EffortMotorCfg, HebiStrategy4ActuatorCfg, HebiDCMotorCfg
 
 from omni.isaac.lab.assets.articulation import ArticulationCfg
 from octilab.assets.articulation import HebiArticulationCfg
@@ -47,7 +47,7 @@ HEBI_DEFAULT_JOINTPOS = {
 
 HEBI_ORBIT_ARTICULATION = ArticulationCfg(
     spawn=sim_utils.UsdFileCfg(
-        usd_path="datasets/tycho_robot2.usd",
+        usd_path="datasets/tycho_robot.usd",
         activate_contact_sensors=True,
         rigid_props=sim_utils.RigidBodyPropertiesCfg(
             disable_gravity=True,
@@ -65,7 +65,7 @@ HEBI_ORBIT_ARTICULATION = ArticulationCfg(
 
 HEBI_CUSTOM_ARTICULATION = HebiArticulationCfg(
     spawn=sim_utils.UsdFileCfg(
-        usd_path="datasets/tycho_robot2.usd",
+        usd_path="datasets/tycho_robot.usd",
         activate_contact_sensors=True,
         rigid_props=sim_utils.RigidBodyPropertiesCfg(
             disable_gravity=True,
@@ -81,76 +81,9 @@ HEBI_CUSTOM_ARTICULATION = HebiArticulationCfg(
     soft_joint_pos_limit_factor=1
 )
 
-ORIGIN_HEBI_ARTICULATION = HebiArticulationCfg(
-    spawn=sim_utils.UsdFileCfg(
-        usd_path="datasets/hebi_origin.usd",
-        activate_contact_sensors=True,
-        rigid_props=sim_utils.RigidBodyPropertiesCfg(
-            disable_gravity=True,
-            max_depenetration_velocity=5.0,
-        ),
-        articulation_props=sim_utils.ArticulationRootPropertiesCfg(
-            enabled_self_collisions=True, solver_position_iteration_count=1, solver_velocity_iteration_count=0
-        ),
-    ),
-    init_state=HebiArticulationCfg.InitialStateCfg(
-        joint_pos={'HEBI_base_X8_9': -2.2683857389667805,
-                   'HEBI_shoulder_X8_16': 1.5267610481188283,
-                   'HEBI_elbow_X8_9': 2.115358222505881,
-                   'HEBI_wrist1_X5_1': 0.5894993521468314,
-                   'HEBI_wrist2_X5_1': 0.8740650991816328,
-                   'HEBI_wrist3_X5_1': 0.0014332898815118368,
-                   'HEBI_chopstick_actuator_X5_1': -0.36}
-    ),
-    soft_joint_pos_limit_factor=1
-)
-
-origin_implicit_stiffness_scalar = 50
-origin_implicit_damping_scalar = 10
-ORIGIN_HEBI_IMPLICITY_ACTUATOR_CFG = ORIGIN_HEBI_ARTICULATION.copy()
-ORIGIN_HEBI_IMPLICITY_ACTUATOR_CFG.actuators = {
-    "X8_9": ImplicitActuatorCfg(
-        joint_names_expr=["HEBI_base_X8_9", "HEBI_elbow_X8_9"],
-        stiffness=3.0 * origin_implicit_stiffness_scalar,
-        damping=2. * origin_implicit_damping_scalar,
-        armature=0.001,
-        friction=0.2,
-        velocity_limit=1,
-        effort_limit=500,
-    ),
-    "X8_16": ImplicitActuatorCfg(
-        joint_names_expr=["HEBI_shoulder_X8_16"],
-        stiffness=3.0 * origin_implicit_stiffness_scalar,
-        damping=2. * origin_implicit_damping_scalar,
-        armature=0.001,
-        friction=0.2,
-        velocity_limit=1,
-        effort_limit=500,
-    ),
-    "x5": ImplicitActuatorCfg(
-        joint_names_expr=["HEBI_wrist1_X5_1", "HEBI_wrist2_X5_1", "HEBI_wrist3_X5_1"],
-        stiffness=1.0 * origin_implicit_stiffness_scalar,
-        damping=0.3 * origin_implicit_damping_scalar,
-        armature=0.001,
-        friction=0.2,
-        velocity_limit=1,
-        effort_limit=500,
-    ),
-    "chop": ImplicitActuatorCfg(
-        joint_names_expr=["HEBI_chopstick_actuator_X5_1"],
-        stiffness=1.0 * origin_implicit_stiffness_scalar / 5,
-        damping=0.3 * origin_implicit_damping_scalar / 5,
-        armature=0.001,
-        friction=0.2,
-        velocity_limit=1,
-        effort_limit=500,
-    ),
-}
-
-
 implicit_stiffness_scalar = 40
 implicit_damping_scalar = 10
-HEBI_IMPLICITY_ACTUATOR_CFG = HEBI_ORBIT_ARTICULATION.copy()
+HEBI_IMPLICITY_ACTUATOR_CFG = HEBI_ORBIT_ARTICULATION.copy()  # type: ignore
 HEBI_IMPLICITY_ACTUATOR_CFG.actuators = {
     "X8_9": ImplicitActuatorCfg(
         joint_names_expr=["HEBI_base_X8_9", "HEBI_elbow_X8_9"],
@@ -159,7 +92,7 @@ HEBI_IMPLICITY_ACTUATOR_CFG.actuators = {
         armature=0.001,
         friction=0.2,
         velocity_limit=1,
-        effort_limit=500,
+        effort_limit=23.3,
     ),
     "X8_16": ImplicitActuatorCfg(
         joint_names_expr=["HEBI_shoulder_X8_16"],
@@ -168,34 +101,23 @@ HEBI_IMPLICITY_ACTUATOR_CFG.actuators = {
         armature=0.001,
         friction=0.2,
         velocity_limit=1,
-        effort_limit=500,
+        effort_limit=44.7632,
     ),
     "x5": ImplicitActuatorCfg(
-        joint_names_expr=["HEBI_wrist1_X5_1", "HEBI_wrist2_X5_1", "HEBI_wrist3_X5_1"],
+        joint_names_expr=["HEBI_wrist1_X5_1", "HEBI_wrist2_X5_1", "HEBI_wrist3_X5_1", "HEBI_chopstick_X5_1"],
         stiffness=1.0 * implicit_stiffness_scalar,
         damping=0.3 * implicit_damping_scalar,
         armature=0.001,
         friction=0.2,
         velocity_limit=1,
-        effort_limit=500,
-    ),
-    "chop": ImplicitActuatorCfg(
-        joint_names_expr=["HEBI_chopstick_X5_1"],
-        stiffness=1.0 * implicit_stiffness_scalar / 5,
-        damping=0.3 * implicit_damping_scalar / 5,
-        armature=0.001,
-        friction=0.2,
-        velocity_limit=1,
-        effort_limit=500,
+        effort_limit=2.66,
     ),
 }
 
 
-maxtorch = [23.3, 44.7632, 23.3, 2.66, 2.66, 2.66, 2.66]
-speed_24v = [4.4843, 2.3375, 4.4843, 14.12, 14.12, 14.12, 14.12]
-HEBI_PWM_MOTOR_CFG = HEBI_CUSTOM_ARTICULATION.copy()
-HEBI_PWM_MOTOR_CFG.actuators = {
-    "HEBI": HebiMotorCfg(
+HEBI_STRATEGY3_CFG = HEBI_CUSTOM_ARTICULATION.copy()   # type: ignore
+HEBI_STRATEGY3_CFG.actuators = {
+    "HEBI": HebiStrategy3ActuatorCfg(
         joint_names_expr=["HEBI_base_X8_9", "HEBI_elbow_X8_9", "HEBI_shoulder_X8_16",
                           "HEBI_wrist1_X5_1", "HEBI_wrist2_X5_1", "HEBI_wrist3_X5_1", "HEBI_chopstick_X5_1"],
         stiffness=0.0,
@@ -203,23 +125,147 @@ HEBI_PWM_MOTOR_CFG.actuators = {
         armature=0.001,
         friction=0.2,
         velocity_limit=50,
-        effort_limit=1000,
-        actuator_biasprm=[maxtorch, speed_24v],
+        effort_limit=50,
+        kp=[[3.000000, 5.500000, 7.00000, 7.000000, 2.000000, 3.500000, 3.000000],
+            [0.030000, 0.030000, 0.030000, 0.050000, 0.050000, 0.050000, 0.050000],
+            [0.100000, 0.100000, 0.100000, 0.250000, 0.250000, 0.250000, 0.250000]],
+
+        ki=[[0.0300000, 15.000000, 5.000000, 4.000000, 2.000000, 5.000000, 0.000000],
+            [0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000],
+            [0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000]],
+
+        kd=[[0.025000, 0.0100000, 0.030000, 0.100000, 0.010000, 0.0100000, 0.020000],
+            [0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000],
+            [0.000100, 0.000100, 0.000100, 0.001000, 0.001000, 0.001000, 0.001000]],
+
+        i_clamp=[[0.350000, 10.00000, 5.000000, 4.000000, 2.000000, 5.000000, 1.000000],
+                 [0.250000, 0.250000, 0.250000, 0.250000, 0.250000, 0.250000, 0.250000],
+                 [0.250000, 0.250000, 0.250000, 0.250000, 0.250000, 0.250000, 0.250000]],
+
+        min_target=[[float('-inf'), float('-inf'), float('-inf'), float('-inf'), float('-inf'), float('-inf'), -0.6015],
+                    [-3.434687, -3.434687, -3.434687, -9.617128, -9.617128, -9.617128, -9.617128],
+                    [-25.000000, -25.000000, -25.000000, -4.000000, -4.000000, -4.000000, -4.000000]],
+
+        max_target=[[float('inf'), float('inf'), float('inf'), float('inf'), float('inf'), float('inf'), -0.1495],
+                    [3.434687, 3.434687, 3.434687, 9.617128, 9.617128, 9.617128, 9.617128],
+                    [25.000000, 25.000000, 25.000000, 4.000000, 4.000000, 4.000000, 4.000000]],
+
+        target_lowpass=[[0.500000, 0.500000, 0.500000, 0.100000, 0.100000, 0.100000, 0.200000],
+                        [1.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000],
+                        [1.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000]],
+
+        min_output=[[-1.000000, -1.000000, -1.000000, -1.000000, -4.000000, -4.000000, -4.000000],
+                    [-1.000000, -1.000000, -1.000000, -1.000000, -1.000000, -1.000000, -1.000000],
+                    [-1.000000, -1.000000, -1.000000, -1.000000, -1.000000, -1.000000, -1.000000]],
+
+        max_output=[[1.000000, 1.000000, 1.000000, 1.000000, 4.000000, 4.000000, 4.000000],
+                    [1.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000],
+                    [1.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000]],
+
+        output_lowpass=[[1.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000],
+                        [0.750000, 0.750000, 0.750000, 0.750000, 0.750000, 0.750000, 0.750000],
+                        [0.900000, 0.900000, 0.900000, 0.900000, 0.900000, 0.900000, 0.900000]],
+
+        d_on_error=[[1, 1, 1, 1, 1, 1, 1],
+                    [1, 1, 1, 1, 1, 1, 1],
+                    [0, 0, 0, 0, 0, 0, 0]],
+
+        maxtorque=[23.3, 44.7632, 23.3, 2.66, 2.66, 2.66, 0.2],
+
+        speed_24v=[4.4843, 2.3375, 4.4843, 14.12, 14.12, 14.12, 14.12],
     ),
-    # "HEBI_chopstick_X5_1": ImplicitActuatorCfg(
-    #     joint_names_expr=["HEBI_chopstick_X5_1"],
-    #     stiffness=50,
-    #     damping=10,
-    #     armature=0.01,
-    #     friction=0.2,
-    #     velocity_limit=50,
-    #     effort_limit=10000
-    # )
+}
+
+
+HEBI_STRATEGY4_CFG = HEBI_CUSTOM_ARTICULATION.copy()   # type: ignore
+HEBI_STRATEGY4_CFG.actuators = {
+    "HEBI": HebiStrategy4ActuatorCfg(
+        joint_names_expr=["HEBI_base_X8_9", "HEBI_elbow_X8_9", "HEBI_shoulder_X8_16",
+                          "HEBI_wrist1_X5_1", "HEBI_wrist2_X5_1", "HEBI_wrist3_X5_1", "HEBI_chopstick_X5_1"],
+        stiffness=0.0,
+        damping=0.0,
+        armature=0.001,
+        friction=0.2,
+        velocity_limit=50,
+        effort_limit=50,
+        p_p=[39.0, 34.00, 64.0, 50.0, 9.0, 1, 10.00],
+        p_d=[0.65, 1.5, 7.9, 0.0, 1.66, 0, 0.50],
+        e_p=[0.100, 0.100, 0.150, 0.250, 0.250, 0.250, 0.250],
+        e_d=[0.0001, 0.0001, 0.0005, 0.001, 0.001, 0.001, 0.001],
+
+        i_clamp=[[0.350000, 10.00000, 5.000000, 4.000000, 2.000000, 5.000000, 1.000000],
+                 [0.250000, 0.250000, 0.250000, 0.250000, 0.250000, 0.250000, 0.250000],
+                 [0.250000, 0.250000, 0.250000, 0.250000, 0.250000, 0.250000, 0.250000]],
+
+        min_target=[[float('-inf'), float('-inf'), float('-inf'), float('-inf'), float('-inf'), float('-inf'), -0.6015],
+                    [-3.434687, -3.434687, -3.434687, -9.617128, -9.617128, -9.617128, -9.617128],
+                    [-25.000000, -25.000000, -25.000000, -4.000000, -4.000000, -4.000000, -4.000000]],
+
+        max_target=[[float('inf'), float('inf'), float('inf'), float('inf'), float('inf'), float('inf'), -0.1495],
+                    [3.434687, 3.434687, 3.434687, 9.617128, 9.617128, 9.617128, 9.617128],
+                    [25.000000, 25.000000, 25.000000, 4.000000, 4.000000, 4.000000, 4.000000]],
+
+        target_lowpass=[[0.500000, 0.500000, 0.500000, 0.100000, 0.100000, 0.100000, 0.200000],
+                        [1.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000],
+                        [1.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000]],
+
+        min_output=[[-1.000000, -1.000000, -1.000000, -1.000000, -4.000000, -4.000000, -4.000000],
+                    [-1.000000, -1.000000, -1.000000, -1.000000, -1.000000, -1.000000, -1.000000],
+                    [-1.000000, -1.000000, -1.000000, -1.000000, -1.000000, -1.000000, -1.000000]],
+
+        max_output=[[1.000000, 1.000000, 1.000000, 1.000000, 4.000000, 4.000000, 4.000000],
+                    [1.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000],
+                    [1.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000]],
+
+        output_lowpass=[[1.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000],
+                        [0.750000, 0.750000, 0.750000, 0.750000, 0.750000, 0.750000, 0.750000],
+                        [0.900000, 0.900000, 0.900000, 0.900000, 0.900000, 0.900000, 0.900000]],
+
+        d_on_error=[[1, 1, 1, 1, 1, 1, 1],
+                    [1, 1, 1, 1, 1, 1, 1],
+                    [0, 0, 0, 0, 0, 0, 0]],
+
+        maxtorque=[23.3, 44.7632, 23.3, 2.66, 2.66, 2.66, 0.2],
+
+        speed_24v=[4.4843, 2.3375, 4.4843, 14.12, 14.12, 14.12, 14.12]
+    ),
+}
+
+HEBI_DCMOTOR_CFG = HEBI_CUSTOM_ARTICULATION.copy()   # type: ignore
+HEBI_DCMOTOR_CFG.actuators = {
+    "HEBI": HebiDCMotorCfg(
+        joint_names_expr=["HEBI_base_X8_9", "HEBI_elbow_X8_9", "HEBI_shoulder_X8_16",
+                          "HEBI_wrist1_X5_1", "HEBI_wrist2_X5_1", "HEBI_wrist3_X5_1", "HEBI_chopstick_X5_1"],
+        stiffness=0.0,
+        damping=0.0,
+        armature=0.001,
+        friction=0.2,
+        velocity_limit=50,
+        effort_limit=50,
+        p_p=[39.0, 34.00, 64.0, 50.0, 20.0, 20, 10.00],
+        p_d=[0.65, 1.5, 7.9, 0.0, 1.66, 0, 0.50],
+        e_p=[0.100, 0.100, 0.150, 0.250, 0.250, 0.250, 0.250],
+        e_d=[0.0001, 0.0001, 0.0005, 0.001, 0.001, 0.001, 0.001],
+        saturation_effort=[23.3, 44.7632, 23.3, 2.66, 2.66, 2.66, 0.2],
+        maxtorque=[23.3, 44.7632, 23.3, 2.66, 2.66, 2.66, 0.2],
+        speed_24v=[4.4843, 2.3375, 4.4843, 14.12, 14.12, 14.12, 14.12]
+    ),
+}
+
+HEBI_EFFORT_CFG = HEBI_CUSTOM_ARTICULATION.copy()   # type: ignore
+HEBI_EFFORT_CFG.actuators = {
+    "HEBI": EffortMotorCfg(
+        joint_names_expr=["HEBI_base_X8_9", "HEBI_elbow_X8_9", "HEBI_shoulder_X8_16",
+                          "HEBI_wrist1_X5_1", "HEBI_wrist2_X5_1", "HEBI_wrist3_X5_1", "HEBI_chopstick_X5_1"],
+        stiffness=0,
+        damping=0,
+        actuation_limit=[23.3, 44.7632, 23.3, 2.66, 2.66, 2.66, 2.66],
+    ),
 }
 
 pd_stiffness_scalar = 50
 pd_damping_scalar = 50
-HEBI_IDEAL_PD_CFG = HEBI_ORBIT_ARTICULATION.copy()
+HEBI_IDEAL_PD_CFG = HEBI_ORBIT_ARTICULATION.copy()   # type: ignore
 HEBI_IDEAL_PD_CFG.actuators = {
     "X8_9": IdealPDActuatorCfg(
         joint_names_expr=["HEBI_base_X8_9", "HEBI_elbow_X8_9"],
@@ -228,7 +274,7 @@ HEBI_IDEAL_PD_CFG.actuators = {
         armature=0.001,
         friction=0.2,
         velocity_limit=50,
-        effort_limit=10000
+        effort_limit=23.3
     ),
 
     "X8_16": IdealPDActuatorCfg(
@@ -238,102 +284,60 @@ HEBI_IDEAL_PD_CFG.actuators = {
         armature=0.001,
         friction=0.2,
         velocity_limit=50,
-        effort_limit=10000
+        effort_limit=44.7632
     ),
     "X5_1": IdealPDActuatorCfg(
-        joint_names_expr=["HEBI_wrist1_X5_1", "HEBI_wrist2_X5_1", "HEBI_wrist3_X5_1"],
+        joint_names_expr=["HEBI_wrist1_X5_1", "HEBI_wrist2_X5_1", "HEBI_wrist3_X5_1", "HEBI_chopstick_X5_1"],
         stiffness=2.0 * pd_stiffness_scalar,
         damping=0.10 * pd_damping_scalar,
         armature=0.001,
         friction=0.2,
         velocity_limit=50,
-        effort_limit=10000
+        effort_limit=2.66
     ),
-    "HEBI_chopstick_X5_1": ImplicitActuatorCfg(
-        joint_names_expr=["HEBI_chopstick_X5_1"],
-        stiffness=1 * pd_stiffness_scalar,
-        damping=0.1 * pd_damping_scalar,
-        armature=0.01,
-        friction=0.2,
-        velocity_limit=50,
-        effort_limit=10000
-    )
 }
 
-all3_stiffness_scalar = 30
-all3_damping_scalar = 10
-HEBI_ALL3_CFG = HEBI_ORBIT_ARTICULATION.copy()
-HEBI_ALL3_CFG.actuators = {
-    "HEBI_base_X8_9": IdealPDActuatorCfg(
-        joint_names_expr=["HEBI_base_X8_9"],
-        stiffness=3.0 * all3_stiffness_scalar,
-        damping=0.5 * all3_damping_scalar,
+dc_stiffness_scalar = 50
+dc_damping_scalar = 50
+DCMOTOR_CFG = HEBI_ORBIT_ARTICULATION.copy()   # type: ignore
+DCMOTOR_CFG.actuators = {
+    "X8_9": DCMotorCfg(
+        joint_names_expr=["HEBI_base_X8_9", "HEBI_elbow_X8_9"],
+        stiffness=3.0 * dc_stiffness_scalar,
+        damping=0.025 * dc_damping_scalar,
         armature=0.001,
         friction=0.2,
         velocity_limit=50,
-        effort_limit=10000
+        effort_limit=23.3,
+        saturation_effort=23.3
     ),
-    "HEBI_elbow_X8_9": IdealPDActuatorCfg(
-        joint_names_expr=["HEBI_elbow_X8_9"],
-        stiffness=5.5 * all3_stiffness_scalar,
-        damping=0.5 * all3_damping_scalar,
-        armature=0.001,
-        friction=0.2,
-        velocity_limit=50,
-        effort_limit=10000
-    ),
-    "HEBI_shoulder_X8_16": IdealPDActuatorCfg(
+
+    "X8_16": DCMotorCfg(
         joint_names_expr=["HEBI_shoulder_X8_16"],
-        stiffness=7.0 * all3_stiffness_scalar,
-        damping=1.2 * all3_damping_scalar,
+        stiffness=7.0 * dc_stiffness_scalar,
+        damping=0.03 * dc_damping_scalar,
         armature=0.001,
         friction=0.2,
         velocity_limit=50,
-        effort_limit=10000
+        effort_limit=44.7632,
+        saturation_effort=44.7632,
     ),
-    "HEBI_wrist1_X5_1": IdealPDActuatorCfg(
-        joint_names_expr=["HEBI_wrist1_X5_1"],
-        stiffness=7.0 * all3_stiffness_scalar,
-        damping=0.1 * all3_damping_scalar,
+    "X5_1": DCMotorCfg(
+        joint_names_expr=["HEBI_wrist1_X5_1", "HEBI_wrist2_X5_1", "HEBI_wrist3_X5_1", "HEBI_chopstick_X5_1"],
+        stiffness=2.0 * dc_stiffness_scalar,
+        damping=0.10 * dc_damping_scalar,
         armature=0.001,
         friction=0.2,
         velocity_limit=50,
-        effort_limit=10000
+        effort_limit=2.66,
+        saturation_effort=2.66,
     ),
-    "HEBI_wrist2_X5_1": IdealPDActuatorCfg(
-        joint_names_expr=["HEBI_wrist2_X5_1"],
-        stiffness=2.0 * all3_stiffness_scalar,
-        damping=0.01 * all3_damping_scalar,
-        armature=0.1,
-        friction=0.2,
-        velocity_limit=50,
-        effort_limit=10000
-    ),
-    "HEBI_wrist3_X5_1": IdealPDActuatorCfg(
-        joint_names_expr=["HEBI_wrist3_X5_1"],
-        stiffness=3.5 * all3_stiffness_scalar,
-        damping=0.1 * all3_damping_scalar,
-        armature=0.001,
-        friction=0.2,
-        velocity_limit=50,
-        effort_limit=10000
-    ),
-    "HEBI_chopstick_X5_1": IdealPDActuatorCfg(
-        joint_names_expr=["HEBI_chopstick_X5_1"],
-        stiffness=1 * all3_stiffness_scalar,
-        damping=0.1 * all3_damping_scalar,
-        armature=0.01,
-        friction=0.2,
-        velocity_limit=50,
-        effort_limit=10000
-    )
 }
-
 
 '''
 FRAMES
 '''
-marker_cfg = FRAME_MARKER_CFG.copy()
+marker_cfg = FRAME_MARKER_CFG.copy()   # type: ignore
 marker_cfg.markers["frame"].scale = (0.01, 0.01, 0.01)
 marker_cfg.prim_path = "/Visuals/FrameTransformer"
 

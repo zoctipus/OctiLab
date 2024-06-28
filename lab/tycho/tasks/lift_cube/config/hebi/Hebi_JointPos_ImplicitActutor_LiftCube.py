@@ -11,26 +11,26 @@ from omni.isaac.lab.managers import SceneEntityCfg
 from omni.isaac.lab.managers import ObservationGroupCfg as ObsGroup
 from omni.isaac.lab.managers import ObservationTermCfg as ObsTerm
 from omni.isaac.lab.managers import EventTermCfg as EventTerm  # noqa: F401
-from lab.tycho.cfgs.scenes.cube_scene import SceneObjectSceneCfg, SceneCommandsCfg, SceneEventCfg, SceneRewardsCfg, SceneTerminationsCfg
-from octilab.envs import HebiRLTaskEnvCfg
+from lab.cfgs.scenes.cube_scene import SceneObjectSceneCfg, SceneCommandsCfg, SceneEventCfg, SceneRewardsCfg, SceneTerminationsCfg
+from octilab.envs import OctiManagerBasedRLEnvCfg
 import lab.tycho.tasks.lift_cube.mdp as lift_cube_mdp
 ##
 # Pre-defined configs
 ##
 
-from lab.tycho.cfgs.robots.hebi.robot_dynamics import (RobotSceneCfg_HebiPwmMotor,  # noqa: F401
-                                                       RobotSceneCfg_ImplicityActuator,
-                                                       RobotSceneCfg_IdealPD)
+from lab.cfgs.robots.hebi.robot_dynamics import (RobotSceneCfg_HebiStrategy3Actuator,  # noqa: F401
+                                                 RobotSceneCfg_ImplicityActuator,
+                                                 RobotSceneCfg_IdealPD)
 
-from lab.tycho.cfgs.robots.hebi.robot_dynamics import (RobotActionsCfg_HebiJointPosition,  # noqa: F401
-                                                       RobotActionsCfg_HebiIkAbsoluteDls,
-                                                       RobotActionsCfg_HebiIkDeltaDls)
+from lab.cfgs.robots.hebi.robot_dynamics import (RobotActionsCfg_HebiJointPosition,  # noqa: F401
+                                                 RobotActionsCfg_HebiIkAbsoluteDls,
+                                                 RobotActionsCfg_HebiIkDeltaDls)
 
-from lab.tycho.cfgs.robots.hebi.robot_dynamics import RobotObservationsPolicyCfg
-from lab.tycho.cfgs.robots.hebi.robot_dynamics import RobotRewardsCfg
-from lab.tycho.cfgs.robots.hebi.robot_dynamics import RobotRandomizationCfg
-import lab.tycho.cfgs.robots.hebi.robot_dynamics as rd
-from lab.tycho.cfgs.robots.hebi.robot_cfg import FRAME_EE, CAMERA_WRIST, CAMERA_BASE  # noqa: F401
+from lab.cfgs.robots.hebi.robot_dynamics import RobotObservationsPolicyCfg
+from lab.cfgs.robots.hebi.robot_dynamics import RobotRewardsCfg
+from lab.cfgs.robots.hebi.robot_dynamics import RobotRandomizationCfg
+import lab.cfgs.robots.hebi.robot_dynamics as rd
+from lab.cfgs.robots.hebi.robot_cfg import FRAME_EE, CAMERA_WRIST, CAMERA_BASE  # noqa: F401
 
 
 @configclass
@@ -44,7 +44,7 @@ class IdealPDHebi_ObjectSceneCfg(SceneObjectSceneCfg, rd.RobotSceneCfg_IdealPD, 
 
 
 @configclass
-class PwmMotorHebi_ObjectSceneCfg(SceneObjectSceneCfg, rd.RobotSceneCfg_HebiPwmMotor, ObjectSceneCfg):
+class PwmMotorHebi_ObjectSceneCfg(SceneObjectSceneCfg, rd.RobotSceneCfg_HebiStrategy3Actuator, ObjectSceneCfg):
     ee_frame = FRAME_EE
 
 
@@ -143,7 +143,7 @@ class CurriculumCfg:
 
 
 @configclass
-class IdealPDHebi_JointPos_LiftCube_Env(HebiRLTaskEnvCfg):
+class IdealPDHebi_JointPos_LiftCube_Env(OctiManagerBasedRLEnvCfg):
 
     scene: ObjectSceneCfg = IdealPDHebi_ObjectSceneCfg(num_envs=2048, env_spacing=2.5, replicate_physics=False)
     observations: ObservationsCfg = ObservationsCfg()

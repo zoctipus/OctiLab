@@ -3,22 +3,20 @@
 #
 # SPDX-License-Identifier: BSD-3-Clause
 from omni.isaac.lab.utils import configclass
-from omni.isaac.lab.managers import RewardTermCfg as RewTerm
 from omni.isaac.lab.envs import ManagerBasedRLEnvCfg
 # import mdp as tycho_mdp
 import omni.isaac.lab.envs.mdp as orbit_mdp
 from omni.isaac.lab.managers import ObservationGroupCfg as ObsGroup
 from omni.isaac.lab.managers import ObservationTermCfg as ObsTerm
 from dataclasses import MISSING
+
+
 ##
 # Pre-defined configs
 ##
-episode_length = 15.0
-from ... import mdp as track_goal_mdp
-from lab.tycho.cfgs.scenes.empty_scene import SceneObjectSceneCfg, SceneCommandsCfg, SceneEventCfg, SceneRewardsCfg, SceneTerminationsCfg
-import lab.tycho.cfgs.robots.hebi.robot_dynamics as rd
-from lab.tycho.cfgs.robots.hebi.robot_cfg import FRAME_EE
-from lab.tycho.cfgs.robots.hebi.robot_dynamics import RobotRewardsCfg
+import lab.cfgs.robots.leap_hand.robot_dynamics as rd
+from lab.cfgs.scenes.empty_scene import SceneObjectSceneCfg, SceneCommandsCfg, SceneEventCfg, SceneRewardsCfg, SceneTerminationsCfg
+episode_length = 50.0
 
 
 class ObjectSceneCfg():
@@ -26,22 +24,7 @@ class ObjectSceneCfg():
 
 
 @configclass
-class IdealPDHebi_ObjectSceneCfg(SceneObjectSceneCfg, rd.RobotSceneCfg_IdealPD, ObjectSceneCfg):
-    ee_frame = FRAME_EE
-
-
-@configclass
-class PwmMotorHebi_ObjectSceneCfg(SceneObjectSceneCfg, rd.RobotSceneCfg_HebiPwmMotor, ObjectSceneCfg):
-    ee_frame = FRAME_EE
-
-
-@configclass
-class ImplicitMotorHebi_ObjectSceneCfg(SceneObjectSceneCfg, rd.RobotSceneCfg_ImplicityActuator, ObjectSceneCfg):
-    ee_frame = FRAME_EE
-
-
-@configclass
-class ImplicitMotorOriginHebi_ObjectSceneCfg(SceneObjectSceneCfg, rd.RobotSceneCfg_ImplicityActuator_OriginHebi, ObjectSceneCfg):
+class ImplicitMotorLeap_ObjectSceneCfg(SceneObjectSceneCfg, rd.RobotSceneCfg_ImplicityActuator, ObjectSceneCfg):
     pass
 
 
@@ -72,13 +55,26 @@ class ObservationsCfg:
 
 
 @configclass
-class RewardsCfg(SceneRewardsCfg, RobotRewardsCfg):
+class RewardsCfg(SceneRewardsCfg, rd.RobotRewardsCfg):
     """Reward terms for the MDP."""
-    pass
-    ee_frame_goal_tracking = RewTerm(
-        func=track_goal_mdp.ee_frame_goal_distance,
-        params={"std": 0.1, "command_name": "ee_pose"},
-        weight=3.0,)
+
+    # end_effector_position_tracking = RewTerm(
+    #     func=mdp.position_command_error,
+    #     weight=-2,
+    #     params={"asset_cfg": SceneEntityCfg("robot", body_names="static_chop_tip"), "command_name": "ee_pose"},
+    # )
+
+    # end_effector_position_tracking_fine_grained = RewTerm(
+    #     func=mdp.position_command_error_tanh,
+    #     weight=4,
+    #     params={"asset_cfg": SceneEntityCfg("robot", body_names="static_chop_tip"), "std": 0.1, "command_name": "ee_pose"},
+    # )
+
+    # end_effector_orientation_tracking = RewTerm(
+    #     func=mdp.orientation_command_error,
+    #     weight=-2,
+    #     params={"asset_cfg": SceneEntityCfg("robot", body_names="static_chop_tip"), "command_name": "ee_pose"},
+    # )
 
 
 @configclass
@@ -93,13 +89,13 @@ class CommandsCfg(SceneCommandsCfg):
 
     ee_pose = orbit_mdp.UniformPoseCommandCfg(
         asset_name="robot",
-        body_name="end_effector",
-        resampling_time_range=(episode_length, episode_length),
+        body_name="palm_lower",
+        resampling_time_range=(episode_length / 5, episode_length / 5),
         debug_vis=False,
         ranges=orbit_mdp.UniformPoseCommandCfg.Ranges(
             # CAUTION: to use the hebi's ik solver the roll needs to be (0.0, 0.0) for upright vector to be correct
-            # however, for the isaac sim ik solver, the roll needs to be (1.57075, 1.57075)
-            pos_x=(-0.45, -0.15), pos_y=(-0.5, -0.15), pos_z=(0.02, 0.3), roll=(1.57075, 1.57075), pitch=(3.14, 3.14), yaw=(0.5, 0.5)
+            # however, for the isaac lab ik solver, the roll needs to be (1.57075, 1.57075)
+            pos_x=(-0.45, -0.15), pos_y=(-0.5, -0.15), pos_z=(0.02, 0.3), roll=(1.57075, 1.57075), pitch=(3.14, 3.14), yaw=(0.0, 0.5)
         ),
     )
 
@@ -110,7 +106,7 @@ class EventCfg(SceneEventCfg, rd.RobotRandomizationCfg):
 
 
 @configclass
-class TerminationsCfg(SceneTerminationsCfg):
+class TerminationsCfg(SceneTerminationsCfg, rd.RobotTerminationsCfg):
     """Termination terms for the MDP."""
     pass
 
@@ -122,10 +118,10 @@ class CurriculumCfg:
 
 
 @configclass
-class IdealPDHebi_JointPos_GoalTracking_Env(ManagerBasedRLEnvCfg):
+class ImplicitMotorLeap_JointPos_GoalTracking_Env(ManagerBasedRLEnvCfg):
 
     # Scene settings
-    scene: ObjectSceneCfg = IdealPDHebi_ObjectSceneCfg(num_envs=1, env_spacing=2.5, replicate_physics=False)
+    scene: ObjectSceneCfg = ImplicitMotorLeap_ObjectSceneCfg(num_envs=1, env_spacing=2.5, replicate_physics=False)
     # Basic settings
     observations: ObservationsCfg = ObservationsCfg()
     actions: ActionsCfg = MISSING  # type: ignore
@@ -138,10 +134,10 @@ class IdealPDHebi_JointPos_GoalTracking_Env(ManagerBasedRLEnvCfg):
     datas: DataCfg = DataCfg()
 
     def __post_init__(self):
-        self.decimation = 20
+        self.decimation = 1
         self.episode_length_s = episode_length
         # simulation settings
-        self.sim.dt = 0.05 / self.decimation  # Agent: 20Hz, Motor: 500Hz
+        self.sim.dt = 0.02 / self.decimation  # Agent: 20Hz, Motor: 500Hz
         self.sim.physx.min_position_iteration_count = 16
         self.sim.physx.min_velocity_iteration_count = 8
         self.sim.physx.bounce_threshold_velocity = 0.2
@@ -150,20 +146,3 @@ class IdealPDHebi_JointPos_GoalTracking_Env(ManagerBasedRLEnvCfg):
         self.sim.physx.gpu_total_aggregate_pairs_capacity = 16 * 1024
         self.sim.physx.friction_correlation_distance = 0.00625
 
-
-class PwmMotorHebi_JointPos_GoalTracking_Env(IdealPDHebi_JointPos_GoalTracking_Env):
-    def __post_init__(self):
-        super().__post_init__()
-        self.scene: ObjectSceneCfg = PwmMotorHebi_ObjectSceneCfg(num_envs=1, env_spacing=2.5, replicate_physics=False)
-
-
-class ImplicitMotorHebi_JointPos_GoalTracking_Env(IdealPDHebi_JointPos_GoalTracking_Env):
-    def __post_init__(self):
-        super().__post_init__()
-        self.scene: ObjectSceneCfg = ImplicitMotorHebi_ObjectSceneCfg(num_envs=1, env_spacing=2.5, replicate_physics=False)
-
-
-class ImplicitMotorOriginHebi_JointPos_GoalTracking_Env(IdealPDHebi_JointPos_GoalTracking_Env):
-    def __post_init__(self):
-        super().__post_init__()
-        self.scene: ObjectSceneCfg = ImplicitMotorOriginHebi_ObjectSceneCfg(num_envs=1, env_spacing=2.5, replicate_physics=False)

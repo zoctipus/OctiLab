@@ -1,19 +1,27 @@
 import gymnasium as gym
 from octilab.envs.create_env import create_hebi_env
-import lab.tycho.cfgs.robots.hebi.robot_dynamics as rd
-from .Hebi_JointPos_GoalTracking_Env import (ImplicitMotorOriginHebi_JointPos_GoalTracking_Env,
-                                             PwmMotorHebi_JointPos_GoalTracking_Env,
+import lab.cfgs.robots.hebi.robot_dynamics as rd
+from .Hebi_JointPos_GoalTracking_Env import (EffortHebi_JointPos_GoalTracking_Env,
+                                             Strategy3MotorHebi_JointPos_GoalTracking_Env,
                                              IdealPDHebi_JointPos_GoalTracking_Env,
-                                             ImplicitMotorHebi_JointPos_GoalTracking_Env)
+                                             ImplicitMotorHebi_JointPos_GoalTracking_Env,
+                                             Strategy4MotorHebi_JointPos_GoalTracking_Env,
+                                             HebiDCMotorHebi_JointPos_GoalTracking_Env,
+                                             DCMotorHebi_JointPos_GoalTracking_Env)
 from . import agents
 
-base_envs = [PwmMotorHebi_JointPos_GoalTracking_Env, 
+base_envs = [EffortHebi_JointPos_GoalTracking_Env,
+             Strategy3MotorHebi_JointPos_GoalTracking_Env, 
              IdealPDHebi_JointPos_GoalTracking_Env, 
-             ImplicitMotorHebi_JointPos_GoalTracking_Env]
+             ImplicitMotorHebi_JointPos_GoalTracking_Env,
+             Strategy4MotorHebi_JointPos_GoalTracking_Env,
+             HebiDCMotorHebi_JointPos_GoalTracking_Env,
+             DCMotorHebi_JointPos_GoalTracking_Env]
 
 action_classes = [rd.RobotActionsCfg_HebiIkDeltaDls, 
                 rd.RobotActionsCfg_HebiIkAbsoluteDls,
-                rd.RobotActionsCfg_HebiJointPosition]
+                rd.RobotActionsCfg_HebiJointPosition,
+                rd.RobotActionsCfg_HebiJointEffort]
 
 
 # Loop through each configuration and register the environment
@@ -24,7 +32,7 @@ for base_env in base_envs:
         _id = f"{action_class_id}_{base_env_id}_v0".replace("_", "-")
         gym.register(
             id=_id,
-            entry_point="octilab.envs.hebi_rl_task_env:HebiRLTaskEnv",
+            entry_point="octilab.envs.octi_manager_based_rl:OctiManagerBasedRLEnv",
             kwargs={
                 "env_cfg_entry_point": create_hebi_env(
                                             base_env_cfg=base_env,

@@ -31,6 +31,7 @@ from omni.isaac.lab.scene import InteractiveScene  # noqa: E402
 from omni.isaac.lab.sim import SimulationContext  # noqa: E402
 from .clock_scene import SceneObjectSceneCfg  # noqa: E402
 
+
 def run_simulator(sim: sim_utils.SimulationContext, scene: InteractiveScene):
     """Runs the simulation loop."""
     # Extract scene entities

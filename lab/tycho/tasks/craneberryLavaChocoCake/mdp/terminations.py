@@ -5,33 +5,15 @@ from typing import TYPE_CHECKING
 
 
 if TYPE_CHECKING:
-    from octilab.envs.hebi_rl_task_env import HebiRLTaskEnv
+    from octilab.envs import OctiManagerBasedRLEnv
 from octilab.managers.data_manager import History
 """
 MDP terminations.
 """
 
-# def chop_missing(
-#     env: HebiRLTaskEnv,
-#     robot_name:str = "robot",
-#     canberry_name: str = "canberry",
-#     caneberry_offset: list[float] = [0.0, 0.0, 0.0],
-#     fixed_chop_frame_name = "frame_fixed_chop_tip",
-#     free_chop_frame_name = "frame_free_chop_tip",
-# ):
-#     robot: Articulation = env.scene[robot_name]
-#     canberry: RigidObject = env.scene[canberry_name]
-#     fixed_chop_frame = env.scene[fixed_chop_frame_name]
-#     free_chop_frame = env.scene[free_chop_frame_name]
-#     canberry_offset_tensor = torch.tensor(caneberry_offset, device = env.device)
-#     chop_pose = robot.data.joint_pos[:, -1]
-#     canberry_eeframe_distance = tycho_mdp.get_object_eeFrame_distance(canberry, canberry_offset_tensor, fixed_chop_frame, free_chop_frame)
-#     missing_mask = (chop_pose < -0.60) & (canberry_eeframe_distance < 0.035)
-#     return missing_mask
-
 
 def chop_missing(
-    env: HebiRLTaskEnv,
+    env: OctiManagerBasedRLEnv,
     canberry_eeframe_distance_key: str,
     chop_pose_key: str,
 ):
@@ -41,7 +23,7 @@ def chop_missing(
 
 
 def non_moving_abnormalty(
-    env: HebiRLTaskEnv,
+    env: OctiManagerBasedRLEnv,
     end_effector_speed_str: str = "end_effector_speed",
     ee_position_b_str: str = "ee_position_b"
 
@@ -55,7 +37,7 @@ def non_moving_abnormalty(
 
 
 def canberry_dropped(
-    env: HebiRLTaskEnv,
+    env: OctiManagerBasedRLEnv,
     canberry_cake_distance_key : str,
     canberry_eeframe_distance_key: str,
     chop_pose_key: str,
@@ -70,7 +52,7 @@ def canberry_dropped(
     
 
 def success_state(
-    env: HebiRLTaskEnv,
+    env: OctiManagerBasedRLEnv,
     canberry_cake_distance_key : str,
     canberry_eeframe_distance_key: str,
     chop_pose_key: str,
@@ -80,34 +62,3 @@ def success_state(
     chop_pose = env.data_manager.get_active_term("data", chop_pose_key)
 
     return ((canberry_cake_distance < 0.022) & (chop_pose > -0.4) & (canberry_eeframe_distance > 0.05)).view(-1)
-
-
-# def success_state(
-#     env: HebiRLTaskEnv,
-#     robot_name:str = "robot",
-#     canberry_name: str = "canberry",
-#     cake_name: str = "cake",
-#     caneberry_offset: list[float] = [0.0, 0.0, 0.0],
-#     cake_offset: list[float] = [0.0, 0.0, 0.0],
-#     fixed_chop_frame_name = "frame_fixed_chop_tip",
-#     free_chop_frame_name = "frame_free_chop_tip",
-
-# ) -> torch.Tensor:
-#     """Return ture if the RigidBody position reads nan
-#     """
-#     robot: Articulation = env.scene[robot_name]
-#     canberry: RigidObject = env.scene[canberry_name]
-#     cake: RigidObject = env.scene[cake_name]
-#     canberry_offset_tensor = torch.tensor(caneberry_offset, device = env.device)
-#     cake_offset_tensor = torch.tensor(cake_offset, device = env.device)
-#     fixed_chop_frame = env.scene[fixed_chop_frame_name]
-#     free_chop_frame = env.scene[free_chop_frame_name]
-
-#     canberry_eeframe_distance = tycho_mdp.get_object_eeFrame_distance(canberry, canberry_offset_tensor, fixed_chop_frame, free_chop_frame)
-#     chop_pose = robot.data.joint_pos[:, -1]
-#     release_mask = chop_pose > -0.4
-#     canberry_cake_distance = general_mdp.get_body1_body2_distance(canberry, cake, canberry_offset_tensor, cake_offset_tensor)
-#     goal_reach_chop_release_mask = (canberry_cake_distance < 0.022) &\
-#                                    (release_mask) &\
-#                                    (canberry_eeframe_distance > 0.05)
-#     return goal_reach_chop_release_mask

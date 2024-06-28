@@ -1,21 +1,19 @@
-from .Hebi_JointPos_ImplicitActutor_LiftCube import *
-from octilab.envs.create_env import create_hebi_env
 import gymnasium as gym
-import os
+from octilab.envs.create_env import create_hebi_env
+import lab.cfgs.robots.leap_hand.robot_dynamics as rd
+from .LeapHand_JointPos_GoalTracking_Env import (ImplicitMotorLeap_JointPos_GoalTracking_Env,)
 from . import agents
 
+base_envs = [ImplicitMotorLeap_JointPos_GoalTracking_Env]
 
-base_envs = [PwmMotorHebi_JointPos_LiftCube_Env, 
-             IdealPDHebi_JointPos_LiftCube_Env, 
-             ImplicitMotorHebi_JointPos_LiftCube_Env]
+action_classes = [rd.RobotActionsCfg_IkAbsoluteDls,
+                  rd.RobotActionsCfg_LeapIkAbsoluteDls]
 
-action_classes = [rd.RobotActionsCfg_HebiIkDeltaDls, 
-                rd.RobotActionsCfg_HebiIkAbsoluteDls,]
 
 # Loop through each configuration and register the environment
 for base_env in base_envs:
     for action_class in action_classes:
-        action_class_id = action_class.__name__.replace("RobotActionsCfg_Hebi", "")
+        action_class_id = action_class.__name__.replace("RobotActionsCfg_", "")
         base_env_id = base_env.__name__.replace("_Env", "")
         _id = f"{action_class_id}_{base_env_id}_v0".replace("_", "-")
         gym.register(
@@ -29,10 +27,7 @@ for base_env in base_envs:
                 "rsl_rl_cfg_entry_point": agents.rsl_rl_hebi_agent_cfg.Base_PPORunnerCfg,
                 "sb3_cfg_entry_point": f"{agents.__name__}:sb3_sac_cfg.yaml",
                 "d3rlpy_cfg_entry_point": f"{agents.__name__}:d3rlpy_cfg.yaml",
-                "robomimic_bc_cfg_entry_point": os.path.join(agents.__path__[0], "robomimic/bc.json"),  # type: ignore
-                "robomimic_bcq_cfg_entry_point": os.path.join(agents.__path__[0], "robomimic/bcq.json"),  # type: ignore
-                "diversity_skill_entry_point": f"{agents.__name__}:diversity_skill_cfg.yaml",
-                "d3rlpy_cfg_entry_point": f"{agents.__name__}:d3rlpy_cfg.yaml"
             },
             disable_env_checker=True,
         )
+

@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: BSD-3-Clause
 from omni.isaac.lab.utils import configclass
 # from omni.isaac.lab.envs import RLTaskEnvCfg
-from octilab.envs.hebi_rl_task_env import HebiRLTaskEnvCfg
+from octilab.envs import OctiManagerBasedRLEnvCfg
 # import mdp as tycho_mdp
 import omni.isaac.lab.envs.mdp as orbit_mdp
 from omni.isaac.lab.managers import ObservationGroupCfg as ObsGroup
@@ -14,9 +14,9 @@ from dataclasses import MISSING
 ##
 # Pre-defined configs
 ##
-from lab.tycho.cfgs.scenes.clock_scene import SceneObjectSceneCfg, SceneCommandsCfg, SceneEventCfg, SceneRewardsCfg, SceneTerminationsCfg
-import lab.tycho.cfgs.robots.hebi.robot_dynamics as rd
-from lab.tycho.cfgs.robots.hebi.robot_cfg import FRAME_EE, CAMERA_WRIST, CAMERA_BASE  # noqa: F401
+from lab.cfgs.scenes.clock_scene import SceneObjectSceneCfg, SceneCommandsCfg, SceneEventCfg, SceneRewardsCfg, SceneTerminationsCfg
+import lab.cfgs.robots.hebi.robot_dynamics as rd
+from lab.cfgs.robots.hebi.robot_cfg import FRAME_EE, CAMERA_WRIST, CAMERA_BASE  # noqa: F401
 
 
 class ObjectSceneCfg():
@@ -29,7 +29,7 @@ class IdealPDHebi_ObjectSceneCfg(SceneObjectSceneCfg, rd.RobotSceneCfg_IdealPD, 
 
 
 @configclass
-class PwmMotorHebi_ObjectSceneCfg(SceneObjectSceneCfg, rd.RobotSceneCfg_HebiPwmMotor, ObjectSceneCfg):
+class PwmMotorHebi_ObjectSceneCfg(SceneObjectSceneCfg, rd.RobotSceneCfg_HebiStrategy3Actuator, ObjectSceneCfg):
     ee_frame = FRAME_EE
 
 
@@ -98,7 +98,7 @@ class CurriculumCfg:
 
 
 @configclass
-class IdealPDHebi_JointPos_ClockHand_Env(HebiRLTaskEnvCfg):
+class IdealPDHebi_JointPos_ClockHand_Env(OctiManagerBasedRLEnvCfg):
     # Scene settings
     scene: ObjectSceneCfg = IdealPDHebi_ObjectSceneCfg(num_envs=1, env_spacing=2.5, replicate_physics=False)
     # Basic settings

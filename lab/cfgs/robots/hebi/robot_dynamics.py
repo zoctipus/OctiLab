@@ -6,9 +6,8 @@ from omni.isaac.lab.managers import SceneEntityCfg
 from omni.isaac.lab.managers import TerminationTermCfg as DoneTerm
 from omni.isaac.lab.utils import configclass
 from omni.isaac.lab.managers import ObservationTermCfg as ObsTerm
-from math import pi
 import omni.isaac.lab.envs.mdp as orbit_mdp
-import lab.tycho.cfgs.robots.hebi.mdp as robot_mdp
+import lab.cfgs.robots.hebi.mdp as robot_mdp
 import octilab.envs.mdp as tycho_general_mdp
 
 '''
@@ -21,16 +20,14 @@ from omni.isaac.lab.envs.mdp.actions.actions_cfg import (JointPositionActionCfg,
 
 from omni.isaac.lab.controllers.differential_ik_cfg import DifferentialIKControllerCfg
 
-from octilab.envs.mdp.actions.actions_cfg import TychoControllerDifferentialInverseKinematicsActionCfg
-from octilab.controllers.tycho_differential_ik_cfg import TychoDifferentialIKControllerCfg
-from octilab.controllers.tycho_controller_utils.tycho_controller_cfg import TychoControllerCfg
-
 from . import (  # noqa: F401
     HEBI_IMPLICITY_ACTUATOR_CFG,
-    HEBI_PWM_MOTOR_CFG,
+    HEBI_STRATEGY3_CFG,
+    HEBI_STRATEGY4_CFG,
     HEBI_IDEAL_PD_CFG,
-    HEBI_ALL3_CFG,
-    ORIGIN_HEBI_IMPLICITY_ACTUATOR_CFG,
+    HEBI_EFFORT_CFG,
+    HEBI_DCMOTOR_CFG,
+    DCMOTOR_CFG,
     FRAME_FIXED_CHOP_TIP,
     FRAME_FIXED_CHOP_END,
     FRAME_FREE_CHOP_TIP,
@@ -39,7 +36,28 @@ from . import (  # noqa: F401
 
 
 @configclass
-class RobotSceneCfg_HebiPwmMotor:
+class RobotSceneCfg_HebiEffort:
+    robot = HEBI_EFFORT_CFG.replace(prim_path="{ENV_REGEX_NS}/Robot")
+    frame_fixed_chop_tip = FRAME_FIXED_CHOP_TIP
+    frame_free_chop_tip = FRAME_FREE_CHOP_TIP
+
+
+@configclass
+class RobotSceneCfg_HebiDCMotor:
+    robot = HEBI_DCMOTOR_CFG.replace(prim_path="{ENV_REGEX_NS}/Robot")
+    frame_fixed_chop_tip = FRAME_FIXED_CHOP_TIP
+    frame_free_chop_tip = FRAME_FREE_CHOP_TIP
+
+
+@configclass
+class RobotSceneCfg_DCMotor:
+    robot = DCMOTOR_CFG.replace(prim_path="{ENV_REGEX_NS}/Robot")
+    frame_fixed_chop_tip = FRAME_FIXED_CHOP_TIP
+    frame_free_chop_tip = FRAME_FREE_CHOP_TIP
+
+
+@configclass
+class RobotSceneCfg_HebiStrategy3Actuator:
     '''
     **Hebi Pwm Motor requires target joint position** and thus will only work with
     Actions that output desired JointPos, such us IK, JointPositionAction, etc
@@ -48,7 +66,22 @@ class RobotSceneCfg_HebiPwmMotor:
     Hebi Pwm Motor has no stiffness or damping, such values are defined in xml supplied
     by the PwmMotor configuration.
     '''
-    robot = HEBI_PWM_MOTOR_CFG.replace(prim_path="{ENV_REGEX_NS}/Robot")
+    robot = HEBI_STRATEGY3_CFG.replace(prim_path="{ENV_REGEX_NS}/Robot")
+    frame_fixed_chop_tip = FRAME_FIXED_CHOP_TIP
+    frame_free_chop_tip = FRAME_FREE_CHOP_TIP
+
+
+@configclass
+class RobotSceneCfg_HebiStrategy4Actuator:
+    '''
+    **Hebi Pwm Motor requires target joint position** and thus will only work with
+    Actions that output desired JointPos, such us IK, JointPositionAction, etc
+    and will not work with JointEffortAction or JointVelocityAction.
+
+    Hebi Pwm Motor has no stiffness or damping, such values are defined in xml supplied
+    by the PwmMotor configuration.
+    '''
+    robot = HEBI_STRATEGY4_CFG.replace(prim_path="{ENV_REGEX_NS}/Robot")
     frame_fixed_chop_tip = FRAME_FIXED_CHOP_TIP
     frame_free_chop_tip = FRAME_FREE_CHOP_TIP
 
@@ -65,33 +98,12 @@ class RobotSceneCfg_ImplicityActuator:
 
 
 @configclass
-class RobotSceneCfg_ImplicityActuator_OriginHebi:
-    '''
-    HEBI Implicity Actuator is a simple low PD that groups "X8_9", "X8_16", "x5" typed
-    motor into identical PD values.
-    '''
-    robot = ORIGIN_HEBI_IMPLICITY_ACTUATOR_CFG.replace(prim_path="{ENV_REGEX_NS}/Robot")
-
-
-@configclass
 class RobotSceneCfg_IdealPD:
     '''
     HEBI HighPD Actuator is a simple high PD that groups "X8_9", "X8_16", "x5" typed
     motor into identical PD values.
     '''
     robot = HEBI_IDEAL_PD_CFG.replace(prim_path="{ENV_REGEX_NS}/Robot")
-    frame_fixed_chop_tip = FRAME_FIXED_CHOP_TIP
-    frame_free_chop_tip = FRAME_FREE_CHOP_TIP
-
-
-@configclass
-class RobotSceneCfg_All3:
-    '''
-    HEBI All3 Actuator is a exact pd replica defined in PwmMotor's xml file
-    but used in isaac sim internally. This is intended to run Pwm similar
-    motor calculation within orbit, and so is easy for testing and parallelizable
-    '''
-    robot = HEBI_ALL3_CFG.replace(prim_path="{ENV_REGEX_NS}/Robot")
     frame_fixed_chop_tip = FRAME_FIXED_CHOP_TIP
     frame_free_chop_tip = FRAME_FREE_CHOP_TIP
 
@@ -105,31 +117,21 @@ class RobotActionsCfg_HebiJointPosition:
                                          "HEBI_elbow_X8_9",
                                          "HEBI_wrist1_X5_1",
                                          "HEBI_wrist2_X5_1",
-                                         "HEBI_wrist3_X5_1"], scale=1)
-    # chop joint effort too big will cause the env's robot articulation to crush
-    # it will be good what causes it and how to prevent
-    chop_joint_position: JointPositionActionCfg = JointPositionActionCfg(
-        asset_name="robot", joint_names=["HEBI_chopstick_X5_1"], scale=0.5
-    )
+                                         "HEBI_wrist3_X5_1",
+                                         "HEBI_chopstick_X5_1"], scale=1)
 
 
 @configclass
 class RobotActionsCfg_HebiJointEffort:
     """Action specifications for the MDP."""
-    joint_base_position: JointEffortActionCfg = JointEffortActionCfg(
-        asset_name="robot", joint_names=["HEBI_base_X8_9"], scale=3
-    )
-    joint_position: JointEffortActionCfg = JointEffortActionCfg(
-        asset_name="robot", joint_names=["HEBI_shoulder_X8_16",
+    joint_efforts: JointEffortActionCfg = JointEffortActionCfg(
+        asset_name="robot", joint_names=["HEBI_base_X8_9",
+                                         "HEBI_shoulder_X8_16",
                                          "HEBI_elbow_X8_9",
                                          "HEBI_wrist1_X5_1",
                                          "HEBI_wrist2_X5_1",
-                                         "HEBI_wrist3_X5_1"], scale=1
-    )
-    # chop joint effort too big will cause the env's robot articulation to crush
-    # it will be good what causes it and how to prevent
-    chop_joint_position: JointEffortActionCfg = JointEffortActionCfg(
-        asset_name="robot", joint_names=["HEBI_chopstick_X5_1"], scale=0.5
+                                         "HEBI_wrist3_X5_1",
+                                         "HEBI_chopstick_X5_1"], scale=0.1
     )
 
 
@@ -145,7 +147,7 @@ class RobotActionsCfg_HebiIkDeltaDls:
                      "HEBI_wrist3_X5_1"],
         body_name="static_chop_tip",
         controller=DifferentialIKControllerCfg(command_type="pose", use_relative_mode=True, ik_method="dls"),
-        scale=1,
+        scale=0.05,
         body_offset=DifferentialInverseKinematicsActionCfg.OffsetCfg(pos=(0.0, 0.0, 0.0), rot=(1.0, 0.0, 0, 0)),
     )
     finger_joint_pos = BinaryJointPositionActionCfg(
@@ -154,72 +156,6 @@ class RobotActionsCfg_HebiIkDeltaDls:
         open_command_expr={"HEBI_chopstick_X5_1": -0.175},
         close_command_expr={"HEBI_chopstick_X5_1": -0.646},
     )
-
-
-maxtorch = [23.3, 44.7632, 23.3, 2.66, 2.66, 2.66, 2.66]
-speed_24v = [4.4843, 2.3375, 4.4843, 14.12, 14.12, 14.12, 14.12]
-
-
-# @configclass
-# class RobotActionsCfg_HebiCustomIkDelta:
-#     body_joint_pos = TychoControllerDifferentialInverseKinematicsActionCfg(
-#         asset_name="robot",
-#         joint_names=["HEBI_base_X8_9",
-#                      "HEBI_shoulder_X8_16",
-#                      "HEBI_elbow_X8_9",
-#                      "HEBI_wrist1_X5_1",
-#                      "HEBI_wrist2_X5_1",
-#                      "HEBI_wrist3_X5_1",
-#                      "HEBI_chopstick_X5_1"],
-#         body_name="end_effector",
-#         tycho_differential_controller=TychoDifferentialIKControllerCfg(
-#             command_type="pose", use_relative_mode=True, ik_method="dls"
-#         ),
-#         scale=1,
-#         body_offset=TychoControllerDifferentialInverseKinematicsActionCfg.OffsetCfg(
-#             pos=(0.13018, 0.07598, 0.06429),
-#             rot=(0.7070904, -0.7071232, 0, 0)
-#         ),
-#         tycho_controller=TychoControllerCfg(
-#             gain_path="datasets/chopstick-gains-7D-all3.xml",
-#             onlyPositionCtrl=False,
-#             biasprm=[maxtorch, speed_24v])
-#     )
-
-
-# @configclass
-# class RobotActionsCfg_HebiCustomIkAbsolute:
-#     body_joint_pos = TychoControllerDifferentialInverseKinematicsActionCfg(
-#         asset_name="robot",
-#         joint_names=["HEBI_base_X8_9",
-#                      "HEBI_shoulder_X8_16",
-#                      "HEBI_elbow_X8_9",
-#                      "HEBI_wrist1_X5_1",
-#                      "HEBI_wrist2_X5_1",
-#                      "HEBI_wrist3_X5_1",
-#                      "HEBI_chopstick_X5_1"],
-#         body_name="end_effector",
-#         tycho_differential_controller=TychoDifferentialIKControllerCfg(
-#             command_type="pose",
-#             use_relative_mode=False,
-#             ik_method="dls",
-#             operational_ee_range=[[-0.73, -0.6, 0, -1, -1, -1, -1, -0.6], [0.2, 0, 0.35, 1, 1, 1, 1, -0.2]]
-#         ),
-#         scale=1,
-#         body_offset=TychoControllerDifferentialInverseKinematicsActionCfg.OffsetCfg(
-#             pos=(0.13018, 0.07598, 0.06429), rot=(0.7070904, -0.7071232, 0, 0)
-#         ),
-#         tycho_controller=TychoControllerCfg(
-#             gain_path="datasets/chopstick-gains-7D-all3.xml",
-#             onlyPositionCtrl=False,
-#             biasprm=[maxtorch, speed_24v])
-#     )
-#         finger_joint_pos = BinaryJointPositionActionCfg(
-#                 asset_name="robot",
-#                 joint_names=["HEBI_chopstick_X5_1"],
-#                 open_command_expr={"HEBI_chopstick_X5_1": -0.175},
-#                 close_command_expr={"HEBI_chopstick_X5_1": -0.646},
-#             )
 
 
 @configclass
@@ -269,8 +205,8 @@ class RobotActionsCfg_OriginHebiIkAbsoluteDls:
     finger_joint_pos = BinaryJointPositionActionCfg(
         asset_name="robot",
         joint_names=["HEBI_chopstick_actuator_X5_1"],
-        open_command_expr={"HEBI_chopstick_actuator_X5_1": -0.175},
-        close_command_expr={"HEBI_chopstick_actuator_X5_1": -0.646},
+        open_command_expr={"HEBI_chopstick_actuator_X5_1": -0.3},
+        close_command_expr={"HEBI_chopstick_actuator_X5_1": -0.5},
     )
 
 
@@ -310,7 +246,7 @@ ROBOT RANDOMIZATIONS CFG
 class RobotRandomizationCfg:
     """Configuration for randomization."""
     reset_robot = EventTerm(
-        func=tycho_general_mdp.reset_tycho_to_default,
+        func=tycho_general_mdp.reset_robot_to_default,
         params={"robot_cfg": SceneEntityCfg("robot")},
         mode="reset")
 
@@ -362,6 +298,6 @@ class RobotTerminationsCfg:
         func=tycho_general_mdp.invalid_state, params={"asset_cfg": SceneEntityCfg("robot")}
     )
 
-    robot_extremely_bad_posture = DoneTerm(
-        func=robot_mdp.terminate_extremely_bad_posture, params={"robot_cfg": SceneEntityCfg("robot")}
-    )
+    # robot_extremely_bad_posture = DoneTerm(
+    #     func=robot_mdp.terminate_extremely_bad_posture, params={"robot_cfg": SceneEntityCfg("robot")}
+    # )

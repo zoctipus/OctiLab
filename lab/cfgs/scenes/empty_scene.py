@@ -1,6 +1,7 @@
 from __future__ import annotations
 import omni.isaac.lab.sim as sim_utils
 from omni.isaac.lab.assets import AssetBaseCfg
+from omni.isaac.lab.assets import AssetBaseCfg, RigidObjectCfg
 from omni.isaac.lab.managers import TerminationTermCfg as DoneTerm
 from omni.isaac.lab.scene import InteractiveSceneCfg
 from omni.isaac.lab.utils import configclass
@@ -18,7 +19,11 @@ marker_cfg.prim_path = "/Visuals/RopeFrameTransformer"
 class SceneObjectSceneCfg(InteractiveSceneCfg):
     """Configuration for an empty scene"""
     # ground plane
-    ground = AssetBaseCfg(prim_path="/World/defaultGroundPlane", spawn=sim_utils.GroundPlaneCfg())
+    plane = AssetBaseCfg(
+        prim_path="/World/GroundPlane",
+        init_state=AssetBaseCfg.InitialStateCfg(pos=(0, 0, 0)),
+        spawn=sim_utils.GroundPlaneCfg(),
+    )
     # lights
     dome_light = AssetBaseCfg(
         prim_path="/World/Light", spawn=sim_utils.DomeLightCfg(intensity=1500.0, color=(0.75, 0.75, 0.75))

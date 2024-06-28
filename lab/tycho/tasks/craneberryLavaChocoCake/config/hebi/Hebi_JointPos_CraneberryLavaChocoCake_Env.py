@@ -5,7 +5,7 @@
 from omni.isaac.lab.utils import configclass
 from omni.isaac.lab.managers import RewardTermCfg as RewTerm
 # from omni.isaac.lab.envs import RLTaskEnvCfg
-from octilab.envs.hebi_rl_task_env import HebiRLTaskEnvCfg
+from octilab.envs import OctiManagerBasedRLEnvCfg
 # import mdp as tycho_mdp
 from omni.isaac.lab.managers import CurriculumTermCfg as CurrTerm
 import omni.isaac.lab.envs.mdp as orbit_mdp
@@ -20,10 +20,10 @@ from dataclasses import MISSING
 # Pre-defined configs
 ##
 from ... import mdp as task_mdp
-from lab.tycho.cfgs.scenes.craneberryLavaChocoCake_scene import SceneObjectSceneCfg, SceneCommandsCfg, SceneEventCfg, SceneRewardsCfg, SceneTerminationsCfg
-import lab.tycho.cfgs.robots.hebi.mdp as hebi_mdp
-import lab.tycho.cfgs.robots.hebi.robot_dynamics as rd
-from lab.tycho.cfgs.robots.hebi.robot_cfg import FRAME_EE, CAMERA_WRIST, CAMERA_BASE  # noqa: F401
+from lab.cfgs.scenes.craneberryLavaChocoCake_scene import SceneObjectSceneCfg, SceneCommandsCfg, SceneEventCfg, SceneRewardsCfg, SceneTerminationsCfg
+import lab.cfgs.robots.hebi.mdp as hebi_mdp
+import lab.cfgs.robots.hebi.robot_dynamics as rd
+from lab.cfgs.robots.hebi.robot_cfg import FRAME_EE, CAMERA_WRIST, CAMERA_BASE  # noqa: F401
 
 
 @configclass
@@ -37,7 +37,7 @@ class IdealPDHebi_ObjectSceneCfg(SceneObjectSceneCfg, rd.RobotSceneCfg_IdealPD, 
 
 
 @configclass
-class PwmMotorHebi_ObjectSceneCfg(SceneObjectSceneCfg, rd.RobotSceneCfg_HebiPwmMotor, ObjectSceneCfg):
+class PwmMotorHebi_ObjectSceneCfg(SceneObjectSceneCfg, rd.RobotSceneCfg_HebiStrategy3Actuator, ObjectSceneCfg):
     ee_frame = FRAME_EE
 
 
@@ -241,7 +241,7 @@ class CurriculumCfg:
 
 
 @configclass
-class IdealPDHebi_JointPos_CraneberryLavaChocoCake_Env(HebiRLTaskEnvCfg):
+class IdealPDHebi_JointPos_CraneberryLavaChocoCake_Env(OctiManagerBasedRLEnvCfg):
     # Scene settings
     scene: ObjectSceneCfg = IdealPDHebi_ObjectSceneCfg(num_envs=1, env_spacing=2.5, replicate_physics=False)
     # Basic settings

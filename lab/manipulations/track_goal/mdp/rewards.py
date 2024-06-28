@@ -39,4 +39,5 @@ def ee_frame_goal_distance(
     # distance of the end-effector to the object: (num_envs,)
     distance = torch.norm(des_pos_w - tip_mid_pos_w, dim=1)
     # rewarded if the object is lifted above the threshold
+    print(1 - torch.tanh(distance / std))
     return (1 - torch.tanh(distance / std))
