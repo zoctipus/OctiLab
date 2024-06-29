@@ -14,7 +14,7 @@ Changed
   into :func:`workflows.teleoperation.teleop_se3_agent_absolute.main` 
 
 
-0.1.2 (2024-06-27)
+0.1.1 (2024-06-27)
 ~~~~~~~~~~~~~~~~~~
 
 Added

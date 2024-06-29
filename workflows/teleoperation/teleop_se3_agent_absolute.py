@@ -76,7 +76,7 @@ def pre_process_glove_actions(absolute_pose: torch.Tensor, placeholder_command: 
     ).repeat(len(absolute_pose), 1)
     absolute_pose[:, 3:] = quat_mul(absolute_pose[:, 3:], rot_delta_quat)
     absolute_pose[:, 0] = -absolute_pose[:, 0]
-    return absolute_pose[[11, 6, 5, 7, 8], :3].reshape(1, -1)
+    return absolute_pose[[6, 8, 7, 9, 10], :3].reshape(1, -1)
 
 
 def main():
@@ -87,7 +87,7 @@ def main():
     )
 
     # modify configuration
-    env_cfg.terminations.time_out = None
+    env_cfg.terminations.time_out = None  # type: ignore
     # create environment
     env = gym.make(args_cli.task, cfg=env_cfg)
     # check environment name (for reach , we don't allow the gripper)
