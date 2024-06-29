@@ -48,7 +48,7 @@ from omni.isaac.lab_tasks.utils.data_collector import RobomimicDataCollector
 from omni.isaac.lab_tasks.utils.parse_cfg import parse_env_cfg, load_cfg_from_registry
 import tasks
 from omni.isaac.lab.utils.math import compute_pose_error, axis_angle_from_quat
-from lab.tycho.tasks.craneberryLavaChocoCake.mdp.events import record_state_configuration
+fromext.envs.envs.tasks.craneberryLavaChocoCake.mdp.events import record_state_configuration
 def main():
     """Collect demonstrations from the environment using teleop interfaces."""
     # assert (

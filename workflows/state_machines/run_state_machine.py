@@ -41,7 +41,7 @@ import tasks  # noqa: F401
 from omni.isaac.lab_tasks.manager_based.manipulation.cabinet.cabinet_env_cfg import CabinetEnvCfg
 from omni.isaac.lab_tasks.utils.parse_cfg import load_cfg_from_registry, parse_env_cfg
 from omni.isaac.lab.utils.math import axis_angle_from_quat, compute_pose_error, euler_xyz_from_quat
-from lab.tycho.tasks.craneberryLavaChocoCake.config.hebi.state_machines.cranberry_on_cake import CranberryDecoratorSm
+fromext.envs.envs.tasks.craneberryLavaChocoCake.config.hebi.state_machines.cranberry_on_cake import CranberryDecoratorSm
 
 
 def main():

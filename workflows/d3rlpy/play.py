@@ -45,7 +45,7 @@ import traceback
 
 import carb
 
-import lab.tycho.cfgs
+import ext.envs.cfgs
 import omni.isaac.contrib_tasks  # noqa: F401
 import omni.isaac.lab_tasks  # noqa: F401
 import math
@@ -54,7 +54,7 @@ from omni.isaac.lab_tasks.utils import load_cfg_from_registry, parse_env_cfg, ge
 from workflows.d3rlpy.d3rlpy_wrapper import D3rlpyWrapper
 
 
-class D3Agent():
+class D3Agent:
     def __init__(self, policy, device):
         self.policy = policy
         self.device = device
@@ -62,13 +62,15 @@ class D3Agent():
     def load(self, model_folder, device):
         # load is handled at init
         pass
+
     # For 1-batch query only!
     def predict(self, sample):
 
         with torch.no_grad():
-            input = torch.from_numpy(sample[0]).float().unsqueeze(0).to('cuda:0')
-            at = self.policy(input)[0].to('cpu').detach().numpy()
+            input = torch.from_numpy(sample[0]).float().unsqueeze(0).to("cuda:0")
+            at = self.policy(input)[0].to("cpu").detach().numpy()
         return at
+
 
 def main():
     """Play with stable-baselines agent."""
@@ -85,7 +87,7 @@ def main():
     log_root_path = os.path.abspath(log_root_path)
 
     env.seed(seed=agent_cfg["seed"])
-    
+
     # check checkpoint is valid
     if args_cli.checkpoint is None:
         if args_cli.use_last_checkpoint:
@@ -96,7 +98,7 @@ def main():
     else:
         checkpoint_path = args_cli.checkpoint
     # create agent from stable baselines
-        
+
     if checkpoint_path is not None:
         policy = torch.jit.load(checkpoint_path)
         policy.to(env.device)
@@ -129,5 +131,3 @@ if __name__ == "__main__":
     finally:
         # close sim app
         simulation_app.close()
-
-

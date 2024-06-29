@@ -25,7 +25,9 @@ parser.add_argument(
 parser.add_argument("--num_envs", type=int, default=None, help="Number of environments to simulate.")
 parser.add_argument("--task", type=str, default=None, help="Name of the task.")
 parser.add_argument("--seed", type=int, default=None, help="Seed used for the environment")
-parser.add_argument("--buffer_loading_path", type=str, default=None, help="adding demostration experience to boost learning")
+parser.add_argument(
+    "--buffer_loading_path", type=str, default=None, help="adding demostration experience to boost learning"
+)
 parser.add_argument("--checkpoint", type=str, default=None, help="loading the checkpoint")
 # append AppLauncher cli args
 AppLauncher.add_app_launcher_args(parser)
@@ -48,7 +50,7 @@ from stable_baselines3.common.callbacks import CheckpointCallback
 from omni.isaac.lab.utils.dict import print_dict
 from omni.isaac.lab.utils.io import dump_pickle, dump_yaml
 
-import lab.tycho.cfgs
+import ext.envs.cfgs
 import omni.isaac.contrib_tasks  # noqa: F401
 import omni.isaac.lab_tasks  # noqa: F401
 from omni.isaac.lab_tasks.utils import load_cfg_from_registry, parse_env_cfg
@@ -63,23 +65,29 @@ from workflows.diversity_skills.diversity_skill_wrapper import DiversitySkillWra
 from workflows.diversity_skills.Brain.vec_agent_os import DSACAgent
 from workflows.diversity_skills.Common import Logger
 
+
 def set_seed(seed):
     seed = int(seed)
     import random
+
     random.seed(seed)
     np.random.seed(seed)
-    import torch;
+    import torch
+
     torch.manual_seed(seed)
+
 
 def concat_state_latent(s, z_, n):
     z_one_hot = np.zeros(n)
     z_one_hot[z_] = 1
     return np.concatenate([s, z_one_hot])
 
+
 def concat_state_latent_batch(s, z_, n):
-    z_one_hot = torch.zeros((s.shape[0], n), device = s.device)
+    z_one_hot = torch.zeros((s.shape[0], n), device=s.device)
     z_one_hot[:, z_] = 1
     return torch.cat([s, z_one_hot], axis=1)
+
 
 def main():
     """Train with Diversity Skill agent."""
@@ -110,9 +118,9 @@ def main():
         print("[INFO] Recording videos during training.")
         print_dict(video_kwargs, nesting=4)
         env = gym.wrappers.RecordVideo(env, **video_kwargs)
-    
+
     env = DiversitySkillWrapper(env, [-1, 1])
-    
+
     set_seed(agent_cfg["seed"])
     env.seed(agent_cfg["seed"])
 
@@ -121,26 +129,24 @@ def main():
     n_actions = env.action_space.shape[1:]
     action_bounds = [env.action_space.low[1:], env.action_space.high[1:]]
 
-    agent_cfg.update({
-                    "n_envs": n_envs,
-                    "n_states": n_states,
-                    "n_actions": n_actions,
-                    "action_bounds": action_bounds})
+    agent_cfg.update({"n_envs": n_envs, "n_states": n_states, "n_actions": n_actions, "action_bounds": action_bounds})
     print("agent_cfg:", agent_cfg)
 
     p_z = np.full(agent_cfg["n_skills"], 1 / agent_cfg["n_skills"])
-    agent = DSACAgent(p_z, agent_cfg, replay_buffer_device="cuda:0", replay_buffer_loading_path=args_cli.buffer_loading_path)
+    agent = DSACAgent(
+        p_z, agent_cfg, replay_buffer_device="cuda:0", replay_buffer_loading_path=args_cli.buffer_loading_path
+    )
     logger = Logger(agent, agent_cfg, False, device="cuda")
 
     if agent_cfg["datafile"]:
-        with open(agent_cfg["datafile"], 'rb') as f:
+        with open(agent_cfg["datafile"], "rb") as f:
             episodes = np.load(f, allow_pickle=True)
             for episode in episodes:
                 z = np.random.choice(agent_cfg["n_skills"], p=p_z)
                 obs, act, rew, done = episode["obs"], episode["act"], episode["rew"], episode["done"]
                 obs_z = concat_state_latent_batch(obs, z, agent_cfg["n_skills"])
                 for t in range(len(obs) - 1):
-                    agent.vec_store(obs_z[t], z, done[t], act[t], obs_z[t+1], rew[t])
+                    agent.vec_store(obs_z[t], z, done[t], act[t], obs_z[t + 1], rew[t])
     logger.load_weights(model_path=args_cli.checkpoint, load_replay_buffer=False)
     agent.logger = logger
 
@@ -159,7 +165,7 @@ def main():
 
     # close the simulator
     env.close()
-        
+
 
 if __name__ == "__main__":
     try:
@@ -172,4 +178,3 @@ if __name__ == "__main__":
     finally:
         # close sim app
         simulation_app.close()
-

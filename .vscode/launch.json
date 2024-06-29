@@ -13,7 +13,6 @@
             "port": 3000,
             "host": "localhost"
         },
-
         // For standalone script execution
         {
             "name": "Python: Current File",
@@ -48,8 +47,8 @@
             "name": "Python: Teleoperation",
             "type": "debugpy",
             "request": "launch",
-            "args" : ["--task", "LeapIkAbsoluteDls-ImplicitMotorLeap-JointPos-GoalTracking-v0", "--num_envs", "1", "--device", "rokoko_smartglove"],
-            "program": "${workspaceFolder}/workflows/teleoperation/teleop_se3_agent_absolute_leap.py",
+            "args" : ["--task", "MCIkAbsoluteDls-ImplicitMotorLeap-JointPos-GoalTracking-v0", "--num_envs", "1", "--device", "rokoko_smartglove"],
+            "program": "${workspaceFolder}/workflows/teleoperation/teleop_se3_agent_absolute.py",
             "console": "integratedTerminal",
             "envFile": "${workspaceFolder}/.vscode/.python.env",
         },

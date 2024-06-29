@@ -16,6 +16,7 @@ from omni.isaac.lab.app import AppLauncher
 
 # local imports
 import cli_args  # isort: skip
+
 # add argparse arguments
 parser = argparse.ArgumentParser(description="Train an RL agent with RSL-RL.")
 parser.add_argument("--cpu", action="store_true", default=False, help="Use CPU pipeline.")
@@ -43,7 +44,8 @@ import traceback
 import carb
 from rsl_rl.runners import OnPolicyRunner
 import omni.isaac.lab_tasks  # noqa: F401
-import lab.tycho.tasks  # noqa: F401
+
+import ext.envs.envs.tasks  # noqa: F401
 from omni.isaac.lab_tasks.utils import get_checkpoint_path, parse_env_cfg
 from omni.isaac.lab_tasks.utils.wrappers.rsl_rl import (
     RslRlOnPolicyRunnerCfg,

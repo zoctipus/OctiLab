@@ -39,7 +39,8 @@ import carb
 from omni.isaac.lab.devices import Se3Gamepad, Se3SpaceMouse
 from octilab.devices.se3_keyboard import Se3KeyboardDelta
 import omni.isaac.lab_tasks  # noqa: F401
-import lab.tycho.tasks  # noqa: F401
+
+import ext.envs.envs.tasks  # noqa: F401
 from omni.isaac.lab_tasks.utils import parse_env_cfg
 from omni.isaac.lab.utils.math import axis_angle_from_quat, quat_from_angle_axis
 

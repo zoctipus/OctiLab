@@ -8,6 +8,7 @@
 """Launch Isaac Sim Simulator first."""
 import argparse
 from omni.isaac.lab.app import AppLauncher
+
 # local imports
 import cli_args  # isort: skip
 
@@ -48,10 +49,12 @@ from omni.isaac.lab.utils.dict import print_dict
 from omni.isaac.lab.utils.io import dump_pickle, dump_yaml
 
 import omni.isaac.lab_tasks  # noqa: F401
-import lab.tycho.tasks  # noqa: F401
+
+import ext.envs.envs.tasks  # noqa: F401
 from omni.isaac.lab_tasks.utils import get_checkpoint_path, parse_env_cfg
 from omni.isaac.lab_tasks.utils.wrappers.rsl_rl import RslRlOnPolicyRunnerCfg
 import rsl_rl_wrapper
+
 torch.backends.cuda.matmul.allow_tf32 = True
 torch.backends.cudnn.allow_tf32 = True
 torch.backends.cudnn.deterministic = False

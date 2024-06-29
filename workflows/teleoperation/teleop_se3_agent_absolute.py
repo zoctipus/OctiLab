@@ -36,11 +36,13 @@ import gymnasium as gym
 import torch
 import carb
 from omni.isaac.lab.devices import Se3Gamepad, Se3SpaceMouse
-from octilab.devices.se3_keyboard import Se3KeyboardAbsolute
+from octilab.devices import Se3KeyboardAbsolute, Rokoko_Glove
 import omni.isaac.lab_tasks  # noqa: F401
-import lab.tycho.tasks  # noqa: F401
-import lab.manipulations  # noqa: F401
+
+import ext.envs.envs.tasks  # noqa: F401
+import ext.envs.envs.tasks.manipulations  # noqa: F401
 from omni.isaac.lab_tasks.utils import parse_env_cfg
+from omni.isaac.lab.utils.math import quat_mul, quat_from_angle_axis
 
 
 def pre_process_actions(delta_pose: torch.Tensor, gripper_command: bool) -> torch.Tensor:
@@ -57,6 +59,24 @@ def pre_process_actions(delta_pose: torch.Tensor, gripper_command: bool) -> torc
         gripper_vel[:] = -1.0 if gripper_command else 1.0
         # compute actions
         return torch.concat([d_pose, gripper_vel], dim=1)
+
+
+def pre_process_glove_actions(absolute_pose: torch.Tensor, placeholder_command: bool) -> torch.Tensor:
+    device = absolute_pose.device
+    absolute_pose[:, 0] = -absolute_pose[:, 0]
+    absolute_pose[:, 3:] = absolute_pose[:, [6, 3, 4, 5]]
+    absolute_pose[:, :3] = absolute_pose[:, [0, 2, 1]]
+    absolute_pose[:, 2] += 0.5
+    rot_actions = torch.tensor([[0.0, 0.0, 1.57]], device=device)
+    angle: torch.Tensor = torch.linalg.vector_norm(rot_actions, dim=1)
+    axis = rot_actions / angle.unsqueeze(-1)
+    identity_quat = torch.tensor([1.0, 0.0, 0.0, 0.0], device=device)
+    rot_delta_quat = torch.where(
+        angle.unsqueeze(-1).repeat(1, 4) > 1.0e-6, quat_from_angle_axis(angle, axis), identity_quat
+    ).repeat(len(absolute_pose), 1)
+    absolute_pose[:, 3:] = quat_mul(absolute_pose[:, 3:], rot_delta_quat)
+    absolute_pose[:, 0] = -absolute_pose[:, 0]
+    return absolute_pose[[11, 6, 5, 7, 8], :3].reshape(1, -1)
 
 
 def main():
@@ -81,14 +101,22 @@ def main():
         teleop_interface = Se3KeyboardAbsolute(
             pos_sensitivity=0.003 * args_cli.sensitivity, rot_sensitivity=0.01 * args_cli.sensitivity
         )
+        def preprocess_func(x): return pre_process_actions(*x)  # noqa: E704
     elif args_cli.device.lower() == "spacemouse":
         teleop_interface = Se3SpaceMouse(
             pos_sensitivity=0.05 * args_cli.sensitivity, rot_sensitivity=0.01 * args_cli.sensitivity
         )
+        def preprocess_func(x): return pre_process_actions(*x)  # noqa: E704
     elif args_cli.device.lower() == "gamepad":
         teleop_interface = Se3Gamepad(
             pos_sensitivity=0.1 * args_cli.sensitivity, rot_sensitivity=0.1 * args_cli.sensitivity
         )
+        def preprocess_func(x): return pre_process_actions(*x)  # noqa: E704
+    elif args_cli.device.lower() == "rokoko_smartglove":
+        teleop_interface = Rokoko_Glove(
+            pos_sensitivity=0.1 * args_cli.sensitivity, rot_sensitivity=0.1 * args_cli.sensitivity
+        )
+        def preprocess_func(x): return pre_process_glove_actions(*x)  # noqa: E704
     else:
         raise ValueError(f"Invalid device interface '{args_cli.device}'. Supported: 'keyboard', 'spacemouse'.")
     # add teleoperation key for env reset
@@ -104,8 +132,8 @@ def main():
         # run everything in inference mode
         with torch.inference_mode():
             # get keyboard command
-            absolute_pose, gripper_command = teleop_interface.advance()
-            actions_clone = pre_process_actions(absolute_pose, gripper_command)
+            teleop_output = teleop_interface.advance()
+            actions_clone = preprocess_func(teleop_output)
             # print(actions_clone)
             env.step(actions_clone)
     # close the simulator
