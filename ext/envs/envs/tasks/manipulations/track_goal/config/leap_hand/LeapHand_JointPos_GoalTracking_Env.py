@@ -151,10 +151,10 @@ class ImplicitMotorLeap_JointPos_GoalTracking_Env(ManagerBasedRLEnvCfg):
     datas: DataCfg = DataCfg()
 
     def __post_init__(self):
-        self.decimation = 1
+        self.decimation = 2
         self.episode_length_s = episode_length
         # simulation settings
-        self.sim.dt = 0.02 / self.decimation  # Agent: 20Hz, Motor: 500Hz
+        self.sim.dt = 0.05 / self.decimation  # Agent: 20Hz, Motor: 500Hz
         self.sim.physx.min_position_iteration_count = 16
         self.sim.physx.min_velocity_iteration_count = 8
         self.sim.physx.bounce_threshold_velocity = 0.2

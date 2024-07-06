@@ -1,6 +1,47 @@
 Changelog
 ---------
 
+0.1.5 (2024-07-06)
+~~~~~~~~~~~~~~~~~~
+
+
+Added
+^^^^^
+
+* Added experiments run script :file:`workflows.experiments.actuator_experiments.py`
+* Added experiments run script :file:`workflows.experiments.agent_update_frequency_experiments.py` 
+* Added experiments run script :file:`workflows.experiments.decimation_experiments.py`
+* Added experiments :file:`envs.tasks.manipulations.track_goal.config.hebi.agent_update_rate_experiments.py`
+* Added experiments :file:`envs.tasks.manipulations.track_goal.config.hebi.decimation_experiments.py`
+* Added experiments :file:`envs.tasks.manipulations.track_goal.config.hebi.strategy3_scale_experiments.py`
+* Modified :file:`envs.tasks.manipulations.track_goal.config.hebi.agents.rsl_rl_agent_cfg`, and 
+  :file:`envs.tasks.manipulations.track_goal.config.hebi.__init__` with logging name consistent to experiments 
+
+
+0.1.4 (2024-07-05)
+~~~~~~~~~~~~~~~~~~
+
+Changed
+^^^^^^^
+
+* :const:`ext.envs.cfgs.robots.hebi.robot_cfg.HEBI_STRATEGY3_CFG`
+  :const:`ext.envs.cfgs.robots.hebi.robot_cfg.HEBI_STRATEGY4_CFG`
+  changed from manually editing scaling factor to cfg specifying scaling factor. 
+* :const:`ext.envs.cfgs.robots.hebi.robot_cfg.robot_dynamic`
+* :func:`workflows.teleoperation.teleop_se3_agent_absolute.main` added visualization for full gloves data
+
+0.1.3 (2024-06-29)
+~~~~~~~~~~~~~~~~~~
+
+Changed
+^^^^^^^
+
+* updated :func:`workflows.teleoperation.teleop_se3_agent_absolute.main` gloves device to match updated
+  requirement needed for rokoko gloves. New version can define port usage, output parts
+
+
+
+
 0.1.2 (2024-06-28)
 ~~~~~~~~~~~~~~~~~~
 

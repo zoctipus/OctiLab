@@ -77,7 +77,8 @@ class RobotActionsCfg_MCIkAbsoluteDls:
     index_finger = MultiConstraintsDifferentialInverseKinematicsActionCfg(
         asset_name="robot",
         joint_names=["w.*", "j.*"],
-        body_name=["wrist", "fingertip", "thumb_fingertip", "fingertip_2", "fingertip_3"],
+        # body_name=["wrist", "fingertip", "thumb_fingertip", "fingertip_2", "fingertip_3"],
+        body_name=["wrist", "thumb_fingertip", "tip", "tip_2", "tip_3"],
         controller=MultiConstraintDifferentialIKControllerCfg(command_type="position", use_relative_mode=False, ik_method="dls"),
         scale=1,
         body_offset=MultiConstraintsDifferentialInverseKinematicsActionCfg.OffsetCfg(pos=(0.0, 0.0, 0.0), rot=(1.0, 0.0, 0, 0)),

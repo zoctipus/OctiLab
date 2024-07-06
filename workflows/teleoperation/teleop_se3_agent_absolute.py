@@ -38,12 +38,14 @@ import carb
 from omni.isaac.lab.devices import Se3Gamepad, Se3SpaceMouse
 from octilab.devices import Se3KeyboardAbsolute, Rokoko_Glove
 import omni.isaac.lab_tasks  # noqa: F401
-
 import ext.envs.envs.tasks  # noqa: F401
 import ext.envs.envs.tasks.manipulations  # noqa: F401
 from omni.isaac.lab_tasks.utils import parse_env_cfg
 from omni.isaac.lab.utils.math import quat_mul, quat_from_angle_axis
 
+
+from omni.isaac.lab.markers.config import FRAME_MARKER_CFG
+from omni.isaac.lab.markers import VisualizationMarkers
 
 def pre_process_actions(delta_pose: torch.Tensor, gripper_command: bool) -> torch.Tensor:
     """Pre-process actions for the environment."""
@@ -63,7 +65,6 @@ def pre_process_actions(delta_pose: torch.Tensor, gripper_command: bool) -> torc
 
 def pre_process_glove_actions(absolute_pose: torch.Tensor, placeholder_command: bool) -> torch.Tensor:
     device = absolute_pose.device
-    absolute_pose[:, 0] = -absolute_pose[:, 0]
     absolute_pose[:, 3:] = absolute_pose[:, [6, 3, 4, 5]]
     absolute_pose[:, :3] = absolute_pose[:, [0, 2, 1]]
     absolute_pose[:, 2] += 0.5
@@ -75,8 +76,7 @@ def pre_process_glove_actions(absolute_pose: torch.Tensor, placeholder_command: 
         angle.unsqueeze(-1).repeat(1, 4) > 1.0e-6, quat_from_angle_axis(angle, axis), identity_quat
     ).repeat(len(absolute_pose), 1)
     absolute_pose[:, 3:] = quat_mul(absolute_pose[:, 3:], rot_delta_quat)
-    absolute_pose[:, 0] = -absolute_pose[:, 0]
-    return absolute_pose[[6, 8, 7, 9, 10], :3].reshape(1, -1)
+    return absolute_pose[:, :3].reshape(1, -1)
 
 
 def main():
@@ -113,17 +113,19 @@ def main():
         )
         def preprocess_func(x): return pre_process_actions(*x)  # noqa: E704
     elif args_cli.device.lower() == "rokoko_smartglove":
-        teleop_interface = Rokoko_Glove(
-            pos_sensitivity=0.1 * args_cli.sensitivity, rot_sensitivity=0.1 * args_cli.sensitivity
-        )
+        teleop_interface = Rokoko_Glove(UDP_IP="0.0.0.0", UDP_PORT=14043, scale=1.3)
         def preprocess_func(x): return pre_process_glove_actions(*x)  # noqa: E704
     else:
-        raise ValueError(f"Invalid device interface '{args_cli.device}'. Supported: 'keyboard', 'spacemouse'.")
+        raise ValueError(f"Invalid device interface '{args_cli.device}'.\
+            Supported: 'keyboard', 'spacemouse', 'rokoko_smartgloves'.")
     # add teleoperation key for env reset
     teleop_interface.add_callback("L", env.reset)
     # print helper for keyboard
     print(teleop_interface)
 
+    frame_marker_cfg = FRAME_MARKER_CFG.copy()
+    frame_marker_cfg.markers["frame"].scale = (0.02, 0.02, 0.02)
+    goal_marker = VisualizationMarkers(frame_marker_cfg.replace(prim_path="/Visuals/ee_goal"))
     # reset environment
     env.reset()
     teleop_interface.reset()
@@ -133,6 +135,21 @@ def main():
         with torch.inference_mode():
             # get keyboard command
             teleop_output = teleop_interface.advance()
+            # test = teleop_interface.debug_advance_all_joint_data()[0]
+            
+            # test[:, 3:] = test[:, [6, 3, 4, 5]]
+            # test[:, :3] = test[:, [0, 2, 1]]
+            # test[:, 2] += 0.5
+            # rot_actions = torch.tensor([[0.0, 0.0, 1.57]], device=env.unwrapped.device)
+            # angle: torch.Tensor = torch.linalg.vector_norm(rot_actions, dim=1)
+            # axis = rot_actions / angle.unsqueeze(-1)
+            # identity_quat = torch.tensor([1.0, 0.0, 0.0, 0.0], device=env.unwrapped.device)
+            # rot_delta_quat = torch.where(
+            #     angle.unsqueeze(-1).repeat(1, 4) > 1.0e-6, quat_from_angle_axis(angle, axis), identity_quat
+            # ).repeat(len(test), 1)
+            # test[:, 3:] = quat_mul(test[:, 3:], rot_delta_quat)
+            # goal_marker.visualize(
+            #     test[:, :3] + env.unwrapped.scene._default_env_origins, test[:, 3:])
             actions_clone = preprocess_func(teleop_output)
             # print(actions_clone)
             env.step(actions_clone)

@@ -189,16 +189,17 @@ class IdealPDHebi_JointPos_GoalTracking_Env(ManagerBasedRLEnvCfg):
     datas: DataCfg = DataCfg()
 
     def __post_init__(self):
-        self.decimation = 10
+        self.decimation = 2
         self.episode_length_s = episode_length
         # simulation settings
-        self.sim.dt = 0.02 / self.decimation  # Agent: 20Hz, Motor: 500Hz
-        self.sim.physx.min_position_iteration_count = 16
-        self.sim.physx.min_velocity_iteration_count = 8
+        self.sim.dt = 0.04 / self.decimation  # Env_Hz = Agent_Hz / decimation**2
+        self.sim.physx.min_position_iteration_count = 8
+        self.sim.physx.min_velocity_iteration_count = 4
         self.sim.physx.bounce_threshold_velocity = 0.2
         self.sim.physx.bounce_threshold_velocity = 0.01
         self.sim.physx.gpu_found_lost_aggregate_pairs_capacity = 1024 * 1024 * 4
-        self.sim.physx.gpu_total_aggregate_pairs_capacity = 16 * 1024
+        self.sim.physx.gpu_total_aggregate_pairs_capacity = 24 * 1024
+        self.sim.physx.gpu_max_rigid_patch_count = 5 * 2 ** 17
         self.sim.physx.friction_correlation_distance = 0.00625
 
 
@@ -240,3 +241,27 @@ class DCMotorHebi_JointPos_GoalTracking_Env(IdealPDHebi_JointPos_GoalTracking_En
     def __post_init__(self):
         super().__post_init__()
         self.scene: ObjectSceneCfg = DCMotorHebi_ObjectSceneCfg(num_envs=1, env_spacing=2.5, replicate_physics=False)
+
+
+class IdealPDHebi_JointPos_GoalTracking_Decimate1_Env(IdealPDHebi_JointPos_GoalTracking_Env):
+    def __post_init__(self):
+        super().__post_init__()
+        agent_update_hz = self.decimation * self.sim.dt
+        self.decimation = 1
+        self.sim.dt = agent_update_hz / self.decimation
+
+
+class IdealPDHebi_JointPos_GoalTracking_Decimate2_Env(IdealPDHebi_JointPos_GoalTracking_Env):
+    def __post_init__(self):
+        super().__post_init__()
+        agent_update_hz = self.decimation * self.sim.dt
+        self.decimation = 2
+        self.sim.dt = agent_update_hz / self.decimation
+
+
+class IdealPDHebi_JointPos_GoalTracking_Decimate5_Env(IdealPDHebi_JointPos_GoalTracking_Env):
+    def __post_init__(self):
+        super().__post_init__()
+        agent_update_hz = self.decimation * self.sim.dt
+        self.decimation = 5
+        self.sim.dt = agent_update_hz / self.decimation
