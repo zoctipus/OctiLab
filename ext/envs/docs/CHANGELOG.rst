@@ -24,12 +24,12 @@ Changed
   to be incentive reward instead of punishment reward.
 * Renamed orbit_mdp to lab_mdp in :file:`ext.envs.envs.tasks.manipulations.track_goal.config.Hebi_JointPos_GoalTracking_Env`
 
-
 Added
 ^^^^^
 
 * Added hebi reward term :func:`ext.envs.cfgs.robots.hebi.mdp.rewards.orientation_command_error_tanh`
-
+* Added experiments run script :file:`workflows.experiments.strategy4_scale_experiments.py`
+* Added experiments :file:`envs.tasks.manipulations.track_goal.config.hebi.strategy4_scale_experiments.py`
 
 0.1.5 (2024-07-06)
 ~~~~~~~~~~~~~~~~~~
@@ -41,6 +41,7 @@ Added
 * Added experiments run script :file:`workflows.experiments.actuator_experiments.py`
 * Added experiments run script :file:`workflows.experiments.agent_update_frequency_experiments.py` 
 * Added experiments run script :file:`workflows.experiments.decimation_experiments.py`
+* Added experiments run script :file:`workflows.experiments.strategy3_scale_experiments.py`
 * Added experiments :file:`envs.tasks.manipulations.track_goal.config.hebi.agent_update_rate_experiments.py`
 * Added experiments :file:`envs.tasks.manipulations.track_goal.config.hebi.decimation_experiments.py`
 * Added experiments :file:`envs.tasks.manipulations.track_goal.config.hebi.strategy3_scale_experiments.py`
