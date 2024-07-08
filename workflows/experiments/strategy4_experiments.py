@@ -29,14 +29,14 @@ cli_args.add_rsl_rl_args(parser)
 args_cli = parser.parse_args()
 args_cli.headless = True
 
-tasks = ["IkDeltaDls-Strategy3MotorHebi-JointPos-GoalTracking"]
-# tasks = ["IkDeltaDls-IdealPDHebi-JointPos-GoalTracking",
-#          "IkDeltaDls-Strategy3MotorHebi-JointPos-GoalTracking",
-#          "IkDeltaDls-Strategy4MotorHebi-JointPos-GoalTracking",
-#          "IkDeltaDls-DCMotorHebi-JointPos-GoalTracking",
-#          "IkDeltaDls-HebiDCMotorHebi-JointPos-GoalTracking",
-#          "IkDeltaDls-ImplicitMotorHebi-JointPos-GoalTracking",
-#          ]
+tasks = ["IkDeltaDls-Strategy4MotorHebi-JointPos-GoalTracking-pp0dot5-ep1",
+         "IkDeltaDls-Strategy4MotorHebi-JointPos-GoalTracking-pp1dot5-ep1",
+         "IkDeltaDls-Strategy4MotorHebi-JointPos-GoalTracking-pp2-ep1",
+         "IkDeltaDls-Strategy4MotorHebi-JointPos-GoalTracking-pp5-ep1",
+         "IkDeltaDls-Strategy4MotorHebi-JointPos-GoalTracking-pp1-ep0dot2",
+         "IkDeltaDls-Strategy4MotorHebi-JointPos-GoalTracking-pp1-ep0dot5",
+         "IkDeltaDls-Strategy4MotorHebi-JointPos-GoalTracking-pp1-ep1dot5",
+         "IkDeltaDls-Strategy4MotorHebi-JointPos-GoalTracking-pp1-ep2",]
 
 
 def run_experiment():
