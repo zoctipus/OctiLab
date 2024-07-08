@@ -19,6 +19,7 @@ class Strategy3MotorHebi_JointPos_GoalTracking_pp1dot5_ep1_Env(Strategy3MotorHeb
 
 class Strategy3MotorHebi_JointPos_GoalTracking_pp2_ep1_Env(Strategy3MotorHebi_JointPos_GoalTracking_Env):
     def __post_init__(self):
+        super().__post_init__()
         self.scene.robot.actuators['HEBI'].position_p_scale = 2
 
 

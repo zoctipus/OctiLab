@@ -323,6 +323,10 @@ class RobotTerminationsCfg:
 
     robot_invalid_state = DoneTerm(func=tycho_general_mdp.invalid_state, params={"asset_cfg": SceneEntityCfg("robot")})
 
-    # robot_extremely_bad_posture = DoneTerm(
-    #     func=robot_mdp.terminate_extremely_bad_posture, params={"robot_cfg": SceneEntityCfg("robot")}
-    # )
+    robot_extremely_bad_posture = DoneTerm(
+        func=robot_mdp.terminate_extremely_bad_posture,
+        params={
+            "probability": 0.5,
+            "robot_cfg": SceneEntityCfg("robot")
+        }
+    )

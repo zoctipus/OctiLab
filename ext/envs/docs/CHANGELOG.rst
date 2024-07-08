@@ -1,6 +1,36 @@
 Changelog
 ---------
 
+0.1.6 (2024-07-07)
+~~~~~~~~~~~~~~~~~~
+
+memo:
+^^^^^
+
+* Termination term should be carefully considered along with the punishment reward functions.
+  When there are too many negative reward in the begining, agent would prefer to die sooner by
+  exploiting the termination condition, and this would lead to the agent not learning the task.
+
+* tips:
+  When designing the reward function, try be incentive than punishment.
+
+Changed
+^^^^^^^
+
+* Changed :class:`ext.envs.cfgs.robots.hebi.robot_dynamics.RobotTerminationsCfg` to include DoneTerm: robot_extremely_bad_posture
+* Changed :function:`ext.envs.cfgs.robots.hebi.mdp.terminations.terminate_extremely_bad_posture` to be probabilistic
+* Changed :field:`ext.envs.envs.tasks.manipulations.track_goal.config.hebi.Hebi_JointPos_GoalTracking_Env.RewardsCfg.end_effector_position_tracking`
+  and :field:`ext.envs.envs.tasks.manipulations.track_goal.config.hebi.Hebi_JointPos_GoalTracking_Env.RewardsCfg.end_effector_orientation_tracking`
+  to be incentive reward instead of punishment reward.
+* Renamed orbit_mdp to lab_mdp in :file:`ext.envs.envs.tasks.manipulations.track_goal.config.Hebi_JointPos_GoalTracking_Env`
+
+
+Added
+^^^^^
+
+* Added hebi reward term :func:`ext.envs.cfgs.robots.hebi.mdp.rewards.orientation_command_error_tanh`
+
+
 0.1.5 (2024-07-06)
 ~~~~~~~~~~~~~~~~~~
 
