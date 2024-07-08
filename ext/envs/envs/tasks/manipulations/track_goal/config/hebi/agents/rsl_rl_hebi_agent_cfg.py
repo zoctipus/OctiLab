@@ -16,7 +16,7 @@ from omni.isaac.lab_tasks.utils.wrappers.rsl_rl import (
 @configclass
 class Base_PPORunnerCfg(RslRlOnPolicyRunnerCfg):
     num_steps_per_env = 96
-    max_iterations = 1000
+    max_iterations = 3000
     save_interval = 50
     resume = False
     experiment_name = "hebi_base_agent"
@@ -41,6 +41,11 @@ class Base_PPORunnerCfg(RslRlOnPolicyRunnerCfg):
         desired_kl=0.01,
         max_grad_norm=1.0,
     )
+
+
+@configclass
+class Strategy4ScalePPORunnerCfg(Base_PPORunnerCfg):
+    experiment_name = "strategy4_scale_experiment"
 
 
 @configclass

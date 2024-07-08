@@ -28,6 +28,12 @@ class Strategy3MotorHebi_JointPos_GoalTracking_pp5_ep1_Env(Strategy3MotorHebi_Jo
         self.scene.robot.actuators['HEBI'].position_p_scale = 5
 
 
+class Strategy3MotorHebi_JointPos_GoalTracking_pp10_ep1_Env(Strategy3MotorHebi_JointPos_GoalTracking_Env):
+    def __post_init__(self):
+        super().__post_init__()
+        self.scene.robot.actuators['HEBI'].position_p_scale = 10
+
+
 class Strategy3MotorHebi_JointPos_GoalTracking_pp1_ep0dot2_Env(Strategy3MotorHebi_JointPos_GoalTracking_Env):
     def __post_init__(self):
         super().__post_init__()
@@ -50,3 +56,10 @@ class Strategy3MotorHebi_JointPos_GoalTracking_pp1_ep2_Env(Strategy3MotorHebi_Jo
     def __post_init__(self):
         super().__post_init__()
         self.scene.robot.actuators['HEBI'].effort_p_scale = 2
+
+
+class Strategy3MotorHebi_JointPos_GoalTracking_pp5_ep0dot5_Env(Strategy3MotorHebi_JointPos_GoalTracking_Env):
+    def __post_init__(self):
+        super().__post_init__()
+        self.scene.robot.actuators['HEBI'].position_p_scale = 5
+        self.scene.robot.actuators['HEBI'].effort_p_scale = 0.5

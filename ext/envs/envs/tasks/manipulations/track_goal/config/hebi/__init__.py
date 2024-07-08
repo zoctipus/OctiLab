@@ -33,6 +33,19 @@ from .strategy3_scale_experiments import (
     Strategy3MotorHebi_JointPos_GoalTracking_pp1_ep0dot5_Env,
     Strategy3MotorHebi_JointPos_GoalTracking_pp1_ep1dot5_Env,
     Strategy3MotorHebi_JointPos_GoalTracking_pp1_ep2_Env,
+    Strategy3MotorHebi_JointPos_GoalTracking_pp10_ep1_Env,
+    Strategy3MotorHebi_JointPos_GoalTracking_pp5_ep0dot5_Env,
+)
+
+from .strategy4_scale_experiments import (
+    Strategy4MotorHebi_JointPos_GoalTracking_pp0dot5_ep1_Env,
+    Strategy4MotorHebi_JointPos_GoalTracking_pp1dot5_ep1_Env,
+    Strategy4MotorHebi_JointPos_GoalTracking_pp2_ep1_Env,
+    Strategy4MotorHebi_JointPos_GoalTracking_pp5_ep1_Env,
+    Strategy4MotorHebi_JointPos_GoalTracking_pp1_ep0dot2_Env,
+    Strategy4MotorHebi_JointPos_GoalTracking_pp1_ep0dot5_Env,
+    Strategy4MotorHebi_JointPos_GoalTracking_pp1_ep1dot5_Env,
+    Strategy4MotorHebi_JointPos_GoalTracking_pp1_ep2_Env,
 )
 
 base_envs = [
@@ -68,6 +81,20 @@ strategy3_experiment_envs = [
     Strategy3MotorHebi_JointPos_GoalTracking_pp1_ep0dot5_Env,
     Strategy3MotorHebi_JointPos_GoalTracking_pp1_ep1dot5_Env,
     Strategy3MotorHebi_JointPos_GoalTracking_pp1_ep2_Env,
+    Strategy3MotorHebi_JointPos_GoalTracking_pp10_ep1_Env,
+    Strategy3MotorHebi_JointPos_GoalTracking_pp5_ep0dot5_Env,
+]
+
+
+strategy4_experiment_envs = [
+    Strategy4MotorHebi_JointPos_GoalTracking_pp0dot5_ep1_Env,
+    Strategy4MotorHebi_JointPos_GoalTracking_pp1dot5_ep1_Env,
+    Strategy4MotorHebi_JointPos_GoalTracking_pp2_ep1_Env,
+    Strategy4MotorHebi_JointPos_GoalTracking_pp5_ep1_Env,
+    Strategy4MotorHebi_JointPos_GoalTracking_pp1_ep0dot2_Env,
+    Strategy4MotorHebi_JointPos_GoalTracking_pp1_ep0dot5_Env,
+    Strategy4MotorHebi_JointPos_GoalTracking_pp1_ep1dot5_Env,
+    Strategy4MotorHebi_JointPos_GoalTracking_pp1_ep2_Env,
 ]
 
 action_classes = [
@@ -143,6 +170,24 @@ for base_env in agent_update_rate_experiments_envs:
             kwargs={
                 "env_cfg_entry_point": create_hebi_env(base_env_cfg=base_env, rd_action_class=action_class),
                 "rsl_rl_cfg_entry_point": agents.rsl_rl_hebi_agent_cfg.AgentUpdateRatePPORunnerCfg,
+                "sb3_cfg_entry_point": f"{agents.__name__}:sb3_sac_cfg.yaml",
+                "d3rlpy_cfg_entry_point": f"{agents.__name__}:d3rlpy_cfg.yaml",
+            },
+            disable_env_checker=True,
+        )
+
+
+for base_env in strategy4_experiment_envs:
+    for action_class in action_classes:
+        action_class_id = action_class.__name__.replace("RobotActionsCfg_Hebi", "")
+        base_env_id = base_env.__name__.replace("_Env", "")
+        _id = f"{action_class_id}_{base_env_id}".replace("_", "-")
+        gym.register(
+            id=_id,
+            entry_point="octilab.envs.octi_manager_based_rl:OctiManagerBasedRLEnv",
+            kwargs={
+                "env_cfg_entry_point": create_hebi_env(base_env_cfg=base_env, rd_action_class=action_class),
+                "rsl_rl_cfg_entry_point": agents.rsl_rl_hebi_agent_cfg.Strategy4ScalePPORunnerCfg,
                 "sb3_cfg_entry_point": f"{agents.__name__}:sb3_sac_cfg.yaml",
                 "d3rlpy_cfg_entry_point": f"{agents.__name__}:d3rlpy_cfg.yaml",
             },
