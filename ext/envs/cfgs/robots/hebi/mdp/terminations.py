@@ -21,7 +21,9 @@ MDP terminations.
 
 
 def terminate_extremely_bad_posture(
-    env: ManagerBasedRLEnv, robot_cfg: SceneEntityCfg = SceneEntityCfg("robot")
+    env: ManagerBasedRLEnv,
+    probability: float = 0.5,
+    robot_cfg: SceneEntityCfg = SceneEntityCfg("robot")
 ):
     robot: Articulation = env.scene[robot_cfg.name]
 
@@ -33,5 +35,6 @@ def terminate_extremely_bad_posture(
 
     # reset for extremely bad bad shoulder position
     shoulder_punishment_mask = torch.logical_or(shoulder_position < 0.1, shoulder_position > 3.0)
-
-    return torch.logical_or(elbow_punishment, shoulder_punishment_mask)
+    bitmask = torch.rand(elbow_punishment.shape, device="cuda") < probability
+    bad_posture_mask = torch.logical_or(elbow_punishment, shoulder_punishment_mask)
+    return torch.where(bitmask, bad_posture_mask, False)

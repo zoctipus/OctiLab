@@ -8,7 +8,7 @@ from omni.isaac.lab.envs import ManagerBasedRLEnvCfg
 from omni.isaac.lab.managers import SceneEntityCfg
 
 # import mdp as tycho_mdp
-import omni.isaac.lab.envs.mdp as orbit_mdp
+import omni.isaac.lab.envs.mdp as lab_mdp
 from omni.isaac.lab.managers import ObservationGroupCfg as ObsGroup
 from omni.isaac.lab.managers import ObservationTermCfg as ObsTerm
 from dataclasses import MISSING
@@ -27,6 +27,7 @@ from ext.envs.cfgs.scenes.empty_scene import (
 import ext.envs.cfgs.robots.hebi.robot_dynamics as rd
 from ext.envs.cfgs.robots.hebi.robot_cfg import FRAME_EE
 from ext.envs.cfgs.robots.hebi.robot_dynamics import RobotRewardsCfg
+import ext.envs.cfgs.robots.hebi.mdp as hebimdp
 
 episode_length = 50.0
 
@@ -85,10 +86,10 @@ class ObservationsCfg:
     class PolicyCfg(ObsGroup):
         """Observations for policy group."""
 
-        joint_pos = ObsTerm(func=orbit_mdp.joint_pos_rel)
-        joint_vel = ObsTerm(func=orbit_mdp.joint_vel_rel)
-        target_object_position = ObsTerm(func=orbit_mdp.generated_commands, params={"command_name": "ee_pose"})
-        actions = ObsTerm(func=orbit_mdp.last_action)
+        joint_pos = ObsTerm(func=lab_mdp.joint_pos_rel)
+        joint_vel = ObsTerm(func=lab_mdp.joint_vel_rel)
+        target_object_position = ObsTerm(func=lab_mdp.generated_commands, params={"command_name": "ee_pose"})
+        actions = ObsTerm(func=lab_mdp.last_action)
 
         def __post_init__(self):
             self.enable_corruption = True
@@ -103,9 +104,13 @@ class RewardsCfg(SceneRewardsCfg, RobotRewardsCfg):
     """Reward terms for the MDP."""
 
     end_effector_position_tracking = RewTerm(
-        func=mdp.position_command_error,
-        weight=-2,
-        params={"asset_cfg": SceneEntityCfg("robot", body_names="static_chop_tip"), "command_name": "ee_pose"},
+        func=mdp.position_command_error_tanh,
+        weight=2,
+        params={
+            "asset_cfg": SceneEntityCfg("robot", body_names="static_chop_tip"),
+            "std": 0.5,
+            "command_name": "ee_pose",
+        },
     )
 
     end_effector_position_tracking_fine_grained = RewTerm(
@@ -119,9 +124,12 @@ class RewardsCfg(SceneRewardsCfg, RobotRewardsCfg):
     )
 
     end_effector_orientation_tracking = RewTerm(
-        func=mdp.orientation_command_error,
-        weight=-2,
-        params={"asset_cfg": SceneEntityCfg("robot", body_names="static_chop_tip"), "command_name": "ee_pose"},
+        func=hebimdp.orientation_command_error_tanh,
+        weight=2,
+        params={
+            "asset_cfg": SceneEntityCfg("robot", body_names="static_chop_tip"),
+            "std": 0.5,
+            "command_name": "ee_pose"},
     )
 
 
@@ -135,12 +143,12 @@ class DataCfg:
 class CommandsCfg(SceneCommandsCfg):
     """Command terms for the MDP."""
 
-    ee_pose = orbit_mdp.UniformPoseCommandCfg(
+    ee_pose = lab_mdp.UniformPoseCommandCfg(
         asset_name="robot",
         body_name="static_chop_tip",
         resampling_time_range=(episode_length / 5, episode_length / 5),
         debug_vis=False,
-        ranges=orbit_mdp.UniformPoseCommandCfg.Ranges(
+        ranges=lab_mdp.UniformPoseCommandCfg.Ranges(
             # CAUTION: to use the hebi's ik solver the roll needs to be (0.0, 0.0) for upright vector to be correct
             # however, for the isaac lab ik solver, the roll needs to be (1.57075, 1.57075)
             pos_x=(-0.45, -0.15),
@@ -193,8 +201,8 @@ class IdealPDHebi_JointPos_GoalTracking_Env(ManagerBasedRLEnvCfg):
         self.episode_length_s = episode_length
         # simulation settings
         self.sim.dt = 0.04 / self.decimation  # Env_Hz = Agent_Hz / decimation**2
-        self.sim.physx.min_position_iteration_count = 8
-        self.sim.physx.min_velocity_iteration_count = 4
+        self.sim.physx.min_position_iteration_count = 16
+        self.sim.physx.min_velocity_iteration_count = 8
         self.sim.physx.bounce_threshold_velocity = 0.2
         self.sim.physx.bounce_threshold_velocity = 0.01
         self.sim.physx.gpu_found_lost_aggregate_pairs_capacity = 1024 * 1024 * 4
