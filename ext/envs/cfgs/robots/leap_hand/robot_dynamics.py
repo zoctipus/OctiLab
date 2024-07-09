@@ -5,16 +5,14 @@ from omni.isaac.lab.managers import EventTermCfg as EventTerm
 from omni.isaac.lab.managers import SceneEntityCfg
 from omni.isaac.lab.utils import configclass
 from omni.isaac.lab.managers import ObservationTermCfg as ObsTerm
-import omni.isaac.lab.envs.mdp as orbit_mdp
+import omni.isaac.lab.envs.mdp as lab_mdp
 
 '''
 ROBOT ACTION CFGS
 '''
 from omni.isaac.lab.envs.mdp.actions.actions_cfg import (JointPositionActionCfg,
-                                                         JointEffortActionCfg,
-                                                         DifferentialInverseKinematicsActionCfg)
+                                                         JointEffortActionCfg,)
 from octilab.envs.mdp.actions.actions_cfg import MultiConstraintsDifferentialInverseKinematicsActionCfg
-from omni.isaac.lab.controllers.differential_ik_cfg import DifferentialIKControllerCfg
 from octilab.controllers.differential_ik_cfg import MultiConstraintDifferentialIKControllerCfg
 from . import (  # noqa: F401
     IMPLICIT_LEAP
@@ -46,39 +44,11 @@ class RobotActionsCfg_JointEffort:
 
 
 @configclass
-class RobotActionsCfg_IkDeltaDls:
-    index_finger = DifferentialInverseKinematicsActionCfg(
-        asset_name="robot",
-        joint_names=["j[0-3]", "w[0-5]"],
-        body_name="fingertip",
-        controller=DifferentialIKControllerCfg(command_type="pose", use_relative_mode=True, ik_method="dls"),
-        scale=0.05,
-        body_offset=DifferentialInverseKinematicsActionCfg.OffsetCfg(pos=(0.0, 0.0, 0.0), rot=(1.0, 0.0, 0, 0)),
-    )
-
-
-@configclass
-class RobotActionsCfg_IkAbsoluteDls:
-    index_finger = DifferentialInverseKinematicsActionCfg(
-        asset_name="robot",
-        joint_names=["w[0-5]"],
-        body_name="palm_lower",
-        controller=DifferentialIKControllerCfg(
-            command_type="pose",
-            use_relative_mode=False,
-            ik_method="dls"),
-        scale=1,
-        body_offset=DifferentialInverseKinematicsActionCfg.OffsetCfg(pos=(0.0, 0.0, 0.0), rot=(1.0, 0.0, 0, 0)),
-    )
-
-
-@configclass
 class RobotActionsCfg_MCIkAbsoluteDls:
     index_finger = MultiConstraintsDifferentialInverseKinematicsActionCfg(
         asset_name="robot",
         joint_names=["w.*", "j.*"],
-        # body_name=["wrist", "fingertip", "thumb_fingertip", "fingertip_2", "fingertip_3"],
-        body_name=["wrist", "thumb_fingertip", "tip", "tip_2", "tip_3"],
+        body_name=["wrist", "pip", "pip_2", "pip_3", "thumb_fingertip", "tip", "tip_2", "tip_3"],
         controller=MultiConstraintDifferentialIKControllerCfg(command_type="position", use_relative_mode=False, ik_method="dls"),
         scale=1,
         body_offset=MultiConstraintsDifferentialInverseKinematicsActionCfg.OffsetCfg(pos=(0.0, 0.0, 0.0), rot=(1.0, 0.0, 0, 0)),
@@ -93,9 +63,9 @@ ROBOT OBSERVATIONS POLICY CFG
 @configclass
 class RobotObservationsPolicyCfg:
     """Observations policy terms for the Scene."""
-    robot_actions = ObsTerm(func=orbit_mdp.last_action)
-    robot_joint_pos = ObsTerm(func=orbit_mdp.joint_pos_rel)
-    robot_joint_vel = ObsTerm(func=orbit_mdp.joint_vel_rel)
+    robot_actions = ObsTerm(func=lab_mdp.last_action)
+    robot_joint_pos = ObsTerm(func=lab_mdp.joint_pos_rel)
+    robot_joint_vel = ObsTerm(func=lab_mdp.joint_vel_rel)
     # robot_end_effector_speed = ObsTerm(func=robot_mdp.end_effector_speed,
     #                                   params={"end_effector_speed_str": "end_effector_speed"})
 
@@ -120,7 +90,7 @@ ROBOT RANDOMIZATIONS CFG
 class RobotRandomizationCfg:
     """Configuration for randomization."""
     reset_robot = EventTerm(
-        func=orbit_mdp.reset_scene_to_default,
+        func=lab_mdp.reset_scene_to_default,
         params={},
         mode="reset")
 
@@ -134,10 +104,10 @@ ROBOT REWARDS CFG
 class RobotRewardsCfg:
     """Reward terms for the MDP."""
     # action penalty
-    action_rate = RewTerm(func=orbit_mdp.action_rate_l2, weight=-0.01)
+    action_rate = RewTerm(func=lab_mdp.action_rate_l2, weight=-0.01)
 
     joint_vel = RewTerm(
-        func=orbit_mdp.joint_vel_l2,
+        func=lab_mdp.joint_vel_l2,
         weight=-0.0001,
         params={"asset_cfg": SceneEntityCfg("robot")},
     )

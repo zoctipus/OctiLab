@@ -39,10 +39,9 @@ import carb
 from omni.isaac.lab.devices import Se3Gamepad, Se3SpaceMouse
 from octilab.devices.se3_keyboard import Se3KeyboardDelta
 import omni.isaac.lab_tasks  # noqa: F401
-
 import ext.envs.envs.tasks  # noqa: F401
 from omni.isaac.lab_tasks.utils import parse_env_cfg
-from omni.isaac.lab.utils.math import axis_angle_from_quat, quat_from_angle_axis
+from omni.isaac.lab.utils.math import axis_angle_from_quat
 
 
 def pre_process_actions(delta_pose: torch.Tensor, gripper_command: bool) -> torch.Tensor:
@@ -67,7 +66,7 @@ def main():
         args_cli.task, use_gpu=not args_cli.cpu, num_envs=args_cli.num_envs, use_fabric=not args_cli.disable_fabric
     )
     # modify configuration
-    env_cfg.terminations.time_out = None
+    env_cfg.terminations.time_out = None  # type: ignore
 
     # create environment
     env = gym.make(args_cli.task, cfg=env_cfg)
@@ -109,7 +108,7 @@ def main():
             delta_pose, gripper_command = teleop_interface.advance()
             # delta_pose = delta_pose.astype("float32")
             # convert to torch
-            delta_pose = torch.tensor(delta_pose, device=env.unwrapped.device).repeat(env.unwrapped.num_envs, 1)
+            delta_pose = torch.tensor(delta_pose, device=env.unwrapped.device).repeat(env.unwrapped.num_envs, 1)  # type: ignore
             delta_angle_axis = axis_angle_from_quat(delta_pose[:, 3:7])
             delta_pose[:, 3:6] = delta_angle_axis
             delta_pose = delta_pose[:, :-1]

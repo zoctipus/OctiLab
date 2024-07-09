@@ -36,16 +36,15 @@ import gymnasium as gym
 import torch
 import carb
 from omni.isaac.lab.devices import Se3Gamepad, Se3SpaceMouse
-from octilab.devices import Se3KeyboardAbsolute, Rokoko_Glove
+from octilab.devices import Se3KeyboardAbsolute, RokokoGlove, RokokoGloveKeyboard
 import omni.isaac.lab_tasks  # noqa: F401
 import ext.envs.envs.tasks  # noqa: F401
 import ext.envs.envs.tasks.manipulations  # noqa: F401
 from omni.isaac.lab_tasks.utils import parse_env_cfg
 from omni.isaac.lab.utils.math import quat_mul, quat_from_angle_axis
-
-
 from omni.isaac.lab.markers.config import FRAME_MARKER_CFG
-from omni.isaac.lab.markers import VisualizationMarkers
+# from omni.isaac.lab.markers import VisualizationMarkers
+
 
 def pre_process_actions(delta_pose: torch.Tensor, gripper_command: bool) -> torch.Tensor:
     """Pre-process actions for the environment."""
@@ -99,7 +98,7 @@ def main():
     # create controller
     if args_cli.device.lower() == "keyboard":
         teleop_interface = Se3KeyboardAbsolute(
-            pos_sensitivity=0.003 * args_cli.sensitivity, rot_sensitivity=0.01 * args_cli.sensitivity
+            pos_sensitivity=0.01 * args_cli.sensitivity, rot_sensitivity=0.01 * args_cli.sensitivity
         )
         def preprocess_func(x): return pre_process_actions(*x)  # noqa: E704
     elif args_cli.device.lower() == "spacemouse":
@@ -113,8 +112,20 @@ def main():
         )
         def preprocess_func(x): return pre_process_actions(*x)  # noqa: E704
     elif args_cli.device.lower() == "rokoko_smartglove":
-        teleop_interface = Rokoko_Glove(UDP_IP="0.0.0.0", UDP_PORT=14043, scale=1.3)
-        def preprocess_func(x): return pre_process_glove_actions(*x)  # noqa: E704
+        teleop_interface = RokokoGlove(
+            UDP_IP="0.0.0.0", UDP_PORT=14043, scale=1.65,
+            right_hand_track=["rightHand", "rightIndexMedial", "rightMiddleMedial", "rightRingMedial",
+                              "rightThumbTip", "rightIndexTip", "rightMiddleTip", "rightRingTip"]
+        )
+        def preprocess_func(x): return pre_process_glove_actions(*x)  # noqa: E704, E306
+    elif args_cli.device.lower() == "rokoko_smartglove_keyboard":
+        teleop_interface = RokokoGloveKeyboard(
+            pos_sensitivity=0.1 * args_cli.sensitivity, rot_sensitivity=0.1 * args_cli.sensitivity,
+            UDP_IP="0.0.0.0", UDP_PORT=14043, scale=1.65,
+            right_hand_track=["rightHand", "rightIndexMedial", "rightMiddleMedial", "rightRingMedial",
+                              "rightThumbTip", "rightIndexTip", "rightMiddleTip", "rightRingTip"]
+        )
+        def preprocess_func(x): return pre_process_glove_actions(*x)  # noqa: E704, E306
     else:
         raise ValueError(f"Invalid device interface '{args_cli.device}'.\
             Supported: 'keyboard', 'spacemouse', 'rokoko_smartgloves'.")
@@ -123,9 +134,9 @@ def main():
     # print helper for keyboard
     print(teleop_interface)
 
-    frame_marker_cfg = FRAME_MARKER_CFG.copy()
+    frame_marker_cfg = FRAME_MARKER_CFG.copy()  # type: ignore
     frame_marker_cfg.markers["frame"].scale = (0.02, 0.02, 0.02)
-    goal_marker = VisualizationMarkers(frame_marker_cfg.replace(prim_path="/Visuals/ee_goal"))
+    # goal_marker = VisualizationMarkers(frame_marker_cfg.replace(prim_path="/Visuals/ee_goal"))
     # reset environment
     env.reset()
     teleop_interface.reset()
@@ -136,7 +147,6 @@ def main():
             # get keyboard command
             teleop_output = teleop_interface.advance()
             # test = teleop_interface.debug_advance_all_joint_data()[0]
-            
             # test[:, 3:] = test[:, [6, 3, 4, 5]]
             # test[:, :3] = test[:, [0, 2, 1]]
             # test[:, 2] += 0.5

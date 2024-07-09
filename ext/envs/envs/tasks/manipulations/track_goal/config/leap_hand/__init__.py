@@ -8,7 +8,7 @@ from . import agents
 
 base_envs = [ImplicitMotorLeap_JointPos_GoalTracking_Env]
 
-action_classes = [rd.RobotActionsCfg_IkAbsoluteDls, rd.RobotActionsCfg_MCIkAbsoluteDls]
+action_classes = [rd.RobotActionsCfg_MCIkAbsoluteDls]
 
 
 # Loop through each configuration and register the environment
@@ -16,7 +16,7 @@ for base_env in base_envs:
     for action_class in action_classes:
         action_class_id = action_class.__name__.replace("RobotActionsCfg_", "")
         base_env_id = base_env.__name__.replace("_Env", "")
-        _id = f"{action_class_id}_{base_env_id}_v0".replace("_", "-")
+        _id = f"{action_class_id}_{base_env_id}".replace("_", "-")
         gym.register(
             id=_id,
             entry_point="octilab.envs.octi_manager_based_rl:OctiManagerBasedRLEnv",

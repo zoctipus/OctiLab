@@ -12,6 +12,19 @@ from .Hebi_JointPos_GoalTracking_Env import (
     DCMotorHebi_JointPos_GoalTracking_Env,
 )
 
+from .idealpd_experiments import (
+    IdealPDHebi_JointPos_GoalTracking_0dot5p_Env,
+    IdealPDHebi_JointPos_GoalTracking_1dot5p_Env,
+    IdealPDHebi_JointPos_GoalTracking_2p_Env,
+    IdealPDHebi_JointPos_GoalTracking_5p_Env,
+    IdealPDHebi_JointPos_GoalTracking_10p_Env,
+    IdealPDHebi_JointPos_GoalTracking_0dot2d_Env,
+    IdealPDHebi_JointPos_GoalTracking_0dot5d_Env,
+    IdealPDHebi_JointPos_GoalTracking_1dot5d_Env,
+    IdealPDHebi_JointPos_GoalTracking_2d_Env,
+    IdealPDHebi_JointPos_GoalTracking_5p_0dot5d_Env,
+)
+
 from .decimation_experiments import (
     IdealPDHebi_JointPos_GoalTracking_Decimate5_Env,
     IdealPDHebi_JointPos_GoalTracking_Decimate2_Env,
@@ -95,6 +108,19 @@ strategy4_experiment_envs = [
     Strategy4MotorHebi_JointPos_GoalTracking_pp1_ep0dot5_Env,
     Strategy4MotorHebi_JointPos_GoalTracking_pp1_ep1dot5_Env,
     Strategy4MotorHebi_JointPos_GoalTracking_pp1_ep2_Env,
+]
+
+idealpd_experiment_envs = [
+    IdealPDHebi_JointPos_GoalTracking_0dot5p_Env,
+    IdealPDHebi_JointPos_GoalTracking_1dot5p_Env,
+    IdealPDHebi_JointPos_GoalTracking_2p_Env,
+    IdealPDHebi_JointPos_GoalTracking_5p_Env,
+    IdealPDHebi_JointPos_GoalTracking_10p_Env,
+    IdealPDHebi_JointPos_GoalTracking_0dot2d_Env,
+    IdealPDHebi_JointPos_GoalTracking_0dot5d_Env,
+    IdealPDHebi_JointPos_GoalTracking_1dot5d_Env,
+    IdealPDHebi_JointPos_GoalTracking_2d_Env,
+    IdealPDHebi_JointPos_GoalTracking_5p_0dot5d_Env,
 ]
 
 action_classes = [
@@ -188,6 +214,23 @@ for base_env in strategy4_experiment_envs:
             kwargs={
                 "env_cfg_entry_point": create_hebi_env(base_env_cfg=base_env, rd_action_class=action_class),
                 "rsl_rl_cfg_entry_point": agents.rsl_rl_hebi_agent_cfg.Strategy4ScalePPORunnerCfg,
+                "sb3_cfg_entry_point": f"{agents.__name__}:sb3_sac_cfg.yaml",
+                "d3rlpy_cfg_entry_point": f"{agents.__name__}:d3rlpy_cfg.yaml",
+            },
+            disable_env_checker=True,
+        )
+
+for base_env in idealpd_experiment_envs:
+    for action_class in action_classes:
+        action_class_id = action_class.__name__.replace("RobotActionsCfg_Hebi", "")
+        base_env_id = base_env.__name__.replace("_Env", "")
+        _id = f"{action_class_id}_{base_env_id}".replace("_", "-")
+        gym.register(
+            id=_id,
+            entry_point="octilab.envs.octi_manager_based_rl:OctiManagerBasedRLEnv",
+            kwargs={
+                "env_cfg_entry_point": create_hebi_env(base_env_cfg=base_env, rd_action_class=action_class),
+                "rsl_rl_cfg_entry_point": agents.rsl_rl_hebi_agent_cfg.IdealPdScalePPORunnerCfg,
                 "sb3_cfg_entry_point": f"{agents.__name__}:sb3_sac_cfg.yaml",
                 "d3rlpy_cfg_entry_point": f"{agents.__name__}:d3rlpy_cfg.yaml",
             },
