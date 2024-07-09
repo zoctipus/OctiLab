@@ -50,7 +50,7 @@ HEBI_ORBIT_ARTICULATION = ArticulationCfg(
         usd_path="datasets/tycho_robot.usd",
         activate_contact_sensors=True,
         rigid_props=sim_utils.RigidBodyPropertiesCfg(
-            disable_gravity=True,
+            disable_gravity=False,
             max_depenetration_velocity=5.0,
         ),
         articulation_props=sim_utils.ArticulationRootPropertiesCfg(
@@ -68,7 +68,7 @@ HEBI_CUSTOM_ARTICULATION = HebiArticulationCfg(
         usd_path="datasets/tycho_robot.usd",
         activate_contact_sensors=True,
         rigid_props=sim_utils.RigidBodyPropertiesCfg(
-            disable_gravity=True,
+            disable_gravity=False,
             max_depenetration_velocity=5.0,
         ),
         articulation_props=sim_utils.ArticulationRootPropertiesCfg(

@@ -44,6 +44,11 @@ class Base_PPORunnerCfg(RslRlOnPolicyRunnerCfg):
 
 
 @configclass
+class IdealPdScalePPORunnerCfg(Base_PPORunnerCfg):
+    experiment_name = "idealPd_scale_experiment"
+
+
+@configclass
 class Strategy4ScalePPORunnerCfg(Base_PPORunnerCfg):
     experiment_name = "strategy4_scale_experiment"
 

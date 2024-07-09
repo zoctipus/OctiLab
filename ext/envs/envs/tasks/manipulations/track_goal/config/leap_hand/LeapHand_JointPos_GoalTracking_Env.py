@@ -68,24 +68,6 @@ class ObservationsCfg:
 class RewardsCfg(SceneRewardsCfg, rd.RobotRewardsCfg):
     """Reward terms for the MDP."""
 
-    # end_effector_position_tracking = RewTerm(
-    #     func=mdp.position_command_error,
-    #     weight=-2,
-    #     params={"asset_cfg": SceneEntityCfg("robot", body_names="static_chop_tip"), "command_name": "ee_pose"},
-    # )
-
-    # end_effector_position_tracking_fine_grained = RewTerm(
-    #     func=mdp.position_command_error_tanh,
-    #     weight=4,
-    #     params={"asset_cfg": SceneEntityCfg("robot", body_names="static_chop_tip"), "std": 0.1, "command_name": "ee_pose"},
-    # )
-
-    # end_effector_orientation_tracking = RewTerm(
-    #     func=mdp.orientation_command_error,
-    #     weight=-2,
-    #     params={"asset_cfg": SceneEntityCfg("robot", body_names="static_chop_tip"), "command_name": "ee_pose"},
-    # )
-
 
 @configclass
 class DataCfg:
