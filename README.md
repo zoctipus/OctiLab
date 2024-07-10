@@ -10,9 +10,10 @@
 ## Overview
 
 This repository was originally developed from Isaac Lab Extension Template. Now it extends additional features and 
-environment on top of Isaac Lab, and serves as a Robot Learning developing platform. It is currently maintained and 
-more robots and features come along. This extension is carefully implemented in a non-destructive, easy-to-update 
-manner, as it inherits as much as from Isaac Lab, so it updates as soon as Isaac Lab updates.
+environment on top of Isaac Lab, and intend to serve as a more wellrounded robot learning developing platform. 
+It is currently actively maintained and more robots and features are coming along. This extension is carefully
+implemented in a non-destructive, easy-to-update manner, as it inherits as much as from Isaac Lab, so it updates
+as soon as Isaac Lab updates.
 
 
 ### Lab Features:
