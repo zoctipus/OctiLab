@@ -8,7 +8,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>octi.lab.devices.se3_keyboard &#8212; Isaac Lab documentation</title>
+    <title>octi.lab.devices.se3_keyboard &#8212; Octi Lab documentation</title>
   
   
   
@@ -146,11 +146,11 @@
       
     
     
-    <img src="../../../../_static/NVIDIA-logo-white.png" class="logo__image only-light" alt=""/>
-    <script>document.write(`<img src="../../../../_static/NVIDIA-logo-black.png" class="logo__image only-dark" alt=""/>`);</script>
+    <img src="../../../../_static/OCTI-NVIDIA-logo.png" class="logo__image only-light" alt=""/>
+    <script>document.write(`<img src="../../../../_static/OCTI-NVIDIA-logo.png" class="logo__image only-dark" alt=""/>`);</script>
   
   
-    <p class="title logo__title">Isaac Lab documentation</p>
+    <p class="title logo__title">Octi Lab documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item"><ul class="navbar-icon-links"
@@ -424,18 +424,64 @@ document.write(`
 
 
 <div class="viewcode-block" id="Se3KeyboardAbsolute"><a class="viewcode-back" href="../../../../source/api/lab/octi.lab.devices.html#octi.lab.devices.Se3KeyboardAbsolute">[docs]</a><span class="k">class</span> <span class="nc">Se3KeyboardAbsolute</span><span class="p">(</span><span class="n">Se3Keyboard</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A keyboard controller for sending SE(3) commands as absolute poses and binary command (open/close).</span>
+
+<span class="sd">    This class is designed to provide a keyboard controller for a robotic arm with a gripper.</span>
+<span class="sd">    It uses the Omniverse keyboard interface to listen to keyboard events and map them to robot&#39;s</span>
+<span class="sd">    task-space commands. Different from Isaac Lab Se3Keyboard that adds delta command to current robot pose,</span>
+<span class="sd">    this implementation controls a target pose which robot actively tracks. this error corrective property is </span>
+<span class="sd">    advantageous to use when robot is prone to drift or under actuated</span>
+
+<span class="sd">    The command comprises of two parts:</span>
+
+<span class="sd">    * delta pose: a 6D vector of (x, y, z, roll, pitch, yaw) in meters and radians.</span>
+<span class="sd">    * gripper: a binary command to open or close the gripper.</span>
+
+<span class="sd">    Key bindings:</span>
+<span class="sd">        ============================== ================= =================</span>
+<span class="sd">        Description                    Key (+ve axis)    Key (-ve axis)</span>
+<span class="sd">        ============================== ================= =================</span>
+<span class="sd">        Toggle gripper (open/close)    K</span>
+<span class="sd">        Move along x-axis              W                 S</span>
+<span class="sd">        Move along y-axis              A                 D</span>
+<span class="sd">        Move along z-axis              Q                 E</span>
+<span class="sd">        Rotate along x-axis            Z                 X</span>
+<span class="sd">        Rotate along y-axis            T                 G</span>
+<span class="sd">        Rotate along z-axis            C                 V</span>
+<span class="sd">        ============================== ================= =================</span>
+
+<span class="sd">    .. seealso::</span>
+
+<span class="sd">        The official documentation for the keyboard interface: `Carb Keyboard Interface &lt;https://docs.omniverse.nvidia.com/dev-guide/latest/programmer_ref/input-devices/keyboard.html&gt;`__.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="Se3KeyboardAbsolute.__init__"><a class="viewcode-back" href="../../../../source/api/lab/octi.lab.devices.html#octi.lab.devices.Se3KeyboardAbsolute.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pos_sensitivity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.4</span><span class="p">,</span> <span class="n">rot_sensitivity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.8</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s2">&quot;cuda:0&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the keyboard layer.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            pos_sensitivity: Magnitude of input position command scaling. Defaults to 0.05.</span>
+<span class="sd">            rot_sensitivity: Magnitude of scale input rotation commands scaling. Defaults to 0.5.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">pos_sensitivity</span><span class="p">,</span> <span class="n">rot_sensitivity</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">device</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">absolute_pose</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
         <span class="c1"># self.init_pose = torch.tensor([[-0.265, -0.28, 0.05, 0.0, 0.0, 1, 0.0]], device=self.device)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">init_pose</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([[</span><span class="o">-</span><span class="mf">0.3000</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.3000</span><span class="p">,</span> <span class="mf">0.0500</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.5497e-05</span><span class="p">,</span> <span class="mf">2.0993e-05</span><span class="p">,</span> <span class="mf">7.1197e-01</span><span class="p">,</span> <span class="o">-</span><span class="mf">7.0221e-01</span><span class="p">]],</span> <span class="n">device</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_pose</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span>
+            <span class="p">[</span><span class="o">-</span><span class="mf">0.3000</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.3000</span><span class="p">,</span> <span class="mf">0.0500</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.5497e-05</span><span class="p">,</span> <span class="mf">2.0993e-05</span><span class="p">,</span> <span class="mf">7.1197e-01</span><span class="p">,</span> <span class="o">-</span><span class="mf">7.0221e-01</span><span class="p">]],</span> <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span></div>
 
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Operations</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="Se3KeyboardAbsolute.reset"><a class="viewcode-back" href="../../../../source/api/lab/octi.lab.devices.html#octi.lab.devices.Se3KeyboardAbsolute.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">absolute_pose</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_pose</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Se3KeyboardAbsolute.advance"><a class="viewcode-back" href="../../../../source/api/lab/octi.lab.devices.html#octi.lab.devices.Se3KeyboardAbsolute.advance">[docs]</a>    <span class="k">def</span> <span class="nf">advance</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Provides the result from internal target command modified by keyboard event.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A tuple containing the absolute pose command and gripper commands.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">delta_pose</span><span class="p">,</span> <span class="n">gripper_command</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">advance</span><span class="p">()</span>
 
         <span class="n">delta_pose</span> <span class="o">=</span> <span class="n">delta_pose</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;float32&quot;</span><span class="p">)</span>

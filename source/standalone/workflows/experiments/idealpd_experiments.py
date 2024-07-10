@@ -9,7 +9,7 @@
 import argparse
 import subprocess
 # local imports
-from workflows.rsl_rl import cli_args  # isort: skip
+from source.standalone.workflows.rsl_rl import cli_args  # isort: skip
 
 # add argparse arguments
 parser = argparse.ArgumentParser(description="Train an RL agent with RSL-RL.")
@@ -45,7 +45,7 @@ def run_experiment():
         subprocess.run(
             [
                 "python",
-                "workflows/rsl_rl/train.py",
+                "source/standalone/workflows/rsl_rl/train.py",
                 "--task",
                 task,
                 "--headless",

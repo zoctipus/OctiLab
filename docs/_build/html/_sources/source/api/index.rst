@@ -19,11 +19,6 @@ The following modules are available in the ``octi.lab`` extension:
    devices
    envs
    managers
-   markers
    scene
-   sensors
-   sim
-   terrains
-   utils
 
 
