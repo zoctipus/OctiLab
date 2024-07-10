@@ -1,6 +1,19 @@
 Changelog
 ---------
 
+
+0.1.7 (2024-07-08)
+~~~~~~~~~~~~~~~~~~
+
+
+Changed
+^^^^^^^
+
+* Documented :class:`octi.lab.devices.rokoko_glove.RokokoGlove`,
+  :class:`octi.lab.devices.rokoko_glove.RokokoGloveKeyboard`, :class:`octi.lab.devices.rokoko_glove.Se3Keyboard`
+
+
+
 0.1.7 (2024-07-08)
 ~~~~~~~~~~~~~~~~~~
 
