@@ -1,0 +1,12 @@
+seed: 123
+actor_learning_rate: 0.0003
+critic_learning_rate: 0.0003
+temp_learning_rate: 0.0003
+dropout: 0.0
+layernorm: True
+replay_buffer_max_length: 1000000
+n_steps: 5000000
+n_steps_per_epoch: 10000
+random_steps: 5000
+save_interval: 10
+utd: 10

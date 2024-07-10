@@ -1,0 +1,968 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>octilab.devices &#8212; Isaac Lab documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="/home/octipus/anaconda3/envs/octilab/lib/python3.10/site-packages/sphinxcontrib/icon/node_modules/@fortawesome/fontawesome-free/css/all.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.5ea377869091fd0449014c60fc090103.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="/home/octipus/anaconda3/envs/octilab/lib/python3.10/site-packages/sphinxcontrib/icon/node_modules/@fortawesome/fontawesome-free/js/all.min.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script src="../../../_static/design-tabs.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'source/api/lab/octilab.devices';</script>
+    <link rel="icon" href="../../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="octilab.envs" href="octilab.envs.html" />
+    <link rel="prev" title="octilab.controllers" href="octilab.controllers.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+    <meta name="docbuild:last-update" content="Jul 09, 2024"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/NVIDIA-logo-white.png" class="logo__image only-light" alt=""/>
+    <script>document.write(`<img src="../../../_static/NVIDIA-logo-black.png" class="logo__image only-dark" alt=""/>`);</script>
+  
+  
+    <p class="title logo__title">Isaac Lab documentation</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links"
+    aria-label="Quick Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/isaac-sim/IsaacLab" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://developer.nvidia.com/isaac-sim" title="Isaac Sim" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="https://img.shields.io/badge/IsaacSim-4.0-silver.svg" class="icon-link-image" alt="Isaac Sim"/></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://img.shields.io/github/stars/isaac-sim/IsaacLab?color=fedcba" title="Stars" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="https://img.shields.io/github/stars/isaac-sim/IsaacLab?color=fedcba" class="icon-link-image" alt="Stars"/></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Resources</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../tutorials/00_sim/index.html">Setting up a Simple Simulation</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/00_sim/create_empty.html">Creating an empty scene</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/00_sim/spawn_prims.html">Spawning prims into the scene</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/00_sim/launch_app.html">Deep-dive into AppLauncher</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Source API</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../index.html">API Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="octilab.actuators.html">octilab.actuators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="octilab.assets.html">octilab.assets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="octilab.controllers.html">octilab.controllers</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">octilab.devices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="octilab.envs.html">octilab.envs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="octilab.managers.html">octilab.managers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="octilab.scene.html">octilab.scene</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Project Links</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://github.com/isaac-sim/IsaacLab">GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://docs.omniverse.nvidia.com/isaacsim/latest/index.html">NVIDIA Isaac Sim</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://nvidia-omniverse.github.io/PhysX/physx/5.4.0/index.html">NVIDIA PhysX</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/isaac-sim/IsaacLab" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/isaac-sim/IsaacLab/edit/main/source/api/lab/octilab.devices.rst" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/isaac-sim/IsaacLab/issues/new?title=Issue%20on%20page%20%2Fsource/api/lab/octilab.devices.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../_sources/source/api/lab/octilab.devices.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>octilab.devices</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#keyboard">Keyboard</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#octilab.devices.Se3KeyboardAbsolute"><code class="docutils literal notranslate"><span class="pre">Se3KeyboardAbsolute</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#octilab.devices.Se3KeyboardAbsolute.__init__"><code class="docutils literal notranslate"><span class="pre">Se3KeyboardAbsolute.__init__()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#octilab.devices.Se3KeyboardAbsolute.reset"><code class="docutils literal notranslate"><span class="pre">Se3KeyboardAbsolute.reset()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#octilab.devices.Se3KeyboardAbsolute.advance"><code class="docutils literal notranslate"><span class="pre">Se3KeyboardAbsolute.advance()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#octilab.devices.Se3KeyboardAbsolute.add_callback"><code class="docutils literal notranslate"><span class="pre">Se3KeyboardAbsolute.add_callback()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#octilab.devices.Se3KeyboardDelta"><code class="docutils literal notranslate"><span class="pre">Se3KeyboardDelta</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#octilab.devices.Se3KeyboardDelta.__init__"><code class="docutils literal notranslate"><span class="pre">Se3KeyboardDelta.__init__()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#octilab.devices.Se3KeyboardDelta.reset"><code class="docutils literal notranslate"><span class="pre">Se3KeyboardDelta.reset()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#octilab.devices.Se3KeyboardDelta.advance"><code class="docutils literal notranslate"><span class="pre">Se3KeyboardDelta.advance()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#octilab.devices.Se3KeyboardDelta.add_callback"><code class="docutils literal notranslate"><span class="pre">Se3KeyboardDelta.add_callback()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rokokoglove">RokokoGlove</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#octilab.devices.RokokoGlove"><code class="docutils literal notranslate"><span class="pre">RokokoGlove</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#octilab.devices.RokokoGlove.__init__"><code class="docutils literal notranslate"><span class="pre">RokokoGlove.__init__()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#octilab.devices.RokokoGlove.reset"><code class="docutils literal notranslate"><span class="pre">RokokoGlove.reset()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#octilab.devices.RokokoGlove.advance"><code class="docutils literal notranslate"><span class="pre">RokokoGlove.advance()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#octilab.devices.RokokoGlove.add_callback"><code class="docutils literal notranslate"><span class="pre">RokokoGlove.add_callback()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#octilab.devices.RokokoGloveKeyboard"><code class="docutils literal notranslate"><span class="pre">RokokoGloveKeyboard</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#octilab.devices.RokokoGloveKeyboard.__init__"><code class="docutils literal notranslate"><span class="pre">RokokoGloveKeyboard.__init__()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#octilab.devices.RokokoGloveKeyboard.reset"><code class="docutils literal notranslate"><span class="pre">RokokoGloveKeyboard.reset()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#octilab.devices.RokokoGloveKeyboard.advance"><code class="docutils literal notranslate"><span class="pre">RokokoGloveKeyboard.advance()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#octilab.devices.RokokoGloveKeyboard.add_callback"><code class="docutils literal notranslate"><span class="pre">RokokoGloveKeyboard.add_callback()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="module-octilab.devices">
+<span id="octilab-devices"></span><h1>octilab.devices<a class="headerlink" href="#module-octilab.devices" title="Permalink to this heading">#</a></h1>
+<p class="rubric">Classes</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#octilab.devices.RokokoGlove" title="octilab.devices.RokokoGlove"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RokokoGlove</span></code></a></p></td>
+<td><p>A Rokoko_Glove controller for sending SE(3) commands as absolute poses of hands individual part</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#octilab.devices.Se3KeyboardAbsolute" title="octilab.devices.Se3KeyboardAbsolute"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Se3KeyboardAbsolute</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#octilab.devices.Se3KeyboardDelta" title="octilab.devices.Se3KeyboardDelta"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Se3KeyboardDelta</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<section id="keyboard">
+<h2>Keyboard<a class="headerlink" href="#keyboard" title="Permalink to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="octilab.devices.Se3KeyboardAbsolute">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">octilab.devices.</span></span><span class="sig-name descname"><span class="pre">Se3KeyboardAbsolute</span></span><a class="reference internal" href="../../../_modules/octilab/devices/se3_keyboard.html#Se3KeyboardAbsolute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#octilab.devices.Se3KeyboardAbsolute" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Se3Keyboard</span></code></p>
+<p><strong>Methods:</strong></p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#octilab.devices.Se3KeyboardAbsolute.__init__" title="octilab.devices.Se3KeyboardAbsolute.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>([pos_sensitivity, rot_sensitivity, ...])</p></td>
+<td><p>Initialize the keyboard layer.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#octilab.devices.Se3KeyboardAbsolute.reset" title="octilab.devices.Se3KeyboardAbsolute.reset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reset</span></code></a>()</p></td>
+<td><p>Reset the internals.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#octilab.devices.Se3KeyboardAbsolute.advance" title="octilab.devices.Se3KeyboardAbsolute.advance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">advance</span></code></a>()</p></td>
+<td><p>Provides the result from keyboard event state.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#octilab.devices.Se3KeyboardAbsolute.add_callback" title="octilab.devices.Se3KeyboardAbsolute.add_callback"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_callback</span></code></a>(key, func)</p></td>
+<td><p>Add additional functions to bind keyboard.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="octilab.devices.Se3KeyboardAbsolute.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pos_sensitivity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rot_sensitivity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cuda:0'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/octilab/devices/se3_keyboard.html#Se3KeyboardAbsolute.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#octilab.devices.Se3KeyboardAbsolute.__init__" title="Permalink to this definition">#</a></dt>
+<dd><p>Initialize the keyboard layer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pos_sensitivity</strong> – Magnitude of input position command scaling. Defaults to 0.05.</p></li>
+<li><p><strong>rot_sensitivity</strong> – Magnitude of scale input rotation commands scaling. Defaults to 0.5.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="octilab.devices.Se3KeyboardAbsolute.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/octilab/devices/se3_keyboard.html#Se3KeyboardAbsolute.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#octilab.devices.Se3KeyboardAbsolute.reset" title="Permalink to this definition">#</a></dt>
+<dd><p>Reset the internals.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="octilab.devices.Se3KeyboardAbsolute.advance">
+<span class="sig-name descname"><span class="pre">advance</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/octilab/devices/se3_keyboard.html#Se3KeyboardAbsolute.advance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#octilab.devices.Se3KeyboardAbsolute.advance" title="Permalink to this definition">#</a></dt>
+<dd><p>Provides the result from keyboard event state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A tuple containing the delta pose command and gripper commands.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="octilab.devices.Se3KeyboardAbsolute.add_callback">
+<span class="sig-name descname"><span class="pre">add_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable" title="(in Python v3.12)"><span class="pre">Callable</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#octilab.devices.Se3KeyboardAbsolute.add_callback" title="Permalink to this definition">#</a></dt>
+<dd><p>Add additional functions to bind keyboard.</p>
+<p>A list of available keys are present in the
+<a class="reference external" href="https://docs.omniverse.nvidia.com/dev-guide/latest/programmer_ref/input-devices/keyboard.html">carb documentation</a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> – The keyboard button to check against.</p></li>
+<li><p><strong>func</strong> – The function to call when key is pressed. The callback function should not
+take any arguments.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="octilab.devices.Se3KeyboardDelta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">octilab.devices.</span></span><span class="sig-name descname"><span class="pre">Se3KeyboardDelta</span></span><a class="reference internal" href="../../../_modules/octilab/devices/se3_keyboard.html#Se3KeyboardDelta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#octilab.devices.Se3KeyboardDelta" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Se3Keyboard</span></code></p>
+<p><strong>Methods:</strong></p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#octilab.devices.Se3KeyboardDelta.__init__" title="octilab.devices.Se3KeyboardDelta.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>([pos_sensitivity, rot_sensitivity, ...])</p></td>
+<td><p>Initialize the keyboard layer.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#octilab.devices.Se3KeyboardDelta.reset" title="octilab.devices.Se3KeyboardDelta.reset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reset</span></code></a>()</p></td>
+<td><p>Reset the internals.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#octilab.devices.Se3KeyboardDelta.advance" title="octilab.devices.Se3KeyboardDelta.advance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">advance</span></code></a>()</p></td>
+<td><p>Provides the result from keyboard event state.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#octilab.devices.Se3KeyboardDelta.add_callback" title="octilab.devices.Se3KeyboardDelta.add_callback"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_callback</span></code></a>(key, func)</p></td>
+<td><p>Add additional functions to bind keyboard.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="octilab.devices.Se3KeyboardDelta.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pos_sensitivity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rot_sensitivity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cuda:0'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/octilab/devices/se3_keyboard.html#Se3KeyboardDelta.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#octilab.devices.Se3KeyboardDelta.__init__" title="Permalink to this definition">#</a></dt>
+<dd><p>Initialize the keyboard layer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pos_sensitivity</strong> – Magnitude of input position command scaling. Defaults to 0.05.</p></li>
+<li><p><strong>rot_sensitivity</strong> – Magnitude of scale input rotation commands scaling. Defaults to 0.5.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="octilab.devices.Se3KeyboardDelta.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/octilab/devices/se3_keyboard.html#Se3KeyboardDelta.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#octilab.devices.Se3KeyboardDelta.reset" title="Permalink to this definition">#</a></dt>
+<dd><p>Reset the internals.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="octilab.devices.Se3KeyboardDelta.advance">
+<span class="sig-name descname"><span class="pre">advance</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/octilab/devices/se3_keyboard.html#Se3KeyboardDelta.advance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#octilab.devices.Se3KeyboardDelta.advance" title="Permalink to this definition">#</a></dt>
+<dd><p>Provides the result from keyboard event state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A tuple containing the delta pose command and gripper commands.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="octilab.devices.Se3KeyboardDelta.add_callback">
+<span class="sig-name descname"><span class="pre">add_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable" title="(in Python v3.12)"><span class="pre">Callable</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#octilab.devices.Se3KeyboardDelta.add_callback" title="Permalink to this definition">#</a></dt>
+<dd><p>Add additional functions to bind keyboard.</p>
+<p>A list of available keys are present in the
+<a class="reference external" href="https://docs.omniverse.nvidia.com/dev-guide/latest/programmer_ref/input-devices/keyboard.html">carb documentation</a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> – The keyboard button to check against.</p></li>
+<li><p><strong>func</strong> – The function to call when key is pressed. The callback function should not
+take any arguments.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="rokokoglove">
+<h2>RokokoGlove<a class="headerlink" href="#rokokoglove" title="Permalink to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="octilab.devices.RokokoGlove">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">octilab.devices.</span></span><span class="sig-name descname"><span class="pre">RokokoGlove</span></span><a class="reference internal" href="../../../_modules/octilab/devices/rokoko_glove.html#RokokoGlove"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#octilab.devices.RokokoGlove" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">DeviceBase</span></code></p>
+<p>A Rokoko_Glove controller for sending SE(3) commands as absolute poses of hands individual part</p>
+<p>This class is designed to track hands and fingers’s pose from rokoko gloves.
+It uses the udp network protocal to listen to Rokoko Live Studio data gathered from Rokoko smart gloves,
+and process the data in form of torch Tensor.
+Addressing the efficiency and ease to understand, the tracking will only be performed with user’s parts
+input, and all Literal of available parts is exhaustively listed in the comment under method __init__.</p>
+<p><strong>Methods:</strong></p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#octilab.devices.RokokoGlove.__init__" title="octilab.devices.RokokoGlove.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>([UDP_IP, UDP_PORT, ...])</p></td>
+<td><p>Initialize the Rokoko_Glove Controller.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#octilab.devices.RokokoGlove.reset" title="octilab.devices.RokokoGlove.reset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reset</span></code></a>()</p></td>
+<td><p>Reset the internals.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#octilab.devices.RokokoGlove.advance" title="octilab.devices.RokokoGlove.advance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">advance</span></code></a>()</p></td>
+<td><p>Provides the joystick event state.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#octilab.devices.RokokoGlove.add_callback" title="octilab.devices.RokokoGlove.add_callback"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_callback</span></code></a>(key, func)</p></td>
+<td><p>Add additional functions to bind keyboard.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="octilab.devices.RokokoGlove.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">UDP_IP</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'0.0.0.0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">UDP_PORT</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">14043</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">left_hand_track</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right_hand_track</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.65</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">proximal_offset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cuda:0'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/octilab/devices/rokoko_glove.html#RokokoGlove.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#octilab.devices.RokokoGlove.__init__" title="Permalink to this definition">#</a></dt>
+<dd><p>Initialize the Rokoko_Glove Controller.
+Be aware that current implementation outputs pose of each hand part in the same order as input list,
+but parts come from left hand always come before parts from right hand.</p>
+<p>available tracking literals:
+LEFT_HAND:</p>
+<blockquote>
+<div><p>leftHand, leftThumbProximal, leftThumbMedial, leftThumbDistal, leftThumbTip,
+leftIndexProximal, leftIndexMedial, leftIndexDistal, leftIndexTip,
+leftMiddleProximal, leftMiddleMedial, leftMiddleDistal, leftMiddleTip,
+leftRingProximal, leftRingMedial, leftRingDistal, leftRingTip,
+leftLittleProximal, leftLittleMedial, leftLittleDistal, leftLittleTip</p>
+</div></blockquote>
+<dl class="simple">
+<dt>RIGHT_HAND:</dt><dd><p>rightHand, rightThumbProximal, rightThumbMedial, rightThumbDistal, rightThumbTip
+rightIndexProximal, rightIndexMedial, rightIndexDistal, rightIndexTip,
+rightMiddleProximal, rightMiddleMedial, rightMiddleDistal, rightMiddleTip
+rightRingProximal, rightRingMedial, rightRingDistal, rightRingTip,
+rightLittleProximal, rightLittleMedial, rightLittleDistal, rightLittleTip</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>UDP_IP</strong> – The IP Address of network to listen to, 0.0.0.0 refers to all available networks</p></li>
+<li><p><strong>UDP_PORT</strong> – The port Rokoko Studio Live sends to</p></li>
+<li><p><strong>left_hand_track</strong> – the trackpoint of left hand this class will be tracking.</p></li>
+<li><p><strong>right_hand_track</strong> – the trackpoint of right hand this class will be tracking.</p></li>
+<li><p><strong>scale</strong> – the overal scale for the hand.</p></li>
+<li><p><strong>proximal_offset</strong> – the inter proximal offset that shorten or widen the spread of hand.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="octilab.devices.RokokoGlove.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/octilab/devices/rokoko_glove.html#RokokoGlove.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#octilab.devices.RokokoGlove.reset" title="Permalink to this definition">#</a></dt>
+<dd><p>Reset the internals.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="octilab.devices.RokokoGlove.advance">
+<span class="sig-name descname"><span class="pre">advance</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/octilab/devices/rokoko_glove.html#RokokoGlove.advance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#octilab.devices.RokokoGlove.advance" title="Permalink to this definition">#</a></dt>
+<dd><p>Provides the joystick event state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The processed output form the joystick.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="octilab.devices.RokokoGlove.add_callback">
+<span class="sig-name descname"><span class="pre">add_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable" title="(in Python v3.12)"><span class="pre">Callable</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/octilab/devices/rokoko_glove.html#RokokoGlove.add_callback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#octilab.devices.RokokoGlove.add_callback" title="Permalink to this definition">#</a></dt>
+<dd><p>Add additional functions to bind keyboard.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> – The button to check against.</p></li>
+<li><p><strong>func</strong> – The function to call when key is pressed. The callback function should not
+take any arguments.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="octilab.devices.RokokoGloveKeyboard">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">octilab.devices.</span></span><span class="sig-name descname"><span class="pre">RokokoGloveKeyboard</span></span><a class="reference internal" href="../../../_modules/octilab/devices/rokoko_glove_keyboard.html#RokokoGloveKeyboard"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#octilab.devices.RokokoGloveKeyboard" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">DeviceBase</span></code></p>
+<p>A keyboard controller for sending SE(3) commands as absolute poses, and gloves for sending commands
+of hands individual part.</p>
+<p><strong>Methods:</strong></p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#octilab.devices.RokokoGloveKeyboard.__init__" title="octilab.devices.RokokoGloveKeyboard.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>([pos_sensitivity, rot_sensitivity, ...])</p></td>
+<td><p>Initialize the teleoperation interface.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#octilab.devices.RokokoGloveKeyboard.reset" title="octilab.devices.RokokoGloveKeyboard.reset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reset</span></code></a>()</p></td>
+<td><p>Reset the internals.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#octilab.devices.RokokoGloveKeyboard.advance" title="octilab.devices.RokokoGloveKeyboard.advance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">advance</span></code></a>()</p></td>
+<td><p>Provides the joystick event state.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#octilab.devices.RokokoGloveKeyboard.add_callback" title="octilab.devices.RokokoGloveKeyboard.add_callback"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_callback</span></code></a>(key, func)</p></td>
+<td><p>Add additional functions to bind keyboard.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="octilab.devices.RokokoGloveKeyboard.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pos_sensitivity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rot_sensitivity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">UDP_IP</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'0.0.0.0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">UDP_PORT</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">14043</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">left_hand_track</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right_hand_track</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">proximal_offset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cuda:0'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/octilab/devices/rokoko_glove_keyboard.html#RokokoGloveKeyboard.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#octilab.devices.RokokoGloveKeyboard.__init__" title="Permalink to this definition">#</a></dt>
+<dd><p>Initialize the teleoperation interface.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="octilab.devices.RokokoGloveKeyboard.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/octilab/devices/rokoko_glove_keyboard.html#RokokoGloveKeyboard.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#octilab.devices.RokokoGloveKeyboard.reset" title="Permalink to this definition">#</a></dt>
+<dd><p>Reset the internals.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="octilab.devices.RokokoGloveKeyboard.advance">
+<span class="sig-name descname"><span class="pre">advance</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/octilab/devices/rokoko_glove_keyboard.html#RokokoGloveKeyboard.advance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#octilab.devices.RokokoGloveKeyboard.advance" title="Permalink to this definition">#</a></dt>
+<dd><p>Provides the joystick event state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The processed output form the joystick.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="octilab.devices.RokokoGloveKeyboard.add_callback">
+<span class="sig-name descname"><span class="pre">add_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable" title="(in Python v3.12)"><span class="pre">Callable</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/octilab/devices/rokoko_glove_keyboard.html#RokokoGloveKeyboard.add_callback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#octilab.devices.RokokoGloveKeyboard.add_callback" title="Permalink to this definition">#</a></dt>
+<dd><p>Add additional functions to bind keyboard.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> – The button to check against.</p></li>
+<li><p><strong>func</strong> – The function to call when key is pressed. The callback function should not
+take any arguments.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="octilab.controllers.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">octilab.controllers</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="octilab.envs.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">octilab.envs</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#keyboard">Keyboard</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#octilab.devices.Se3KeyboardAbsolute"><code class="docutils literal notranslate"><span class="pre">Se3KeyboardAbsolute</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#octilab.devices.Se3KeyboardAbsolute.__init__"><code class="docutils literal notranslate"><span class="pre">Se3KeyboardAbsolute.__init__()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#octilab.devices.Se3KeyboardAbsolute.reset"><code class="docutils literal notranslate"><span class="pre">Se3KeyboardAbsolute.reset()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#octilab.devices.Se3KeyboardAbsolute.advance"><code class="docutils literal notranslate"><span class="pre">Se3KeyboardAbsolute.advance()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#octilab.devices.Se3KeyboardAbsolute.add_callback"><code class="docutils literal notranslate"><span class="pre">Se3KeyboardAbsolute.add_callback()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#octilab.devices.Se3KeyboardDelta"><code class="docutils literal notranslate"><span class="pre">Se3KeyboardDelta</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#octilab.devices.Se3KeyboardDelta.__init__"><code class="docutils literal notranslate"><span class="pre">Se3KeyboardDelta.__init__()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#octilab.devices.Se3KeyboardDelta.reset"><code class="docutils literal notranslate"><span class="pre">Se3KeyboardDelta.reset()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#octilab.devices.Se3KeyboardDelta.advance"><code class="docutils literal notranslate"><span class="pre">Se3KeyboardDelta.advance()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#octilab.devices.Se3KeyboardDelta.add_callback"><code class="docutils literal notranslate"><span class="pre">Se3KeyboardDelta.add_callback()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rokokoglove">RokokoGlove</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#octilab.devices.RokokoGlove"><code class="docutils literal notranslate"><span class="pre">RokokoGlove</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#octilab.devices.RokokoGlove.__init__"><code class="docutils literal notranslate"><span class="pre">RokokoGlove.__init__()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#octilab.devices.RokokoGlove.reset"><code class="docutils literal notranslate"><span class="pre">RokokoGlove.reset()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#octilab.devices.RokokoGlove.advance"><code class="docutils literal notranslate"><span class="pre">RokokoGlove.advance()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#octilab.devices.RokokoGlove.add_callback"><code class="docutils literal notranslate"><span class="pre">RokokoGlove.add_callback()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#octilab.devices.RokokoGloveKeyboard"><code class="docutils literal notranslate"><span class="pre">RokokoGloveKeyboard</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#octilab.devices.RokokoGloveKeyboard.__init__"><code class="docutils literal notranslate"><span class="pre">RokokoGloveKeyboard.__init__()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#octilab.devices.RokokoGloveKeyboard.reset"><code class="docutils literal notranslate"><span class="pre">RokokoGloveKeyboard.reset()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#octilab.devices.RokokoGloveKeyboard.advance"><code class="docutils literal notranslate"><span class="pre">RokokoGloveKeyboard.advance()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#octilab.devices.RokokoGloveKeyboard.add_callback"><code class="docutils literal notranslate"><span class="pre">RokokoGloveKeyboard.add_callback()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Isaac Lab Project Developers.
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022-2024, The Isaac Lab Project Developers..
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    <p class="last-updated">
+  Last updated on Jul 09, 2024.
+  <br/>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
