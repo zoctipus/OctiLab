@@ -34,7 +34,6 @@ manner, as it inherits as much as from Isaac Lab, so it updates as soon as Isaac
 
 **Tycho:**
 
-**Keywords:** extension, template, orbit
 
 ### License
 
