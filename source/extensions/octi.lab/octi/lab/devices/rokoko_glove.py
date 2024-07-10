@@ -8,27 +8,13 @@ from collections.abc import Callable
 
 class RokokoGlove(DeviceBase):
     """A Rokoko_Glove controller for sending SE(3) commands as absolute poses of hands individual part
-
     This class is designed to track hands and fingers's pose from rokoko gloves.
     It uses the udp network protocal to listen to Rokoko Live Studio data gathered from Rokoko smart gloves,
     and process the data in form of torch Tensor.
     Addressing the efficiency and ease to understand, the tracking will only be performed with user's parts
     input, and all Literal of available parts is exhaustively listed in the comment under method __init__.
 
-    """
-    def __init__(self,
-                 UDP_IP: str = "0.0.0.0",  # Listen on all available network interfaces
-                 UDP_PORT: int = 14043,   # Make sure this matches the port used in Rokoko Studio Live
-                 left_hand_track: list[str] = [],
-                 right_hand_track: list[str] = [],
-                 scale: float = 1.65,
-                 proximal_offset: float = 0.3,
-                 device="cuda:0"):
-        """Initialize the Rokoko_Glove Controller.
-        Be aware that current implementation outputs pose of each hand part in the same order as input list,
-        but parts come from left hand always come before parts from right hand.
-
-        available tracking literals:
+    available tracking literals:
         LEFT_HAND:
             leftHand, leftThumbProximal, leftThumbMedial, leftThumbDistal, leftThumbTip,
             leftIndexProximal, leftIndexMedial, leftIndexDistal, leftIndexTip,
@@ -42,6 +28,18 @@ class RokokoGlove(DeviceBase):
             rightMiddleProximal, rightMiddleMedial, rightMiddleDistal, rightMiddleTip
             rightRingProximal, rightRingMedial, rightRingDistal, rightRingTip,
             rightLittleProximal, rightLittleMedial, rightLittleDistal, rightLittleTip
+    """
+    def __init__(self,
+                 UDP_IP: str = "0.0.0.0",  # Listen on all available network interfaces
+                 UDP_PORT: int = 14043,   # Make sure this matches the port used in Rokoko Studio Live
+                 left_hand_track: list[str] = [],
+                 right_hand_track: list[str] = [],
+                 scale: float = 1.65,
+                 proximal_offset: float = 0.3,
+                 device="cuda:0"):
+        """Initialize the Rokoko_Glove Controller.
+        Be aware that current implementation outputs pose of each hand part in the same order as input list,
+        but parts come from left hand always come before parts from right hand.
 
         Args:
             UDP_IP: The IP Address of network to listen to, 0.0.0.0 refers to all available networks
@@ -95,12 +93,19 @@ class RokokoGlove(DeviceBase):
         self.output_indices = torch.tensor(output_indices_list, device=self.device)
 
     def reset(self):
-        pass
-
-    def advance(self):
+        "Reset Internal Buffer"
         self.left_fingertip_poses = torch.zeros((len(self.left_hand_joint_names), 7), device=self.device)
         self.right_fingertip_poses = torch.zeros((len(self.right_hand_joint_names), 7), device=self.device)
-        body_data = self.get_gloves_data()
+
+    def advance(self):
+        """Provides the properly scaled, ordered, selected tracking results received from Rokoko Studio.
+
+        Returns:
+            A tuple containing the 2D (n,7) pose array ordered by user inputed joint track list, and a dummy truth value.
+        """
+        self.left_fingertip_poses = torch.zeros((len(self.left_hand_joint_names), 7), device=self.device)
+        self.right_fingertip_poses = torch.zeros((len(self.right_hand_joint_names), 7), device=self.device)
+        body_data = self._get_gloves_data()
 
         for joint_name in self.left_fingertip_names:
             joint_data = body_data[joint_name]
@@ -152,12 +157,11 @@ class RokokoGlove(DeviceBase):
 
         return self.fingertip_poses[self.output_indices], True  # True being a placeholder statisfy abstract method
 
-    def get_gloves_data(self):
+    def _get_gloves_data(self):
         data, addr = self.sock.recvfrom(8192)  # Buffer size is 1024 bytes
         decompressed_data = lz4.frame.decompress(data)
         received_json = json.loads(decompressed_data)
         body_data = received_json["scene"]["actors"][0]["body"]
-
         return body_data
 
     def add_callback(self, key: str, func: Callable):
@@ -168,7 +172,13 @@ class RokokoGlove(DeviceBase):
         self._additional_callbacks[key] = func
 
     def debug_advance_all_joint_data(self):
-        body_data = self.get_gloves_data()
+        """Provides the properly scaled, all tracking results received from Rokoko Studio.
+        It is intended to use a debug and visualization function inspecting all data from Rokoko Glove.
+
+        Returns:
+            A tuple containing the 2D (42,7) pose array(left:0-21, right:21-42), and a dummy truth value.
+        """
+        body_data = self._get_gloves_data()
 
         for joint_name in self.left_hand_joint_names:
             joint_data = body_data[joint_name]

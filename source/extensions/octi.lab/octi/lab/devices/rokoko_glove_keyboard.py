@@ -7,6 +7,22 @@ from . import Se3KeyboardAbsolute
 class RokokoGloveKeyboard(DeviceBase):
     """A keyboard controller for sending SE(3) commands as absolute poses, and gloves for sending commands
     of hands individual part.
+
+    The keyboard command binding:
+    * absolute pose: a 6D vector of (x, y, z, roll, pitch, yaw) in meters and radians.
+
+    Key bindings:
+        ============================== ================= =================
+        Description                    Key (+ve axis)    Key (-ve axis)
+        ============================== ================= =================
+        Move along x-axis              W                 S
+        Move along y-axis              A                 D
+        Move along z-axis              Q                 E
+        Rotate along x-axis            Z                 X
+        Rotate along y-axis            T                 G
+        Rotate along z-axis            C                 V
+        ============================== ================= =================
+
     """
     def __init__(self,
                  pos_sensitivity: float = 0.4,
@@ -18,6 +34,18 @@ class RokokoGloveKeyboard(DeviceBase):
                  scale: float = 1,
                  proximal_offset: float = 0.3,
                  device="cuda:0"):
+        """Initialize the Rokoko_Glove Controller and Keyboard Controller.
+
+        Args:
+            pos_sensitivity: Magnitude of input position command scaling. Defaults to 0.05.
+            rot_sensitivity: Magnitude of scale input rotation commands scaling. Defaults to 0.5.
+            UDP_IP: The IP Address of network to listen to, 0.0.0.0 refers to all available networks
+            UDP_PORT: The port Rokoko Studio Live sends to
+            left_hand_track: the trackpoint of left hand this class will be tracking.
+            right_hand_track: the trackpoint of right hand this class will be tracking.
+            scale: the overal scale for the hand.
+            proximal_offset: the inter proximal offset that shorten or widen the spread of hand.
+        """
         self.hand_device = RokokoGlove(UDP_IP, UDP_PORT, left_hand_track, right_hand_track, scale, proximal_offset, device)
         self.keyboard_device = Se3KeyboardAbsolute(pos_sensitivity, rot_sensitivity, device)
 
@@ -28,10 +56,18 @@ class RokokoGloveKeyboard(DeviceBase):
         return self.keyboard_device.__str__()
 
     def reset(self):
+        """Resets the internal states of hand and keyboard"""
         self.hand_device.reset()
         self.keyboard_device.reset()
 
     def advance(self):
+        """Gloves no longer translate hands, intead, keyboard controls hands translation
+        While Gloves providing the properly scaled, ordered, selected tracking results received from Rokoko Studio,
+        gloves does not translates hands, instead keyboard provides palms position.
+
+        Returns:
+            A tuple containing the 2D (n,7) pose array ordered by user inputed joint track list, and a dummy truth value.
+        """
         hand_command = self.hand_device.advance()[0]
         keyboard_command = self.keyboard_device.advance()[0]
         hand_command[:, :3] -= hand_command[0, :3]
