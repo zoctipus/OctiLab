@@ -219,6 +219,12 @@ html_theme_options = {
     "icon_links": [
         {
             "name": "GitHub",
+            "url": "https://github.com/zoctipus/OctiLab",
+            "icon": "fa-brands fa-square-github",
+            "type": "fontawesome",
+        },
+        {
+            "name": "Isaac Lab",
             "url": "https://github.com/isaac-sim/IsaacLab",
             "icon": "fa-brands fa-square-github",
             "type": "fontawesome",

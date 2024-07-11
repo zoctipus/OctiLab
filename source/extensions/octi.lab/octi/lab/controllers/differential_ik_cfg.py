@@ -10,6 +10,6 @@ from omni.isaac.lab.controllers.differential_ik_cfg import DifferentialIKControl
 
 @configclass
 class MultiConstraintDifferentialIKControllerCfg(DifferentialIKControllerCfg):
-    """Configuration for differential inverse kinematics controller."""
+    """Configuration for multiconstraint differential inverse kinematics controller."""
 
     class_type: type = MultiConstraintDifferentialIKController

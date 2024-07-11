@@ -17,6 +17,9 @@ if TYPE_CHECKING:
 class MultiConstraintDifferentialIKController:
     r"""Differential inverse kinematics (IK) controller.
 
+    .. note::
+        This controller extends Isaac Lab differential inverse kinematic and provides multi constraints solution.
+
     This controller is based on the concept of differential inverse kinematics [1, 2] which is a method for computing
     the change in joint positions that yields the desired change in pose.
 
@@ -29,13 +32,14 @@ class MultiConstraintDifferentialIKController:
     :math:`\Delta \mathbf{x}` is the desired change in pose, and :math:`\mathbf{q}_{\text{current}}`
     is the current joint positions.
 
-    To deal with singularity in Jacobian, the following methods are supported for computing inverse of the Jacobian:
-        - "pinv": Moore-Penrose pseudo-inverse
-        - "svd": Adaptive singular-value decomposition (SVD)
-        - "trans": Transpose of matrix
+    Currently only below methods are supported :
         - "dls": Damped version of Moore-Penrose pseudo-inverse (also called Levenberg-Marquardt)
 
+
     .. caution::
+        Isaac Lab non-multiconstraints version implementation contains methods such as pinv, svd, trans, however
+        their solution is not yet implemented even though these inputs are available.
+
         The controller does not assume anything about the frames of the current and desired end-effector pose,
         or the joint-space velocities. It is up to the user to ensure that these quantities are given
         in the correct format.
@@ -43,6 +47,7 @@ class MultiConstraintDifferentialIKController:
     Reference:
         [1] https://ethz.ch/content/dam/ethz/special-interest/mavt/robotics-n-intelligent-systems/rsl-dam/documents/RobotDynamics2017/RD_HS2017script.pdf
         [2] https://www.cs.cmu.edu/~15464-s13/lectures/lecture6/iksurvey.pdf
+        [3] https://isaac-sim.github.io/IsaacLab/source/api/lab/omni.isaac.lab.controllers.html
     """
 
     def __init__(self, cfg: MultiConstraintDifferentialIKControllerCfg, num_bodies: int, num_envs: int, device: str):
@@ -100,7 +105,7 @@ class MultiConstraintDifferentialIKController:
         applies the relative mode if the command type is ``position_rel`` or ``pose_rel``.
 
         Args:
-            command: The input command in shape (N, 3) or (N, 6) or (N, 7).
+            command: The input command in shape (N, 3 * num_bodies) or (N, 6 * num_bodies) or (N, 7 * num_bodies).
             ee_pos: The current end-effector position in shape (N, 3).
                 This is only needed if the command type is ``position_rel`` or ``pose_rel``.
             ee_quat: The current end-effector orientation (w, x, y, z) in shape (N, 4).
