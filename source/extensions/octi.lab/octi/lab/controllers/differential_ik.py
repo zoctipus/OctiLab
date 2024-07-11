@@ -87,7 +87,7 @@ class MultiConstraintDifferentialIKController:
     Operations.
     """
 
-    def reset(self, env_ids: torch.Tensor = None):
+    def reset(self, env_ids: torch.Tensor = None):  # type: ignore
         """Reset the internals.
 
         Args:

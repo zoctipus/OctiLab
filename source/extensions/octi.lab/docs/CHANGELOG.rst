@@ -1,6 +1,16 @@
 Changelog
 ---------
 
+0.1.9 (2024-07-10)
+~~~~~~~~~~~~~~~~~~
+
+
+Changed
+^^^^^^^
+
+* Documented :class:`octi.lab.controllers.MultiConstraintDifferentialIKController`,
+  :class:`octi.lab.controllers.MultiConstraintDifferentialIKControllerCfg`
+
 
 0.1.8 (2024-07-09)
 ~~~~~~~~~~~~~~~~~~
