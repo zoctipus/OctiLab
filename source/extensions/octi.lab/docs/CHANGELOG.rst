@@ -1,6 +1,17 @@
 Changelog
 ---------
 
+0.2.0 (2024-07-10)
+~~~~~~~~~~~~~~~~~~
+
+
+Changed
+^^^^^^^
+
+* Added Reward Term :func:`octi.lab.envs.mdp.rewards.reward_body1_frame2_distance`
+* Let Keyboard device accepts initial transform pose input :class:`octi.lab.devices.Se3Keyboard`
+
+
 0.1.9 (2024-07-10)
 ~~~~~~~~~~~~~~~~~~
 
@@ -19,8 +30,8 @@ Changed
 Changed
 ^^^^^^^
 
-* Documented :class:`octi.lab.devices.rokoko_glove.RokokoGlove`,
-  :class:`octi.lab.devices.rokoko_glove.RokokoGloveKeyboard`, :class:`octi.lab.devices.rokoko_glove.Se3Keyboard`
+* Documented :class:`octi.lab.devices.RokokoGlove`,
+  :class:`octi.lab.devices.RokokoGloveKeyboard`, :class:`octi.lab.devices.Se3Keyboard`
 
 
 

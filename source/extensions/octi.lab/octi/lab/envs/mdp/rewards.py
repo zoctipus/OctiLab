@@ -20,6 +20,11 @@ def get_body1_body2_distance(body1, body2, body1_offset, body2_offset):
     return bodys_distance
 
 
+def get_frame1_body2_distance(frame1, body2, body2_offset):
+    distance = torch.norm(frame1.data.target_pos_w[..., 0, :] - (body2.data.root_pos_w + body2_offset), dim=1)
+    return distance
+
+
 def reward_body_height_above(
     env: ManagerBasedRLEnv, minimum_height: float, asset_cfg: SceneEntityCfg
 ) -> torch.Tensor:
@@ -56,4 +61,17 @@ def reward_body1_body2_distance(
     body1_offset_tensor = torch.tensor(body1_offset, device=env.device)
     body2_offset_tensor = torch.tensor(body2_offset, device=env.device)
     bodys_distance = get_body1_body2_distance(body1, body2, body1_offset_tensor, body2_offset_tensor)
+    return 1 - torch.tanh(bodys_distance / 0.1)
+
+
+def reward_body1_frame2_distance(
+    env: ManagerBasedRLEnv,
+    body_cfg: SceneEntityCfg,
+    frame_cfg: SceneEntityCfg,
+    body_offset: list[float] = [0.0, 0.0, 0.0],
+) -> torch.Tensor:
+    body: RigidObject = env.scene[body_cfg.name]
+    object_frame: RigidObject = env.scene[frame_cfg.name]
+    body_offset_tensor = torch.tensor(body_offset, device=env.device)
+    bodys_distance = get_frame1_body2_distance(object_frame, body, body_offset_tensor)
     return 1 - torch.tanh(bodys_distance / 0.1)

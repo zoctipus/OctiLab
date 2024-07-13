@@ -39,12 +39,11 @@ from omni.isaac.lab.devices import Se3Gamepad, Se3SpaceMouse
 from octi.lab.devices import Se3KeyboardAbsolute, RokokoGlove, RokokoGloveKeyboard
 import omni.isaac.lab_tasks  # noqa: F401
 import octi.lab_tasks.tasks  # noqa: F401
-import octi.lab.envs.octi.lab_tasks.tasks.manipulations  # noqa: F401
 from omni.isaac.lab_tasks.utils import parse_env_cfg
 from omni.isaac.lab.utils.math import quat_mul, quat_from_angle_axis
 from omni.isaac.lab.markers.config import FRAME_MARKER_CFG
 
-# from omni.isaac.lab.markers import VisualizationMarkers
+from omni.isaac.lab.markers import VisualizationMarkers
 
 
 def pre_process_actions(delta_pose: torch.Tensor, gripper_command: bool) -> torch.Tensor:
@@ -99,7 +98,9 @@ def main():
     # create controller
     if args_cli.device.lower() == "keyboard":
         teleop_interface = Se3KeyboardAbsolute(
-            pos_sensitivity=0.01 * args_cli.sensitivity, rot_sensitivity=0.01 * args_cli.sensitivity
+            pos_sensitivity=0.002 * args_cli.sensitivity,
+            rot_sensitivity=0.01 * args_cli.sensitivity,
+            init_pose=[0.3000, 0, 0.0500, 1, 0, 0, 0]
         )
 
         def preprocess_func(x):
@@ -123,7 +124,7 @@ def main():
 
     elif args_cli.device.lower() == "rokoko_smartglove":
         teleop_interface = RokokoGlove(
-            UDP_IP="0.0.0.0",
+            UDP_IP="10.158.54.173",
             UDP_PORT=14043,
             scale=1.65,
             right_hand_track=[
@@ -175,7 +176,7 @@ def main():
 
     frame_marker_cfg = FRAME_MARKER_CFG.copy()  # type: ignore
     frame_marker_cfg.markers["frame"].scale = (0.02, 0.02, 0.02)
-    # goal_marker = VisualizationMarkers(frame_marker_cfg.replace(prim_path="/Visuals/ee_goal"))
+    goal_marker = VisualizationMarkers(frame_marker_cfg.replace(prim_path="/Visuals/ee_goal"))
     # reset environment
     env.reset()
     teleop_interface.reset()
@@ -200,8 +201,9 @@ def main():
             # goal_marker.visualize(
             #     test[:, :3] + env.unwrapped.scene._default_env_origins, test[:, 3:])
             actions_clone = preprocess_func(teleop_output)
+            goal_marker.visualize(actions_clone[:, :3], actions_clone[:, 3:7])
             # print(actions_clone)
-            env.step(actions_clone)
+            env.step(actions_clone[:, :7])
     # close the simulator
     env.close()
 

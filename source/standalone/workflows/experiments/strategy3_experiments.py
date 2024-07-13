@@ -38,12 +38,14 @@ args_cli.headless = True
 #          "IkDeltaDls-Strategy3MotorHebi-JointPos-GoalTracking-pp1-ep1dot5",
 #          "IkDeltaDls-Strategy3MotorHebi-JointPos-GoalTracking-pp1-ep2",]
 
-tasks = ["IkDeltaDls-Strategy3MotorHebi-JointPos-GoalTracking-pp2-ep1",
-         "IkDeltaDls-Strategy3MotorHebi-JointPos-GoalTracking-pp5-ep1",
-         "IkDeltaDls-Strategy3MotorHebi-JointPos-GoalTracking-pp1-ep0dot2",
-         "IkDeltaDls-Strategy3MotorHebi-JointPos-GoalTracking-pp1-ep0dot5",
-         "IkDeltaDls-Strategy3MotorHebi-JointPos-GoalTracking-pp1-ep1dot5",
-         "IkDeltaDls-Strategy3MotorHebi-JointPos-GoalTracking-pp1-ep2",]
+tasks = [
+    "IkDeltaDls-Strategy3MotorHebi-JointPos-GoalTracking-pp2-ep1",
+    "IkDeltaDls-Strategy3MotorHebi-JointPos-GoalTracking-pp5-ep1",
+    "IkDeltaDls-Strategy3MotorHebi-JointPos-GoalTracking-pp1-ep0dot2",
+    "IkDeltaDls-Strategy3MotorHebi-JointPos-GoalTracking-pp1-ep0dot5",
+    "IkDeltaDls-Strategy3MotorHebi-JointPos-GoalTracking-pp1-ep1dot5",
+    "IkDeltaDls-Strategy3MotorHebi-JointPos-GoalTracking-pp1-ep2",
+]
 
 
 def run_experiment():

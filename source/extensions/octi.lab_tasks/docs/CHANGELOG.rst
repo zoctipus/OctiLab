@@ -1,6 +1,18 @@
 Changelog
 ---------
 
+0.1.8 (2024-07-08)
+~~~~~~~~~~~~~~~~~~
+
+Changed
+^^^^^^^
+
+* added leap hand xarm robot cfg and dynamic at :file:`octi.lab_tasks.cfgs.robots.leap_hand.robot_cfg.py` and 
+  :file:`octi.lab_tasks.cfgs.robots.leap_hand_xarm.robot_dynamics.py`
+* added environment :file:`octi.lab_tasks.tasks.manipulations.lift_cube.track_goal.confg.leap_hand_xarm.LeapHandXarm_JointPos_GoalTracking_Env.py`
+* added environment :file:`octi.lab_tasks.tasks.manipulations.lift_cube.lift_cube.confg.leap_hand_xarm.LeapHandXarm_JointPos_LiftCube_Env.py`
+
+
 0.1.7 (2024-07-08)
 ~~~~~~~~~~~~~~~~~~
 

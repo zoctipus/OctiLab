@@ -39,7 +39,7 @@ class SceneObjectSceneCfg(InteractiveSceneCfg):
 
     object: AssetBaseCfg = RigidObjectCfg(
         prim_path="{ENV_REGEX_NS}/Object",
-        init_state=RigidObjectCfg.InitialStateCfg(pos=(0, 0, 0.055), rot=(1, 0, 0, 0)),
+        init_state=RigidObjectCfg.InitialStateCfg(pos=(0, 0, 0.016), rot=(1, 0, 0, 0)),
         spawn=UsdFileCfg(
             usd_path=f"{ISAAC_NUCLEUS_DIR}/Props/Blocks/DexCube/dex_cube_instanceable.usd",
             scale=(0.015/0.03, 0.015/0.03, 0.015/0.03),
@@ -81,7 +81,7 @@ class SceneEventCfg:
         func=orbit_mdp.reset_root_state_with_random_orientation,
         mode="reset",
         params={
-            "pose_range": {"x": (-0.5, -0.2), "y": (-0.5, -0.2), "z": (0.03, 0.07)},
+            "pose_range": {"x": (-0.2, 0.2), "y": (-0.4, 0.4), "z": (0.00, 0.00)},
             "velocity_range": {},
             "asset_cfg": SceneEntityCfg("object", body_names="Object"),
         },

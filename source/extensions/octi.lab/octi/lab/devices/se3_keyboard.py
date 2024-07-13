@@ -66,7 +66,11 @@ class Se3KeyboardAbsolute(Se3Keyboard):
         The official documentation for the keyboard interface: `Carb Keyboard Interface <https://docs.omniverse.nvidia.com/dev-guide/latest/programmer_ref/input-devices/keyboard.html>`__.
 
     """
-    def __init__(self, pos_sensitivity: float = 0.4, rot_sensitivity: float = 0.8, device="cuda:0"):
+    def __init__(self,
+                 pos_sensitivity: float = 0.4,
+                 rot_sensitivity: float = 0.8,
+                 init_pose: list = [-0.3000, -0.3000, 0.0500, -1.5497e-05, 2.0993e-05, 7.1197e-01, -7.0221e-01],
+                 device="cuda:0"):
         """Initialize the keyboard layer.
 
         Args:
@@ -77,8 +81,7 @@ class Se3KeyboardAbsolute(Se3Keyboard):
         self.device = device
         self.absolute_pose = torch.zeros(7, device=self.device)
         # self.init_pose = torch.tensor([[-0.265, -0.28, 0.05, 0.0, 0.0, 1, 0.0]], device=self.device)
-        self.init_pose = torch.tensor([
-            [-0.3000, -0.3000, 0.0500, -1.5497e-05, 2.0993e-05, 7.1197e-01, -7.0221e-01]], device=self.device)
+        self.init_pose = torch.tensor([init_pose], device=self.device)
 
     """
     Operations

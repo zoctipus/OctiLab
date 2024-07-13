@@ -9,6 +9,7 @@ from omni.isaac.lab.sensors import FrameTransformer
 if TYPE_CHECKING:
     from omni.isaac.lab.envs import ManagerBasedRLEnv
 from omni.isaac.lab.utils.math import combine_frame_transforms
+from octi.lab.envs.mdp import get_body1_body2_distance
 
 
 def _get_object_ee_distance(object, fixed_chop_tip_frame, free_chop_tip_frame):
