@@ -15,8 +15,8 @@ from omni.isaac.lab_tasks.utils.wrappers.rsl_rl import (
 
 @configclass
 class Base_PPORunnerCfg(RslRlOnPolicyRunnerCfg):
-    num_steps_per_env = 32
-    max_iterations = 1500
+    num_steps_per_env = 64
+    max_iterations = 3000
     save_interval = 50
     resume = False
     experiment_name = "leap_lift_cube_agent"

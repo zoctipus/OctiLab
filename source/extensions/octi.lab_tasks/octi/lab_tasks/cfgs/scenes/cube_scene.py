@@ -81,7 +81,7 @@ class SceneEventCfg:
         func=orbit_mdp.reset_root_state_with_random_orientation,
         mode="reset",
         params={
-            "pose_range": {"x": (-0.2, 0.2), "y": (-0.4, 0.4), "z": (0.00, 0.00)},
+            "pose_range": {"x": (0.2, 0.6), "y": (-0.4, 0.4), "z": (0.00, 0.00)},
             "velocity_range": {},
             "asset_cfg": SceneEntityCfg("object", body_names="Object"),
         },
