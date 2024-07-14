@@ -20,6 +20,7 @@ from octi.lab_tasks.cfgs.scenes.cube_scene import (
 )
 from dataclasses import MISSING
 from octi.lab.envs import OctiManagerBasedRLEnvCfg
+import octi.lab_tasks.cfgs.robots.leap_hand_xarm.mdp as leap_hand_xarm_mdp
 import octi.lab_tasks.tasks.manipulations.lift_cube.mdp as lift_cube_mdp
 import octi.lab.envs.mdp as octilab_mdp
 ##
@@ -92,6 +93,12 @@ class RewardsCfg(SceneRewardsCfg, RobotRewardsCfg):
         weight=1.0,
     )
 
+    reward_fingers_object_distance = RewTerm(
+        func=leap_hand_xarm_mdp.reward_fingers_object_distance,
+        params={"object_cfg": SceneEntityCfg("object")},
+        weight=1.5,
+    )
+
     lifting_object = RewTerm(func=lift_cube_mdp.object_is_lifted,
                              params={"minimal_height": 0.04, "object_cfg": SceneEntityCfg("object")},
                              weight=15.0)
@@ -105,7 +112,7 @@ class RewardsCfg(SceneRewardsCfg, RobotRewardsCfg):
     object_goal_tracking_fine_grained = RewTerm(
         func=lift_cube_mdp.object_goal_distance,
         params={"std": 0.05, "minimal_height": 0.04, "command_name": "object_pose"},
-        weight=10.0,
+        weight=60.0,
     )
 
 
@@ -159,7 +166,7 @@ class ImplicitMotorLeapXarm_JointPos_LiftCube_Env(OctiManagerBasedRLEnvCfg):
 
     def __post_init__(self):
         self.decimation = 1
-        self.episode_length_s = 5.0
+        self.episode_length_s = 4.0
         # simulation settings
         self.sim.dt = 0.02 / self.decimation
         self.sim.physx.gpu_found_lost_aggregate_pairs_capacity = 1024 * 1024 * 4

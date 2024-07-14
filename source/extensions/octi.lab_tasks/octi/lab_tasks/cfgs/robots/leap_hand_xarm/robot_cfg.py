@@ -73,7 +73,7 @@ IMPLICIT_LEAP_XARM.actuators = {
         armature=0.001,
         friction=0.2,
         velocity_limit=1,
-        effort_limit=50,
+        effort_limit=5,
     ),
 }
 

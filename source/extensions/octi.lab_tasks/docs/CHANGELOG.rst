@@ -1,7 +1,30 @@
 Changelog
 ---------
 
-0.1.8 (2024-07-08)
+0.2.0 (2024-07-14)
+~~~~~~~~~~~~~~~~~~
+
+Changed
+^^^^^^^
+
+* added leap hand xarm reward :func:`octi.lab_tasks.cfgs.robots.leap_hand_xarm.mdp.rewards.reward_fingers_object_distance`
+
+
+0.1.9 (2024-07-13)
+~~~~~~~~~~~~~~~~~~
+
+Changed
+^^^^^^^
+
+* added leap hand xarm reward :func:`octi.lab_tasks.cfgs.robots.leap_hand_xarm.mdp.rewards.reward_cross_finger_similarity`
+* added leap hand xarm reward :func:`octi.lab_tasks.cfgs.robots.leap_hand_xarm.mdp.rewards.reward_intra_finger_similarity`
+* added leap hand xarm event :func:`octi.lab_tasks.cfgs.robots.leap_hand_xarm.mdp.events.reset_joints_by_offset` which accepts
+  additional joint ids
+* changed cube lift environment cube size to be a bit larger
+* added mass randomization cfg in cube lift environment :field:`octi.lab_tasks.tasks.manipulations.lift_cube.`
+
+
+0.1.8 (2024-07-12)
 ~~~~~~~~~~~~~~~~~~
 
 Changed
@@ -9,8 +32,8 @@ Changed
 
 * added leap hand xarm robot cfg and dynamic at :file:`octi.lab_tasks.cfgs.robots.leap_hand.robot_cfg.py` and 
   :file:`octi.lab_tasks.cfgs.robots.leap_hand_xarm.robot_dynamics.py`
-* added environment :file:`octi.lab_tasks.tasks.manipulations.lift_cube.track_goal.confg.leap_hand_xarm.LeapHandXarm_JointPos_GoalTracking_Env.py`
-* added environment :file:`octi.lab_tasks.tasks.manipulations.lift_cube.lift_cube.confg.leap_hand_xarm.LeapHandXarm_JointPos_LiftCube_Env.py`
+* added environment :file:`octi.lab_tasks.tasks.manipulations.lift_cube.track_goal.config.leap_hand_xarm.LeapHandXarm_JointPos_GoalTracking_Env.py`
+* added environment :file:`octi.lab_tasks.tasks.manipulations.lift_cube.lift_cube.config.leap_hand_xarm.LeapHandXarm_JointPos_LiftCube_Env.py`
 
 
 0.1.7 (2024-07-08)

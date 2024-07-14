@@ -42,7 +42,7 @@ class SceneObjectSceneCfg(InteractiveSceneCfg):
         init_state=RigidObjectCfg.InitialStateCfg(pos=(0, 0, 0.016), rot=(1, 0, 0, 0)),
         spawn=UsdFileCfg(
             usd_path=f"{ISAAC_NUCLEUS_DIR}/Props/Blocks/DexCube/dex_cube_instanceable.usd",
-            scale=(0.015/0.03, 0.015/0.03, 0.015/0.03),
+            scale=(0.015/0.02, 0.015/0.02, 0.015/0.02),
             rigid_props=RigidBodyPropertiesCfg(
                 solver_position_iteration_count=16,
                 solver_velocity_iteration_count=1,
@@ -87,6 +87,18 @@ class SceneEventCfg:
         },
     )
 
+    # rescale_object_size = EventTerm(
+    #     func=orbit_mdp.randomize_rigid_body_material,
+    #     mode="reset",
+    #     params={
+    #         "static_friction_range": [0.25, 1.0],
+    #         "dynamic_friction_range": [0.25, 1.0],
+    #         "restitution_range": [0.0, 0.5],
+    #         "num_buckets": 1,
+    #         "asset_cfg": SceneEntityCfg("object", body_names="Object"),
+    #     }
+    # )
+
     # randomize_rigid_body_materials = RandTerm(
     #     func=orbit_mdp.randomize_rigid_body_material,
     #     mode='reset',
@@ -99,11 +111,11 @@ class SceneEventCfg:
     #     }
     # )
 
-    # add_rigid_body_mass = RandTerm(
+    # add_rigid_body_mass = EventTerm(
     #     func=orbit_mdp.add_body_mass,
     #     mode="reset",
     #     params={
-    #         "mass_range": (0.001, 0.01),
+    #         "mass_distribution_params": [0.1, 5],
     #         "asset_cfg": SceneEntityCfg("object", body_names="Object"),
     #     }
     # )

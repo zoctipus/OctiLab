@@ -6,6 +6,7 @@ from omni.isaac.lab.managers import SceneEntityCfg
 from omni.isaac.lab.utils import configclass
 from omni.isaac.lab.managers import ObservationTermCfg as ObsTerm
 import omni.isaac.lab.envs.mdp as lab_mdp
+from . import mdp as leap_xarm_mdp
 
 """
 ROBOT ACTION CFGS
@@ -113,7 +114,13 @@ ROBOT RANDOMIZATIONS CFG
 class RobotRandomizationCfg:
     """Configuration for randomization."""
 
-    reset_robot = EventTerm(func=lab_mdp.reset_scene_to_default, params={}, mode="reset")
+    reset_robot_joint = EventTerm(
+        func=leap_xarm_mdp.reset_joints_by_offset,
+        params={"asset_cfg": SceneEntityCfg("robot"),
+                "position_range": [0.0, 1.5],
+                "velocity_range": [-0.1, 0.1],
+                "joint_ids": [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]},
+        mode="reset")
 
 
 """
@@ -133,6 +140,18 @@ class RobotRewardsCfg:
         weight=-0.0001,
         params={"asset_cfg": SceneEntityCfg("robot")},
     )
+
+    # reward_cross_finger_similarity = RewTerm(
+    #     func=leap_xarm_mdp.reward_cross_finger_similarity,
+    #     weight=0.1,
+    #     params={"robot_cfg": SceneEntityCfg("robot")},
+    # )
+
+    # reward_intra_finger_similarity = RewTerm(
+    #     func=leap_xarm_mdp.reward_intra_finger_similarity,
+    #     weight=0.1,
+    #     params={"robot_cfg": SceneEntityCfg("robot")},
+    # )
 
 
 """
