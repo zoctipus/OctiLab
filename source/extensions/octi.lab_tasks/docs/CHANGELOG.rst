@@ -8,7 +8,10 @@ Changed
 ^^^^^^^
 
 * added leap hand xarm reward :func:`octi.lab_tasks.cfgs.robots.leap_hand_xarm.mdp.rewards.reward_fingers_object_distance`
-
+* tuned liftCube environment reward function for LeapHandXarm environments 
+  reward_fingers_object_distance scale was 1.5, now 5
+  reward_object_ee_distance scale was 1, now 3
+  reward_fingers_object_distance tanh return std was 0.1 now 0.2
 
 0.1.9 (2024-07-13)
 ~~~~~~~~~~~~~~~~~~

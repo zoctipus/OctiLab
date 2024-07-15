@@ -90,13 +90,13 @@ class RewardsCfg(SceneRewardsCfg, RobotRewardsCfg):
             "body_cfg": SceneEntityCfg("object"),
             "frame_cfg": SceneEntityCfg("ee_frame"),
         },
-        weight=1.0,
+        weight=3.0,
     )
 
     reward_fingers_object_distance = RewTerm(
         func=leap_hand_xarm_mdp.reward_fingers_object_distance,
         params={"object_cfg": SceneEntityCfg("object")},
-        weight=1.5,
+        weight=5,
     )
 
     lifting_object = RewTerm(func=lift_cube_mdp.object_is_lifted,

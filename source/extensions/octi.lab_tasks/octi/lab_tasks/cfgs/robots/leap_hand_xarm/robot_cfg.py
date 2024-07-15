@@ -59,7 +59,7 @@ IMPLICIT_LEAP_XARM = LEAP_XARM_ARTICULATION.copy()  # type: ignore
 IMPLICIT_LEAP_XARM.actuators = {
     "a": ImplicitActuatorCfg(
         joint_names_expr=["a.*"],
-        stiffness=300.0,
+        stiffness=200.0,
         damping=50.0,
         armature=0.001,
         friction=0.2,
@@ -68,7 +68,7 @@ IMPLICIT_LEAP_XARM.actuators = {
     ),
     "j": ImplicitActuatorCfg(
         joint_names_expr=["j.*"],
-        stiffness=200.0,
+        stiffness=100.0,
         damping=30.0,
         armature=0.001,
         friction=0.2,
@@ -94,7 +94,7 @@ FRAME_EE = FrameTransformerCfg(
             prim_path="{ENV_REGEX_NS}/Robot/palm_lower",
             name="ee",
             offset=OffsetCfg(
-                pos=(-0.028, -0.04, -0.05),
+                pos=(-0.028, -0.04, -0.07),
                 rot=(1.0, 0.0, 0.0, 0.0),
             ),
         ),

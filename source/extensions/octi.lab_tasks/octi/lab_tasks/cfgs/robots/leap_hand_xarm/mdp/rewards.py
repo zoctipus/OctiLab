@@ -80,6 +80,6 @@ def reward_fingers_object_distance(env: ManagerBasedRLEnv, object_cfg: SceneEnti
     tips_distance = torch.mean(torch.norm(tips_pos - object_pos, dim=1))
 
     distance = (dips_distance + tips_distance) / 2
-    reward = 1 - torch.tanh(distance / 0.1)
+    reward = 1 - torch.tanh(distance / 0.2)
 
     return reward

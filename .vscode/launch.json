@@ -37,7 +37,7 @@
             "type": "debugpy",
             "request": "launch",
             "args" : ["--task", "JointPosition-ImplicitMotorLeapXarm-JointPos-LiftCube", 
-                        "--num_envs", "1", "--checkpoint", "logs/rsl_rl/leap_lift_cube_agent/2024-07-14_12-49-28/model_2850.pt"],
+                        "--num_envs", "5", "--checkpoint", "logs/rsl_rl/leap_lift_cube_agent/2024-07-14_18-01-01/model_3350.pt"],
             "program": "${workspaceFolder}/source/standalone/workflows/rsl_rl/play.py",
             "console": "integratedTerminal",
             "envFile": "${workspaceFolder}/.vscode/.python.env",
