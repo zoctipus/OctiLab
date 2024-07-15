@@ -1,6 +1,18 @@
 Changelog
 ---------
 
+0.2.1 (2024-07-14)
+~~~~~~~~~~~~~~~~~~
+
+
+Changed
+^^^^^^^
+* Octi lab now support multi assets spawning
+* Added :func:`source.extensions.octi.lab.octi.lab.sim.spawners.from_files.from_files.spawn_multi_object_randomly_sdf`
+  and :func:`source.extensions.octi.lab.octi.lab.sim.spawners.from_files.from_files.spawn_multi_object_randomly`
+* Added :func:`source.extensions.octi.lab.octi.lab.sim.spawners.from_files.from_files_cfg.MultiAssetCfg`
+
+
 0.2.0 (2024-07-10)
 ~~~~~~~~~~~~~~~~~~
 
