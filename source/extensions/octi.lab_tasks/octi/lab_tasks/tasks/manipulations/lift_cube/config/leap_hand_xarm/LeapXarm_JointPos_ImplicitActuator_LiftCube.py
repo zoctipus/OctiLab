@@ -96,23 +96,23 @@ class RewardsCfg(SceneRewardsCfg, RobotRewardsCfg):
     reward_fingers_object_distance = RewTerm(
         func=leap_hand_xarm_mdp.reward_fingers_object_distance,
         params={"object_cfg": SceneEntityCfg("object")},
-        weight=5,
+        weight=10.0,
     )
 
     lifting_object = RewTerm(func=lift_cube_mdp.object_is_lifted,
-                             params={"minimal_height": 0.04, "object_cfg": SceneEntityCfg("object")},
-                             weight=15.0)
+                             params={"minimal_height": 0.07, "object_cfg": SceneEntityCfg("object")},
+                             weight=40.0)
 
     object_goal_tracking = RewTerm(
         func=lift_cube_mdp.object_goal_distance,
-        params={"std": 0.3, "minimal_height": 0.04, "command_name": "object_pose"},
-        weight=30.0,
+        params={"std": 0.3, "minimal_height": 0.07, "command_name": "object_pose"},
+        weight=40.0,
     )
 
     object_goal_tracking_fine_grained = RewTerm(
         func=lift_cube_mdp.object_goal_distance,
-        params={"std": 0.05, "minimal_height": 0.04, "command_name": "object_pose"},
-        weight=60.0,
+        params={"std": 0.05, "minimal_height": 0.07, "command_name": "object_pose"},
+        weight=80.0,
     )
 
 
@@ -126,7 +126,7 @@ class CommandsCfg(SceneCommandsCfg):
         resampling_time_range=(5.0, 5.0),
         debug_vis=False,
         ranges=orbit_mdp.UniformPoseCommandCfg.Ranges(
-            pos_x=(0.5, 0.7), pos_y=(-0.25, 0.25), pos_z=(0.1, 0.2), roll=(0.0, 0.0), pitch=(0.0, 0.0), yaw=(0.0, 0.0)
+            pos_x=(0.2, 0.5), pos_y=(-0.35, 0.35), pos_z=(0.15, 0.3), roll=(0.0, 0.0), pitch=(0.0, 0.0), yaw=(0.0, 0.0)
         ),
     )
 

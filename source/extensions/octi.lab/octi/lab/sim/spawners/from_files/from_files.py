@@ -111,7 +111,15 @@ def spawn_multi_object_randomly_sdf(
             scale_spec = env_spec.GetAttributeAtPath(prim_path + ".xformOp:scale")
             if scale_spec is None:
                 scale_spec = Sdf.AttributeSpec(env_spec, "xformOp:scale", Sdf.ValueTypeNames.Double3)
-            scale_spec.default = Gf.Vec3d(1.0, 1.0, 1.0)
+            if cfg.uniform_scale:
+                upper_bound = min(cfg.scaling_range['x'][1], cfg.scaling_range['y'][1], cfg.scaling_range['z'][1])
+                lower_bound = max(cfg.scaling_range['x'][0], cfg.scaling_range['y'][0], cfg.scaling_range['z'][0])
+                x = y = z = random.choice((lower_bound, upper_bound))
+            else:
+                x = random.choice(cfg.scaling_range['x'])
+                y = random.choice(cfg.scaling_range['y'])
+                z = random.choice(cfg.scaling_range['z'])
+            scale_spec.default = Gf.Vec3d(x, y, z)
 
             op_order_spec = env_spec.GetAttributeAtPath(prim_path + ".xformOpOrder")
             if op_order_spec is None:
@@ -124,6 +132,10 @@ def spawn_multi_object_randomly_sdf(
             color_spec = env_spec.GetAttributeAtPath(prim_path + "/geometry/material/Shader.inputs:diffuseColor")
             color_spec.default = Gf.Vec3f(random.random(), random.random(), random.random())
 
+    # for i, prim_path in enumerate(prim_paths):
+    #     prim = stage.GetPrimAtPath(prim_path)
+    #     if not UsdPhysics.CollisionAPI(prim):
+    #         print('hi')
     # delete the dataset prim after spawning
     prim_utils.delete_prim("/World/Dataset")
 

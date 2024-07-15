@@ -23,4 +23,8 @@ class MultiAssetCfg(SpawnerCfg):
     func: Callable = from_files.spawn_multi_object_randomly_sdf
 
     assets_cfg: list[SpawnerCfg] = MISSING  # type: ignore
+
+    scaling_range: dict[str, tuple[float, float]] = {'x': (1, 1), 'y': (1, 1), 'z': (1, 1)}
+
+    uniform_scale: bool = True
     """List of asset configurations to spawn."""
