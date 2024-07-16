@@ -24,7 +24,7 @@ Changed
 * added leap hand xarm event :func:`octi.lab_tasks.cfgs.robots.leap_hand_xarm.mdp.events.reset_joints_by_offset` which accepts
   additional joint ids
 * changed cube lift environment cube size to be a bit larger
-* added mass randomization cfg in cube lift environment :field:`octi.lab_tasks.tasks.manipulations.lift_cube.`
+* added mass randomization cfg in cube lift environment :field:`octi.lab_tasks.tasks.manipulation.lift_cube.`
 
 
 0.1.8 (2024-07-12)
@@ -35,8 +35,8 @@ Changed
 
 * added leap hand xarm robot cfg and dynamic at :file:`octi.lab_tasks.cfgs.robots.leap_hand.robot_cfg.py` and 
   :file:`octi.lab_tasks.cfgs.robots.leap_hand_xarm.robot_dynamics.py`
-* added environment :file:`octi.lab_tasks.tasks.manipulations.lift_cube.track_goal.config.leap_hand_xarm.LeapHandXarm_JointPos_GoalTracking_Env.py`
-* added environment :file:`octi.lab_tasks.tasks.manipulations.lift_cube.lift_cube.config.leap_hand_xarm.LeapHandXarm_JointPos_LiftCube_Env.py`
+* added environment :file:`octi.lab_tasks.tasks.manipulation.lift_cube.track_goal.config.leap_hand_xarm.LeapHandXarm_JointPos_GoalTracking_Env.py`
+* added environment :file:`octi.lab_tasks.tasks.manipulation.lift_cube.lift_cube.config.leap_hand_xarm.LeapHandXarm_JointPos_LiftCube_Env.py`
 
 
 0.1.7 (2024-07-08)
@@ -54,7 +54,7 @@ Changed
 Added
 ^^^^^
 * Added experiments run script :file:`workflows.experiments.idealpd_experiments.py`
-* Added experiments :file:`octi.lab_tasks.tasks.manipulations.track_goal.config.hebi.idealpd_scale_experiments.py`
+* Added experiments :file:`octi.lab_tasks.tasks.manipulation.track_goal.config.hebi.idealpd_scale_experiments.py`
 
 
 0.1.6 (2024-07-07)
@@ -75,17 +75,17 @@ Changed
 
 * Changed :class:`octi.lab_tasks.cfgs.robots.hebi.robot_dynamics.RobotTerminationsCfg` to include DoneTerm: robot_extremely_bad_posture
 * Changed :function:`octi.lab_tasks.cfgs.robots.hebi.mdp.terminations.terminate_extremely_bad_posture` to be probabilistic
-* Changed :field:`octi.lab_tasks.tasks.manipulations.track_goal.config.hebi.Hebi_JointPos_GoalTracking_Env.RewardsCfg.end_effector_position_tracking`
-  and :field:`octi.lab_tasks.tasks.manipulations.track_goal.config.hebi.Hebi_JointPos_GoalTracking_Env.RewardsCfg.end_effector_orientation_tracking`
+* Changed :field:`octi.lab_tasks.tasks.manipulation.track_goal.config.hebi.Hebi_JointPos_GoalTracking_Env.RewardsCfg.end_effector_position_tracking`
+  and :field:`octi.lab_tasks.tasks.manipulation.track_goal.config.hebi.Hebi_JointPos_GoalTracking_Env.RewardsCfg.end_effector_orientation_tracking`
   to be incentive reward instead of punishment reward.
-* Renamed orbit_mdp to lab_mdp in :file:`octi.lab_tasks.tasks.manipulations.track_goal.config.Hebi_JointPos_GoalTracking_Env`
+* Renamed orbit_mdp to lab_mdp in :file:`octi.lab_tasks.tasks.manipulation.track_goal.config.Hebi_JointPos_GoalTracking_Env`
 
 Added
 ^^^^^
 
 * Added hebi reward term :func:`octi.lab_tasks.cfgs.robots.hebi.mdp.rewards.orientation_command_error_tanh`
 * Added experiments run script :file:`workflows.experiments.strategy4_scale_experiments.py`
-* Added experiments :file:`octi.lab_tasks.tasks.manipulations.track_goal.config.hebi.strategy4_scale_experiments.py`
+* Added experiments :file:`octi.lab_tasks.tasks.manipulation.track_goal.config.hebi.strategy4_scale_experiments.py`
 
 0.1.5 (2024-07-06)
 ~~~~~~~~~~~~~~~~~~
@@ -98,11 +98,11 @@ Added
 * Added experiments run script :file:`workflows.experiments.agent_update_frequency_experiments.py` 
 * Added experiments run script :file:`workflows.experiments.decimation_experiments.py`
 * Added experiments run script :file:`workflows.experiments.strategy3_scale_experiments.py`
-* Added experiments :file:`octi.lab_tasks.tasks.manipulations.track_goal.config.hebi.agent_update_rate_experiments.py`
-* Added experiments :file:`octi.lab_tasks.tasks.manipulations.track_goal.config.hebi.decimation_experiments.py`
-* Added experiments :file:`octi.lab_tasks.tasks.manipulations.track_goal.config.hebi.strategy3_scale_experiments.py`
-* Modified :file:`octi.lab_tasks.tasks.manipulations.track_goal.config.hebi.agents.rsl_rl_agent_cfg`, and 
-  :file:`octi.lab_tasks.tasks.manipulations.track_goal.config.hebi.__init__` with logging name consistent to experiments 
+* Added experiments :file:`octi.lab_tasks.tasks.manipulation.track_goal.config.hebi.agent_update_rate_experiments.py`
+* Added experiments :file:`octi.lab_tasks.tasks.manipulation.track_goal.config.hebi.decimation_experiments.py`
+* Added experiments :file:`octi.lab_tasks.tasks.manipulation.track_goal.config.hebi.strategy3_scale_experiments.py`
+* Modified :file:`octi.lab_tasks.tasks.manipulation.track_goal.config.hebi.agents.rsl_rl_agent_cfg`, and 
+  :file:`octi.lab_tasks.tasks.manipulation.track_goal.config.hebi.__init__` with logging name consistent to experiments 
 
 
 0.1.4 (2024-07-05)

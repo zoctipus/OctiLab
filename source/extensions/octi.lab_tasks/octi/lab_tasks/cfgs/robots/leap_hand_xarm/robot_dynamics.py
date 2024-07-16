@@ -133,11 +133,11 @@ class RobotRewardsCfg:
     """Reward terms for the MDP."""
 
     # action penalty
-    action_rate = RewTerm(func=lab_mdp.action_rate_l2, weight=-0.01)
+    action_rate = RewTerm(func=lab_mdp.action_rate_l2, weight=-0.1)
 
     joint_vel = RewTerm(
         func=lab_mdp.joint_vel_l2,
-        weight=-0.0001,
+        weight=-0.1,
         params={"asset_cfg": SceneEntityCfg("robot")},
     )
 

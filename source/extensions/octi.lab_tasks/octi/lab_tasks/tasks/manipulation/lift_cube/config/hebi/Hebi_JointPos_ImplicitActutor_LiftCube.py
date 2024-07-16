@@ -19,7 +19,7 @@ from octi.lab_tasks.cfgs.scenes.cube_scene import (
     SceneTerminationsCfg,
 )
 from octi.lab.envs import OctiManagerBasedRLEnvCfg
-import octi.lab_tasks.tasks.manipulations.lift_cube.mdp as lift_cube_mdp
+import octi.lab_tasks.tasks.manipulation.lift_cube.mdp as lift_cube_mdp
 ##
 # Pre-defined configs
 ##

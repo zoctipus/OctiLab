@@ -21,7 +21,7 @@ from octi.lab_tasks.cfgs.scenes.cube_scene import (
 from dataclasses import MISSING
 from octi.lab.envs import OctiManagerBasedRLEnvCfg
 import octi.lab_tasks.cfgs.robots.leap_hand_xarm.mdp as leap_hand_xarm_mdp
-import octi.lab_tasks.tasks.manipulations.lift_cube.mdp as lift_cube_mdp
+import octi.lab_tasks.tasks.manipulation.lift_cube.mdp as lift_cube_mdp
 import octi.lab.envs.mdp as octilab_mdp
 ##
 # Pre-defined configs
