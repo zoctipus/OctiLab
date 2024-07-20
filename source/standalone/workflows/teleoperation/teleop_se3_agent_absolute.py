@@ -66,7 +66,6 @@ def pre_process_glove_actions(absolute_pose: torch.Tensor, placeholder_command: 
     device = absolute_pose.device
     absolute_pose[:, 3:] = absolute_pose[:, [6, 3, 4, 5]]
     absolute_pose[:, :3] = absolute_pose[:, [0, 2, 1]]
-    absolute_pose[:, 2] += 0.5
     rot_actions = torch.tensor([[0.0, 0.0, 1.57]], device=device)
     angle: torch.Tensor = torch.linalg.vector_norm(rot_actions, dim=1)
     axis = rot_actions / angle.unsqueeze(-1)
@@ -100,7 +99,7 @@ def main():
         teleop_interface = Se3KeyboardAbsolute(
             pos_sensitivity=0.002 * args_cli.sensitivity,
             rot_sensitivity=0.01 * args_cli.sensitivity,
-            init_pose=[0.3000, 0, 0.0500, 1, 0, 0, 0]
+            init_pose=[0.3000, 0, 0.0500, 1, 0, 0, 0],
         )
 
         def preprocess_func(x):
@@ -124,16 +123,16 @@ def main():
 
     elif args_cli.device.lower() == "rokoko_smartglove":
         teleop_interface = RokokoGlove(
-            UDP_IP="10.158.54.173",
+            UDP_IP="0.0.0.0",
             UDP_PORT=14043,
-            scale=1.65,
+            scale=1.7,
             right_hand_track=[
                 "rightHand",
                 "rightIndexMedial",
                 "rightMiddleMedial",
                 "rightRingMedial",
-                "rightThumbTip",
                 "rightIndexTip",
+                "rightThumbTip",
                 "rightMiddleTip",
                 "rightRingTip",
             ],
@@ -144,21 +143,22 @@ def main():
 
     elif args_cli.device.lower() == "rokoko_smartglove_keyboard":
         teleop_interface = RokokoGloveKeyboard(
-            pos_sensitivity=0.1 * args_cli.sensitivity,
-            rot_sensitivity=0.1 * args_cli.sensitivity,
+            pos_sensitivity=0.005 * args_cli.sensitivity,
+            rot_sensitivity=0.01 * args_cli.sensitivity,
             UDP_IP="0.0.0.0",
             UDP_PORT=14043,
-            scale=1.65,
+            scale=1.7,
             right_hand_track=[
                 "rightHand",
                 "rightIndexMedial",
                 "rightMiddleMedial",
                 "rightRingMedial",
-                "rightThumbTip",
                 "rightIndexTip",
+                "rightThumbTip",
                 "rightMiddleTip",
                 "rightRingTip",
             ],
+            init_pose=[0.3000, 0, 0.0500, 1, 0, 0, 0],
         )
 
         def preprocess_func(x):
@@ -186,24 +186,23 @@ def main():
         with torch.inference_mode():
             # get keyboard command
             teleop_output = teleop_interface.advance()
-            # test = teleop_interface.debug_advance_all_joint_data()[0]
-            # test[:, 3:] = test[:, [6, 3, 4, 5]]
-            # test[:, :3] = test[:, [0, 2, 1]]
-            # test[:, 2] += 0.5
-            # rot_actions = torch.tensor([[0.0, 0.0, 1.57]], device=env.unwrapped.device)
-            # angle: torch.Tensor = torch.linalg.vector_norm(rot_actions, dim=1)
-            # axis = rot_actions / angle.unsqueeze(-1)
-            # identity_quat = torch.tensor([1.0, 0.0, 0.0, 0.0], device=env.unwrapped.device)
-            # rot_delta_quat = torch.where(
-            #     angle.unsqueeze(-1).repeat(1, 4) > 1.0e-6, quat_from_angle_axis(angle, axis), identity_quat
-            # ).repeat(len(test), 1)
-            # test[:, 3:] = quat_mul(test[:, 3:], rot_delta_quat)
-            # goal_marker.visualize(
-            #     test[:, :3] + env.unwrapped.scene._default_env_origins, test[:, 3:])
+            test = teleop_interface.debug_advance_all_joint_data()[0]
+            test[:, 3:] = test[:, [6, 3, 4, 5]]
+            test[:, :3] = test[:, [0, 2, 1]]
+            rot_actions = torch.tensor([[0.0, 0.0, 1.57]], device=env.unwrapped.device)
+            angle: torch.Tensor = torch.linalg.vector_norm(rot_actions, dim=1)
+            axis = rot_actions / angle.unsqueeze(-1)
+            identity_quat = torch.tensor([1.0, 0.0, 0.0, 0.0], device=env.unwrapped.device)
+            rot_delta_quat = torch.where(
+                angle.unsqueeze(-1).repeat(1, 4) > 1.0e-6, quat_from_angle_axis(angle, axis), identity_quat
+            ).repeat(len(test), 1)
+            test[:, 3:] = quat_mul(test[:, 3:], rot_delta_quat)
+            goal_marker.visualize(
+                test[:, :3] + env.unwrapped.scene._default_env_origins, test[:, 3:])
             actions_clone = preprocess_func(teleop_output)
-            goal_marker.visualize(actions_clone[:, :3], actions_clone[:, 3:7])
+            # goal_marker.visualize(actions_clone[:, :3], actions_clone[:, 3:7])
             # print(actions_clone)
-            env.step(actions_clone[:, :7])
+            env.step(actions_clone)
     # close the simulator
     env.close()
 

@@ -18,6 +18,7 @@ Changed
 * Edited Thumb scaling input in :class:`source.extensions.octi.lab.devices.RokokoGlove` that correts 
   thumb length mismatch in teleoperation
 
+
 0.2.2 (2024-07-15)
 ~~~~~~~~~~~~~~~~~~
 

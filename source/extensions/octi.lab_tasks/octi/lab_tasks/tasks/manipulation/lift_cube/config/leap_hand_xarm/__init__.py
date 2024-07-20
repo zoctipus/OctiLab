@@ -11,6 +11,7 @@ base_envs = [
 
 action_classes = [
     rd.RobotActionsCfg_JointPosition,
+    rd.RobotActionsCfg_MCIkAbsoluteDls
 ]
 
 # Loop through each configuration and register the environment
