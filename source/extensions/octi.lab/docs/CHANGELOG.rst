@@ -1,6 +1,23 @@
 Changelog
 ---------
 
+0.2.3 (2024-07-20)
+~~~~~~~~~~~~~~~~~~
+
+
+Added
+^^^^^
+* Added debug :func:`source.extensions.octi.lab.octi.lab.devices.RokokoGloveKeyboard.debug_advance_all_joint_data.`
+  for glove data visualization
+
+Changed
+^^^^^^^
+* Changed :class:`source.extensions.octi.lab.octi.lab.devices.RokokoGloveKeyboard.` class requires
+  input initial command pose to correctly set robot reset command target
+
+* Edited Thumb scaling input in :class:`source.extensions.octi.lab.devices.RokokoGlove` that correts 
+  thumb length mismatch in teleoperation
+
 0.2.2 (2024-07-15)
 ~~~~~~~~~~~~~~~~~~
 

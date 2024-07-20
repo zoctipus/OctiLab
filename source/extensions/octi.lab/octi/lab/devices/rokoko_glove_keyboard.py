@@ -33,6 +33,7 @@ class RokokoGloveKeyboard(DeviceBase):
                  right_hand_track: list[str] = [],
                  scale: float = 1,
                  proximal_offset: float = 0.3,
+                 init_pose: list[float] = [0.2, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0],
                  device="cuda:0"):
         """Initialize the Rokoko_Glove Controller and Keyboard Controller.
 
@@ -45,9 +46,10 @@ class RokokoGloveKeyboard(DeviceBase):
             right_hand_track: the trackpoint of right hand this class will be tracking.
             scale: the overal scale for the hand.
             proximal_offset: the inter proximal offset that shorten or widen the spread of hand.
+            init_pose: the initial pose command when environment resets.
         """
         self.hand_device = RokokoGlove(UDP_IP, UDP_PORT, left_hand_track, right_hand_track, scale, proximal_offset, device)
-        self.keyboard_device = Se3KeyboardAbsolute(pos_sensitivity, rot_sensitivity, device)
+        self.keyboard_device = Se3KeyboardAbsolute(pos_sensitivity, rot_sensitivity, init_pose, device)
 
     def __del__(self):
         self.keyboard_device.__del__()
@@ -73,6 +75,14 @@ class RokokoGloveKeyboard(DeviceBase):
         hand_command[:, :3] -= hand_command[0, :3]
         hand_command[:, :3] += keyboard_command[0, [0, 2, 1]]
         return hand_command, True
+
+    def debug_advance_all_joint_data(self):
+        hand_command = self.hand_device.debug_advance_all_joint_data()[0]
+        keyboard_command = self.keyboard_device.advance()[0]
+        hand_command[:, :3] -= hand_command[21, :3]
+        hand_command[:, :3] += keyboard_command[0, [0, 2, 1]]
+        return hand_command, True
+
 
     def add_callback(self, key: str, func: Callable):
         # check keys supported by callback

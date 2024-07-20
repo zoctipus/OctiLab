@@ -35,7 +35,8 @@ class RokokoGlove(DeviceBase):
                  left_hand_track: list[str] = [],
                  right_hand_track: list[str] = [],
                  scale: float = 1.65,
-                 proximal_offset: float = 0.3,
+                 proximal_offset: float = 0.5,
+                 thumb_scale: float = 1.1,
                  device="cuda:0"):
         """Initialize the Rokoko_Glove Controller.
         Be aware that current implementation outputs pose of each hand part in the same order as input list,
@@ -56,6 +57,7 @@ class RokokoGlove(DeviceBase):
         self.UDP_PORT = UDP_PORT
         self.scale = scale
         self.proximal_offset = proximal_offset
+        self.thumb_scale = thumb_scale
         # Create a UDP socket
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, 8192)
@@ -140,14 +142,16 @@ class RokokoGlove(DeviceBase):
 
         right_wrist_position = self.right_fingertip_poses[0][:3]
         if len(self.right_fingertip_names) > 0:
-            # scale
-            self.right_fingertip_poses[:, :3] = (self.right_fingertip_poses[:, :3] - right_wrist_position) * self.scale + right_wrist_position
-            # reposition
+            rightThumbProximalIdx = self.right_joint_dict["rightThumbProximal"]
             rightIndexProximalIdx = self.right_joint_dict["rightIndexProximal"]
             rightMiddleProximalIdx = self.right_joint_dict["rightMiddleProximal"]
             rightRingProximalIdx = self.right_joint_dict["rightRingProximal"]
             rightLittleProximalIdx = self.right_joint_dict["rightLittleProximal"]
-
+            # scale
+            self.right_fingertip_poses[:, :3] = (self.right_fingertip_poses[:, :3] - right_wrist_position) * self.scale + right_wrist_position
+            t_idx = rightThumbProximalIdx
+            self.right_fingertip_poses[t_idx:t_idx + 4, :3] = (self.right_fingertip_poses[t_idx:t_idx + 4, :3] - right_wrist_position) * self.thumb_scale + right_wrist_position
+            # reposition
             reposition_vector = self.right_fingertip_poses[rightMiddleProximalIdx][:3] - self.right_fingertip_poses[rightIndexProximalIdx][:3]
             self.right_fingertip_poses[rightIndexProximalIdx:, :3] += self.proximal_offset * reposition_vector
             self.right_fingertip_poses[rightMiddleProximalIdx:, :3] += self.proximal_offset * reposition_vector
@@ -180,12 +184,12 @@ class RokokoGlove(DeviceBase):
         """
         body_data = self._get_gloves_data()
 
-        for joint_name in self.left_hand_joint_names:
-            joint_data = body_data[joint_name]
-            joint_position = torch.tensor(list(joint_data["position"].values()))
-            joint_rotation = torch.tensor(list(joint_data["rotation"].values()))
-            self.left_fingertip_poses[self.left_joint_dict[joint_name]][:3] = joint_position
-            self.left_fingertip_poses[self.left_joint_dict[joint_name]][3:] = joint_rotation
+        # for joint_name in self.left_hand_joint_names:
+        #     joint_data = body_data[joint_name]
+        #     joint_position = torch.tensor(list(joint_data["position"].values()))
+        #     joint_rotation = torch.tensor(list(joint_data["rotation"].values()))
+        #     self.left_fingertip_poses[self.left_joint_dict[joint_name]][:3] = joint_position
+        #     self.left_fingertip_poses[self.left_joint_dict[joint_name]][3:] = joint_rotation
 
         for joint_name in self.right_hand_joint_names:
             joint_data = body_data[joint_name]
@@ -194,22 +198,23 @@ class RokokoGlove(DeviceBase):
             self.right_fingertip_poses[self.right_joint_dict[joint_name]][:3] = joint_position
             self.right_fingertip_poses[self.right_joint_dict[joint_name]][3:] = joint_rotation
 
-        left_wrist_position = self.left_fingertip_poses[0][:3]
+        # left_wrist_position = self.left_fingertip_poses[0][:3]
 
-        self.left_fingertip_poses[:, :3] = (self.left_fingertip_poses[:, :3] - left_wrist_position) * self.scale + left_wrist_position
-        self.fingertip_poses[:len(self.left_fingertip_poses)] = self.left_fingertip_poses
+        # self.left_fingertip_poses[:, :3] = (self.left_fingertip_poses[:, :3] - left_wrist_position) * self.scale + left_wrist_position
+        # self.fingertip_poses[:len(self.left_fingertip_poses)] = self.left_fingertip_poses
 
         right_wrist_position = self.right_fingertip_poses[0][:3]
         # scale
-        self.right_fingertip_poses[:, :3] = (self.right_fingertip_poses[:, :3] - right_wrist_position) * self.scale + right_wrist_position
-        # # reposition
-
-        # step 2: reposition knuckles
+        rightThumbProximalIdx = self.right_joint_dict["rightThumbProximal"]
         rightIndexProximalIdx = self.right_joint_dict["rightIndexProximal"]
         rightMiddleProximalIdx = self.right_joint_dict["rightMiddleProximal"]
         rightRingProximalIdx = self.right_joint_dict["rightRingProximal"]
         rightLittleProximalIdx = self.right_joint_dict["rightLittleProximal"]
-
+        # scale
+        self.right_fingertip_poses[:, :3] = (self.right_fingertip_poses[:, :3] - right_wrist_position) * self.scale + right_wrist_position
+        t_idx = rightThumbProximalIdx
+        self.right_fingertip_poses[t_idx:t_idx + 4, :3] = (self.right_fingertip_poses[t_idx:t_idx + 4, :3] - right_wrist_position) * self.thumb_scale + right_wrist_position
+        # reposition
         reposition_vector = self.right_fingertip_poses[rightMiddleProximalIdx][:3] - self.right_fingertip_poses[rightIndexProximalIdx][:3]
         self.right_fingertip_poses[rightIndexProximalIdx:, :3] += self.proximal_offset * reposition_vector
         self.right_fingertip_poses[rightMiddleProximalIdx:, :3] += self.proximal_offset * reposition_vector
@@ -217,5 +222,4 @@ class RokokoGlove(DeviceBase):
         self.right_fingertip_poses[rightLittleProximalIdx:, :3] += self.proximal_offset * reposition_vector
         self.fingertip_poses[len(self.left_fingertip_poses):] = self.right_fingertip_poses
 
-        self.fingertip_poses[len(self.left_fingertip_poses):] = self.right_fingertip_poses
         return self.fingertip_poses, True
