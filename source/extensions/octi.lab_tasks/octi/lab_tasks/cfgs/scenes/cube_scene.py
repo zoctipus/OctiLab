@@ -38,61 +38,61 @@ class SceneObjectSceneCfg(InteractiveSceneCfg):
     # you can see that 0.015cm instead of RADIUS is used for scale of cube
     # This is something that needs to be fixed in future
 
-    object: AssetBaseCfg = RigidObjectCfg(
-        prim_path="{ENV_REGEX_NS}/Object",
-        init_state=RigidObjectCfg.InitialStateCfg(pos=(0.3, 0, 0.016), rot=(1, 0, 0, 0)),
-        spawn=UsdFileCfg(
-            usd_path=f"{ISAAC_NUCLEUS_DIR}/Props/Blocks/DexCube/dex_cube_instanceable.usd",
-            scale=(0.015/0.02, 0.015/0.02, 0.015/0.02),
-            rigid_props=RigidBodyPropertiesCfg(
-                solver_position_iteration_count=16,
-                solver_velocity_iteration_count=1,
-                max_angular_velocity=1000.0,
-                max_linear_velocity=1000.0,
-                max_depenetration_velocity=5.0,
-                disable_gravity=False,
-            ),
-        ),
-    )
-
-    # object: RigidObjectCfg = RigidObjectCfg(
-    #     prim_path="/World/envs/env_.*/Object",
-    #     spawn=MultiAssetCfg(
-    #         assets_cfg=[
-    #             sim_utils.CuboidCfg(
-    #                 size=(0.1, 0.13, 0.13),
-    #                 rigid_props=sim_utils.RigidBodyPropertiesCfg(),
-    #                 mass_props=sim_utils.MassPropertiesCfg(mass=1.0),
-    #                 collision_props=sim_utils.CollisionPropertiesCfg(),
-    #                 visual_material=sim_utils.PreviewSurfaceCfg(diffuse_color=(1.0, 0.0, 0.0), metallic=0.2),
-    #             ),
-    #             sim_utils.CuboidCfg(
-    #                 size=(0.13, 0.1, 0.13),
-    #                 rigid_props=sim_utils.RigidBodyPropertiesCfg(),
-    #                 mass_props=sim_utils.MassPropertiesCfg(mass=1.0),
-    #                 collision_props=sim_utils.CollisionPropertiesCfg(),
-    #                 visual_material=sim_utils.PreviewSurfaceCfg(diffuse_color=(1.0, 0.0, 0.0), metallic=0.2),
-    #             ),
-    #             sim_utils.CuboidCfg(
-    #                 size=(0.1, 0.1, 0.1),
-    #                 rigid_props=sim_utils.RigidBodyPropertiesCfg(),
-    #                 mass_props=sim_utils.MassPropertiesCfg(mass=1.0),
-    #                 collision_props=sim_utils.CollisionPropertiesCfg(),
-    #                 visual_material=sim_utils.PreviewSurfaceCfg(diffuse_color=(1.0, 0.0, 0.0), metallic=0.2),
-    #             ),
-    #             sim_utils.SphereCfg(
-    #                 radius=0.1,
-    #                 rigid_props=sim_utils.RigidBodyPropertiesCfg(),
-    #                 mass_props=sim_utils.MassPropertiesCfg(mass=1.0),
-    #                 collision_props=sim_utils.CollisionPropertiesCfg(),
-    #                 visual_material=sim_utils.PreviewSurfaceCfg(diffuse_color=(0.0, 0.0, 1.0), metallic=0.2),
-    #             ),
-    #         ],
-    #         scaling_range={'x': (0.4, 0.8), 'y': (0.4, 0.8), 'z': (0.4, 0.8)},
-    #         uniform_scale=True
+    # object: AssetBaseCfg = RigidObjectCfg(
+    #     prim_path="{ENV_REGEX_NS}/Object",
+    #     init_state=RigidObjectCfg.InitialStateCfg(pos=(0.3, 0, 0.016), rot=(1, 0, 0, 0)),
+    #     spawn=UsdFileCfg(
+    #         usd_path=f"{ISAAC_NUCLEUS_DIR}/Props/Blocks/DexCube/dex_cube_instanceable.usd",
+    #         scale=(0.015/0.02, 0.015/0.02, 0.015/0.02),
+    #         rigid_props=RigidBodyPropertiesCfg(
+    #             solver_position_iteration_count=16,
+    #             solver_velocity_iteration_count=1,
+    #             max_angular_velocity=1000.0,
+    #             max_linear_velocity=1000.0,
+    #             max_depenetration_velocity=5.0,
+    #             disable_gravity=False,
+    #         ),
     #     ),
-    #     init_state=RigidObjectCfg.InitialStateCfg(pos=(0.3, 0.0, 0.03)),
     # )
+
+    object: RigidObjectCfg = RigidObjectCfg(
+        prim_path="/World/envs/env_.*/Object",
+        spawn=MultiAssetCfg(
+            assets_cfg=[
+                sim_utils.CuboidCfg(
+                    size=(0.1, 0.13, 0.13),
+                    rigid_props=sim_utils.RigidBodyPropertiesCfg(),
+                    mass_props=sim_utils.MassPropertiesCfg(mass=1.0),
+                    collision_props=sim_utils.CollisionPropertiesCfg(),
+                    visual_material=sim_utils.PreviewSurfaceCfg(diffuse_color=(1.0, 0.0, 0.0), metallic=0.2),
+                ),
+                sim_utils.CuboidCfg(
+                    size=(0.13, 0.1, 0.13),
+                    rigid_props=sim_utils.RigidBodyPropertiesCfg(),
+                    mass_props=sim_utils.MassPropertiesCfg(mass=1.0),
+                    collision_props=sim_utils.CollisionPropertiesCfg(),
+                    visual_material=sim_utils.PreviewSurfaceCfg(diffuse_color=(1.0, 0.0, 0.0), metallic=0.2),
+                ),
+                sim_utils.CuboidCfg(
+                    size=(0.1, 0.1, 0.1),
+                    rigid_props=sim_utils.RigidBodyPropertiesCfg(),
+                    mass_props=sim_utils.MassPropertiesCfg(mass=1.0),
+                    collision_props=sim_utils.CollisionPropertiesCfg(),
+                    visual_material=sim_utils.PreviewSurfaceCfg(diffuse_color=(1.0, 0.0, 0.0), metallic=0.2),
+                ),
+                sim_utils.SphereCfg(
+                    radius=0.1,
+                    rigid_props=sim_utils.RigidBodyPropertiesCfg(),
+                    mass_props=sim_utils.MassPropertiesCfg(mass=1.0),
+                    collision_props=sim_utils.CollisionPropertiesCfg(),
+                    visual_material=sim_utils.PreviewSurfaceCfg(diffuse_color=(0.0, 0.0, 1.0), metallic=0.2),
+                ),
+            ],
+            scaling_range={'x': (0.4, 0.8), 'y': (0.4, 0.8), 'z': (0.4, 0.8)},
+            uniform_scale=True
+        ),
+        init_state=RigidObjectCfg.InitialStateCfg(pos=(0.3, 0.0, 0.03)),
+    )
 
     # ground plane
     ground = AssetBaseCfg(prim_path="/World/defaultGroundPlane", spawn=sim_utils.GroundPlaneCfg())

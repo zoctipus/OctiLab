@@ -41,7 +41,7 @@ LEAP_XARM_DEFAULT_JOINT_POS = {
 
 LEAP_XARM_ARTICULATION = ArticulationCfg(
     spawn=sim_utils.UsdFileCfg(
-        usd_path="datasets/robots/xarm/leap_xarm_meshes.usd",
+        usd_path="datasets/robots/xarm/leap_xarm.usd",
         activate_contact_sensors=False,
         rigid_props=sim_utils.RigidBodyPropertiesCfg(
             disable_gravity=True,

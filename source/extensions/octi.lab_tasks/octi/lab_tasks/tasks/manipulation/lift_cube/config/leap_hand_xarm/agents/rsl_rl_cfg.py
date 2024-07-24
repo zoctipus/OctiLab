@@ -18,7 +18,7 @@ class Base_PPORunnerCfg(RslRlOnPolicyRunnerCfg):
     num_steps_per_env = 64
     max_iterations = 10000
     save_interval = 50
-    resume = True
+    resume = False
     experiment_name = "leap_lift_cube_agent"
     empirical_normalization = False
     policy = RslRlPpoActorCriticCfg(
