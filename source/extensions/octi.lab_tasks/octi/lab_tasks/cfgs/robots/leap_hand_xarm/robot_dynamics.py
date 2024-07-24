@@ -50,7 +50,7 @@ class RobotActionsCfg_MCIkAbsoluteDls:
     index_finger = MultiConstraintsDifferentialInverseKinematicsActionCfg(
         asset_name="robot",
         joint_names=["j.*", "a.*"],
-        body_name=["wrist", "pip", "pip_2", "pip_3", "thumb_fingertip", "tip", "tip_2", "tip_3"],
+        body_name=["wrist", "pip", "pip_2", "pip_3", "tip", "thumb_tip", "tip_2", "tip_3"],
         controller=MultiConstraintDifferentialIKControllerCfg(
             command_type="position", use_relative_mode=False, ik_method="dls"
         ),
@@ -133,7 +133,7 @@ class RobotRewardsCfg:
     """Reward terms for the MDP."""
 
     # action penalty
-    action_rate = RewTerm(func=lab_mdp.action_rate_l2, weight=-0.1)
+    action_rate = RewTerm(func=lab_mdp.action_rate_l2, weight=-1)
 
     joint_vel = RewTerm(
         func=lab_mdp.joint_vel_l2,

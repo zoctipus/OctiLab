@@ -7,6 +7,16 @@ Changelog
 Changed
 ^^^^^^^
 
+* added support for register gym environment with MultiConstraintDifferentialIKController for leap_hand_xarm at 
+  :file:`octi.lab_tasks.tasks.maniputation.lift_cube.config.leap_hand_xarm.__init__`
+
+
+0.2.0 (2024-07-14)
+~~~~~~~~~~~~~~~~~~
+
+Changed
+^^^^^^^
+
 * added leap hand xarm reward :func:`octi.lab_tasks.cfgs.robots.leap_hand_xarm.mdp.rewards.reward_fingers_object_distance`
 * tuned liftCube environment reward function for LeapHandXarm environments 
   reward_fingers_object_distance scale was 1.5, now 5

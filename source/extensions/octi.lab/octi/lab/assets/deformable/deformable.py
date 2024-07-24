@@ -49,7 +49,7 @@ class Deformable(AssetBase):
         return [self.prim_path.split("/")[-1]]
 
     @property
-    def root_physx_view(self) -> physx.RigidBodyView:
+    def root_physx_view(self) -> physx.SoftBodyView:
         """Rigid body view for the asset (PhysX).
 
         Note:

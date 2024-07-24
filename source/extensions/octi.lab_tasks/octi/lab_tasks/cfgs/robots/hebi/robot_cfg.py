@@ -47,7 +47,7 @@ HEBI_DEFAULT_JOINTPOS = {
 
 HEBI_ORBIT_ARTICULATION = ArticulationCfg(
     spawn=sim_utils.UsdFileCfg(
-        usd_path="datasets/tycho_robot.usd",
+        usd_path="datasets/robots/hebi/tycho_robot.usd",
         activate_contact_sensors=True,
         rigid_props=sim_utils.RigidBodyPropertiesCfg(
             disable_gravity=False,
@@ -63,7 +63,7 @@ HEBI_ORBIT_ARTICULATION = ArticulationCfg(
 
 HEBI_CUSTOM_ARTICULATION = HebiArticulationCfg(
     spawn=sim_utils.UsdFileCfg(
-        usd_path="datasets/tycho_robot.usd",
+        usd_path="datasets/robots/hebi/tycho_robot.usd",
         activate_contact_sensors=True,
         rigid_props=sim_utils.RigidBodyPropertiesCfg(
             disable_gravity=False,
