@@ -13,6 +13,7 @@ from ..assets import DeformableCfg, HebiArticulationCfg
 from omni.isaac.lab.sensors import FrameTransformerCfg, SensorBaseCfg
 from omni.isaac.lab.terrains import TerrainImporterCfg
 from omni.isaac.lab.scene import InteractiveSceneCfg, InteractiveScene
+import torch
 
 
 class DeformableInteractiveScene(InteractiveScene):
@@ -30,6 +31,14 @@ class DeformableInteractiveScene(InteractiveScene):
     def deformables(self) -> dict[str, RigidObject]:
         """A dictionary of rigid objects in the scene."""
         return self._deformables
+
+    @property
+    def env_partitions(self) -> list[torch.Tensor]:
+        """The origins of the environments in the scene. Shape is (num_envs, 3)."""
+        if self._terrain is not None:
+            return self._terrain.env_partitions
+        else:
+            return [torch.arange(self.num_envs, device=self.device)]
 
     """
     Operations.

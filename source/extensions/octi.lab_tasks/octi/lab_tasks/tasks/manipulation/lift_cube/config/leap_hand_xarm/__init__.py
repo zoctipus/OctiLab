@@ -4,7 +4,8 @@ import gymnasium as gym
 import os
 from . import agents
 
-
+#JointPosition-ImplicitMotorLeapXarm-JointPos-LiftCube
+#MCIkAbsoluteDls-ImplicitMotorLeapXarm-JointPos-LiftCube
 base_envs = [
     ImplicitMotorLeapXarm_JointPos_LiftCube_Env
 ]

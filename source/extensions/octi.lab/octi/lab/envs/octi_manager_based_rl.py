@@ -16,7 +16,7 @@ from omni.isaac.lab.envs.manager_based_env import VecEnvObs
 from .octi_manager_based_rl_cfg import OctiManagerBasedRLEnvCfg
 from ..managers.data_manager import DataManager
 VecEnvStepReturn = tuple[VecEnvObs, torch.Tensor, torch.Tensor, torch.Tensor, dict]
-
+import os
 
 class OctiManagerBasedRLEnv(ManagerBasedRLEnv):
     """The superclass for reinforcement learning-based environments.
@@ -57,10 +57,7 @@ class OctiManagerBasedRLEnv(ManagerBasedRLEnv):
         frame_marker_cfg = FRAME_MARKER_CFG.copy()
         frame_marker_cfg.markers["frame"].scale = (0.02, 0.02, 0.02)
         self.goal_marker = VisualizationMarkers(frame_marker_cfg.replace(prim_path="/Visuals/ee_goal"))
-        # self.goal_marker1 = VisualizationMarkers(frame_marker_cfg.replace(prim_path="/Visuals/ee_goal"))
-        # self.goal_marker2 = VisualizationMarkers(frame_marker_cfg.replace(prim_path="/Visuals/ee_goal"))
-        # self.goal_marker3 = VisualizationMarkers(frame_marker_cfg.replace(prim_path="/Visuals/ee_goal"))
-        self.trajectory_memory = {}
+        self.extensions = {}
     """
     Operations - MDP
     """
@@ -87,7 +84,7 @@ class OctiManagerBasedRLEnv(ManagerBasedRLEnv):
         # process actions
         self.action_manager.process_action(action)
         # perform physics stepping
-        for _ in range(self.cfg.decimation ** 2):
+        for _ in range(self.cfg.decimation):
             self._sim_step_counter += 1
             # set actions into buffers
             self.action_manager.apply_action()
@@ -104,7 +101,8 @@ class OctiManagerBasedRLEnv(ManagerBasedRLEnv):
         # des_pos = self.action_manager._terms.get('index_finger')._ik_controller
         # self.goal_marker.visualize(
         #     des_pos.ee_pos_des[0] + self.scene._default_env_origins, des_pos.ee_quat_des[0, :, 0:4])
-        self.data_manager.compute()
+        if getattr(self.cfg, "data_manager", None) is not None:
+            self.data_manager.compute()
         # post-step:
         # -- update env counters (used for curriculum generation)
         self.episode_length_buf += 1  # step in current episode (per env)
@@ -131,10 +129,17 @@ class OctiManagerBasedRLEnv(ManagerBasedRLEnv):
         return self.obs_buf, self.reward_buf, self.reset_terminated, self.reset_time_outs, self.extras
 
     def load_managers(self):
-        self.data_manager: DataManager = DataManager(self.cfg.datas, self)
-        print("[INFO] Data Manager: ", self.data_manager)
+        if getattr(self.cfg, "datas", None) is not None:
+            self.data_manager: DataManager = DataManager(self.cfg.datas, self)
+            print("[INFO] Data Manager: ", self.data_manager)
         super().load_managers()
 
     def _reset_idx(self, env_ids: Sequence[int]):
-        self.data_manager.reset(env_ids)
+        if getattr(self, "data_manager", None) is not None:
+            self.data_manager.reset(env_ids)
         return super()._reset_idx(env_ids)
+
+    def close(self):
+        for key, val in self.extension.items():
+            del val
+        super().close()
