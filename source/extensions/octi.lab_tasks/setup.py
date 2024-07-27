@@ -56,8 +56,8 @@ EXTRAS_REQUIRE["all"] = list(set(EXTRAS_REQUIRE["all"]))
 # Installation operation
 setup(
     name="octi-lab_tasks",
-    author="Isaac Lab Project Developers",
-    maintainer="Isaac Lab Project Developers",
+    author="Octi and Isaac Lab Project Developers",
+    maintainer="Octi and Isaac Lab Project Developers",
     url=EXTENSION_TOML_DATA["package"]["repository"],
     version=EXTENSION_TOML_DATA["package"]["version"],
     description=EXTENSION_TOML_DATA["package"]["description"],
