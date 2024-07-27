@@ -16,7 +16,7 @@ from omni.isaac.lab.envs.manager_based_env import VecEnvObs
 from .octi_manager_based_rl_cfg import OctiManagerBasedRLEnvCfg
 from ..managers.data_manager import DataManager
 VecEnvStepReturn = tuple[VecEnvObs, torch.Tensor, torch.Tensor, torch.Tensor, dict]
-import os
+
 
 class OctiManagerBasedRLEnv(ManagerBasedRLEnv):
     """The superclass for reinforcement learning-based environments.

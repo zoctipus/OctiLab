@@ -113,10 +113,8 @@ def reset_upon_close(
         reset_asset.write_root_pose_to_sim(torch.cat([positions, orientations], dim=-1), env_ids=env_ids)
         reset_asset.write_root_velocity_to_sim(velocities, env_ids=env_ids)
 
-        # if "goal_reached_count" not in env.extensions:
-        #     env.extensions["goal_reached_count"] = torch.zeros((env.num_envs,), dtype=torch.long, device=env.device)
-
-        env.extensions["goal_reached_count"][env_ids] += 1
+        if "goal_reached_count" in env.extensions:
+            env.extensions["goal_reached_count"][env_ids] += 1
 
 
 def reset_root_state_uniform(
