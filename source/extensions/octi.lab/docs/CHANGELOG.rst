@@ -1,21 +1,37 @@
 Changelog
 ---------
 
-0.2.3 (2024-07-26)
+0.2.6 (2024-07-27)
 ~~~~~~~~~~~~~~~~~~
-
-
 Added
 ^^^^^
+* Added reward term :func:`octi.lab.envs.mdp.reward_body1_body2_within_distance` for reward proximity
+  two objects proximity
 
 Changed
 ^^^^^^^
-* Changed :class:`octi.lab.octi.lab.actuators.EffortMotor` inherites and uses super classes stiffness,
-  damping, effort limit instead of redefining a redundant field as of :class:`octi.lab.octi.lab.actuators.HebiEffortMotor`
+* Updating default rough terrain tiling configuration at :class:`octi.lab.terrains.config`
 
-* Changed : :class:`octi.lab.octi.lab.actuators.EffortMotorCfg` added to support above change
 
-* Changed : :class:`octi.lab.octi.lab.actuators.__init__` added to support above change
+0.2.5 (2024-07-27)
+~~~~~~~~~~~~~~~~~~
+
+Changed
+^^^^^^^
+* Removed dependency on `import os` to support custom extension in :class:`octi.lab.actuators.EffortMotor`
+
+
+0.2.4 (2024-07-26)
+~~~~~~~~~~~~~~~~~~
+
+Changed
+^^^^^^^
+* Changed :class:`octi.lab.actuators.EffortMotor` inherites and uses super classes stiffness,
+  damping, effort limit instead of redefining a redundant field as of :class:`octi.lab.actuators.HebiEffortMotor`
+
+* Changed : :class:`octi.lab.actuators.EffortMotorCfg` added to support above change
+
+* Changed : :class:`octi.lab.actuators.__init__` added to support above change
 
 
 0.2.3 (2024-07-20)
@@ -24,12 +40,12 @@ Changed
 
 Added
 ^^^^^
-* Added debug :func:`octi.lab.octi.lab.devices.RokokoGloveKeyboard.debug_advance_all_joint_data.`
+* Added debug :func:`octi.lab.devices.RokokoGloveKeyboard.debug_advance_all_joint_data.`
   for glove data visualization
 
 Changed
 ^^^^^^^
-* Changed :class:`octi.lab.octi.lab.devices.RokokoGloveKeyboard.` class requires
+* Changed :class:`octi.lab.devices.RokokoGloveKeyboard.` class requires
   input initial command pose to correctly set robot reset command target
 
 * Edited Thumb scaling input in :class:`octi.lab.devices.RokokoGlove` that correts 
@@ -42,9 +58,9 @@ Changed
 
 Changed
 ^^^^^^^
-* Changed :func:`octi.lab.octi.lab.sim.spawners.from_files.from_files_cfg.MultiAssetCfg` to support 
+* Changed :func:`octi.lab.sim.spawners.from_files.from_files_cfg.MultiAssetCfg` to support 
   multi objects scaling.
-* Changed :func:`octi.lab.octi.lab.sim.spawners.from_files.from_files.spawn_multi_object_randomly_sdf`
+* Changed :func:`octi.lab.sim.spawners.from_files.from_files.spawn_multi_object_randomly_sdf`
   to support multi objects scaling.
 
 
@@ -55,9 +71,9 @@ Changed
 Added
 ^^^^^
 * Octi lab now support multi assets spawning
-* Added :func:`octi.lab.octi.lab.sim.spawners.from_files.from_files.spawn_multi_object_randomly_sdf`
-  and :func:`octi.lab.octi.lab.sim.spawners.from_files.from_files.spawn_multi_object_randomly`
-* Added :func:`octi.lab.octi.lab.sim.spawners.from_files.from_files_cfg.MultiAssetCfg`
+* Added :func:`octi.lab.sim.spawners.from_files.from_files.spawn_multi_object_randomly_sdf`
+  and :func:`octi.lab.sim.spawners.from_files.from_files.spawn_multi_object_randomly`
+* Added :func:`octi.lab.sim.spawners.from_files.from_files_cfg.MultiAssetCfg`
 
 
 0.2.0 (2024-07-10)

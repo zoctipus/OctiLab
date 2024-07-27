@@ -63,8 +63,31 @@ def reward_body1_body2_distance(
     body1_offset_tensor = torch.tensor(body1_offset, device=env.device)
     body2_offset_tensor = torch.tensor(body2_offset, device=env.device)
     bodys_distance = get_body1_body2_distance(body1, body2, body1_offset_tensor, body2_offset_tensor)
-    reward = torch.where(bodys_distance < 0.85, 5.0, 0.0)
-    return 1 - torch.tanh(bodys_distance / std) + reward
+
+    return 1 - torch.tanh(bodys_distance / std)
+
+
+def reward_body1_body2_within_distance(
+    env: ManagerBasedRLEnv,
+    body1_cfg: SceneEntityCfg,
+    body2_cfg: SceneEntityCfg,
+    min_distance: float,
+    body1_offset: list[float] = [0.0, 0.0, 0.0],
+    body2_offset: list[float] = [0.0, 0.0, 0.0],
+) -> torch.Tensor:
+    body1: RigidObject = env.scene[body1_cfg.name]
+    body2: RigidObject = env.scene[body2_cfg.name]
+    body1_offset_tensor = torch.tensor(body1_offset, device=env.device)
+    body2_offset_tensor = torch.tensor(body2_offset, device=env.device)
+    bodys_distance = get_body1_body2_distance(body1, body2, body1_offset_tensor, body2_offset_tensor)
+    reward = torch.where(bodys_distance < min_distance, 1.0, 0.0)
+    return reward
+
+
+def reward_being_alive(
+    env: ManagerBasedRLEnv,
+) -> torch.Tensor:
+    return torch.tanh((env.episode_length_buf / env.max_episode_length) / 0.1)
 
 
 def reward_body1_frame2_distance(
