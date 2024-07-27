@@ -1,6 +1,24 @@
 Changelog
 ---------
 
+0.2.2 (2024-07-27)
+~~~~~~~~~~~~~~~~~~
+
+Changed
+^^^^^^^
+
+* dropped dependency of :folder:`octi.lab_tasks.cfg` in favor of extension `octi.lab_assets`
+
+
+
+0.2.1 (2024-07-27)
+~~~~~~~~~~~~~~~~~~
+
+Changed
+^^^^^^^
+
+* added Octi as author and maintainer to :file:`octi.lab_tasks.setup.py`
+
 0.2.0 (2024-07-14)
 ~~~~~~~~~~~~~~~~~~
 
