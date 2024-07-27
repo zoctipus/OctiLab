@@ -4,16 +4,17 @@
 # SPDX-License-Identifier: BSD-3-Clause
 from omni.isaac.lab.utils import configclass
 from omni.isaac.lab.managers import RewardTermCfg as RewTerm
+import omni.isaac.lab.sim as sim_utils
 
-# from omni.isaac.lab.envs import RLTaskEnvCfg
 from octi.lab.envs import OctiManagerBasedRLEnvCfg
+from ... import cake_decoration_env as CakeDecorationEnv
+from omni.isaac.lab.managers import SceneEntityCfg
 
-# import mdp as tycho_mdp
 from omni.isaac.lab.managers import CurriculumTermCfg as CurrTerm
-import omni.isaac.lab.envs.mdp as orbit_mdp
 from omni.isaac.lab.managers import ObservationGroupCfg as ObsGroup
 from omni.isaac.lab.managers import ObservationTermCfg as ObsTerm
 from omni.isaac.lab.managers import TerminationTermCfg as DoneTerm
+from omni.isaac.lab.managers import EventTermCfg as EventTerm
 from octi.lab.managers.manager_term_cfg import DataTermCfg as DataTerm
 from octi.lab.managers.manager_term_cfg import DataGroupCfg as DataGroup
 
@@ -23,38 +24,39 @@ from dataclasses import MISSING
 # Pre-defined configs
 ##
 from ... import mdp as task_mdp
-from octi.lab_tasks.cfgs.scenes.craneberryLavaChocoCake_scene import (
-    SceneObjectSceneCfg,
-    SceneCommandsCfg,
-    SceneEventCfg,
-    SceneRewardsCfg,
-    SceneTerminationsCfg,
-)
-import octi.lab_tasks.cfgs.robots.hebi.mdp as hebi_mdp
-import octi.lab_tasks.cfgs.robots.hebi.robot_dynamics as rd
-from octi.lab_tasks.cfgs.robots.hebi.robot_cfg import FRAME_EE, CAMERA_WRIST, CAMERA_BASE  # noqa: F401
+
+# from octi.lab_tasks.cfgs.robots.hebi.robot_cfg import FRAME_EE, CAMERA_WRIST, CAMERA_BASE  # noqa: F401
+from octi.lab_assets.tycho import FRAME_EE, CAMERA_WRIST, CAMERA_BASE, FRAME_FIXED_CHOP_TIP, FRAME_FREE_CHOP_TIP  # noqa: F401
+from octi.lab_assets.tycho import HEBI_IMPLICITY_ACTUATOR_CFG, HEBI_EFFORT_CFG
+from octi.lab_assets.tycho import IKDELTA, IKABSOLUTE, JOINT_POSITION, BINARY_GRIPPER, JOINT_EFFORT
+
+RADIUS = 0.02
+
+plate_position = [-0.5, -0.3, 0.04]
+plate_scale = 1.5
+
+cake_position = [-0.2, -0.48, 0.00362]
+cake_scale = 5
+
+canberry_position = [plate_position[0] + 0.06, plate_position[1] + 0.02, plate_position[2] + 0.06]
+canberry_scale = 5
+
+canberryTree_position = [plate_position[0] + 0.03, plate_position[1] + 0.07, plate_position[2]]
+canberryTree_scale = 5
+
+p_glassware_short_position = [cake_position[0] + 0.2, cake_position[1] + 0.1, cake_position[2] + 0.1]
+p_glassware_short_scale = 1
+
+spoon_position = [0.016113101099947867, -0.47999998927116405, 0.019141643538828867]
+spoon_scale = 3
 
 
 @configclass
-class ObjectSceneCfg:
-    pass
-
-
-@configclass
-class IdealPDHebi_ObjectSceneCfg(SceneObjectSceneCfg, rd.RobotSceneCfg_IdealPD, ObjectSceneCfg):
+class ObjectSceneCfg(CakeDecorationEnv.ObjectSceneCfg):
     ee_frame = FRAME_EE
-
-
-@configclass
-class PwmMotorHebi_ObjectSceneCfg(SceneObjectSceneCfg, rd.RobotSceneCfg_HebiStrategy3Actuator, ObjectSceneCfg):
-    ee_frame = FRAME_EE
-
-
-@configclass
-class ImplicitMotorHebi_ObjectSceneCfg(SceneObjectSceneCfg, rd.RobotSceneCfg_ImplicityActuator, ObjectSceneCfg):
-    ee_frame = FRAME_EE
-    # camera_wrist = CAMERA_WRIST
-    # camera_base = CAMERA_BASE
+    robot = HEBI_IMPLICITY_ACTUATOR_CFG.replace(prim_path="{ENV_REGEX_NS}/Robot")
+    frame_fixed_chop_tip = FRAME_FIXED_CHOP_TIP
+    frame_free_chop_tip = FRAME_FREE_CHOP_TIP
 
 
 @configclass
@@ -64,15 +66,13 @@ class DataCfg:
     class TaskData(DataGroup):
         data = DataTerm(
             func=task_mdp.update_data,
-            params={
-                "robot_name": "robot",
-                "canberry_name": "canberry",
-                "cake_name": "cake",
-                "caneberry_offset": [0, 0, 0],
-                "cake_offset": [0.0002, -0.0014, 0.0215],
-                "fixed_chop_frame_name": "frame_fixed_chop_tip",
-                "free_chop_frame_name": "frame_free_chop_tip",
-            },
+            params={"robot_name": "robot",
+                    "canberry_name": "canberry",
+                    "cake_name": "cake",
+                    "caneberry_offset": [0, 0, 0],
+                    "cake_offset": [0.0002, -0.0014, 0.0215],
+                    "fixed_chop_frame_name": "frame_fixed_chop_tip",
+                    "free_chop_frame_name": "frame_free_chop_tip"},
         )
 
         def __post_init__(self):
@@ -93,23 +93,24 @@ class DataCfg:
 
 @configclass
 class ActionsCfg:
-    """Action will be defined at the moment class gets constructed"""
-
     pass
 
 
 @configclass
-class ObservationsCfg:
+class ObservationsCfg():
     """"""
 
     @configclass
-    class PolicyCfg(ObsGroup, rd.RobotObservationsPolicyCfg):
+    class PolicyCfg(ObsGroup):
         """Observations for policy group."""
-
+        robot_actions = ObsTerm(func=task_mdp.last_action)
+        robot_joint_pos = ObsTerm(func=task_mdp.joint_pos_rel)
+        robot_joint_vel = ObsTerm(func=task_mdp.joint_vel_rel)
+        robot_eepose = ObsTerm(func=task_mdp.end_effector_pose_in_robot_root_frame)
         canberry_pos_b = ObsTerm(
-            func=hebi_mdp.position_in_robot_root_frame, params={"position_b": "canberry_position_b"}
+            func=task_mdp.position_in_robot_root_frame, params={"position_b": "canberry_position_b"}
         )
-        cake_pos_b = ObsTerm(func=hebi_mdp.position_in_robot_root_frame, params={"position_b": "cake_position_b"})
+        cake_pos_b = ObsTerm(func=task_mdp.position_in_robot_root_frame, params={"position_b": "cake_position_b"})
         # wrist_picture = ObsTerm(func=hebi_mdp.capture_image, params={"camera_key": "camera_wrist"})
         # base_picture = ObsTerm(func=hebi_mdp.capture_image, params={"camera_key": "camera_base"})
 
@@ -122,22 +123,36 @@ class ObservationsCfg:
 
 
 @configclass
-class RewardsCfg(SceneRewardsCfg, rd.RobotRewardsCfg):
+class RewardsCfg(CakeDecorationEnv.RewardsCfg):
     """Reward terms for the MDP."""
+
+    action_rate = RewTerm(func=task_mdp.action_rate_l2, weight=-0.01)
+
+    joint_vel = RewTerm(
+        func=task_mdp.joint_vel_l2,
+        weight=-0.0001,
+        params={"asset_cfg": SceneEntityCfg("robot")},
+    )
+
+    velocity_punishment = RewTerm(func=task_mdp.joint_vel_limits, weight=-1, params={"soft_ratio": 1})
+
+    punish_hand_tilted = RewTerm(func=task_mdp.punish_hand_tilted, weight=1 )
+
+    punish_touching_ground = RewTerm(func=task_mdp.punish_touching_ground, weight=0.3)
+
+    punish_bad_elbow_posture = RewTerm(func=task_mdp.punish_bad_elbow_shoulder_posture, weight=1)
 
     reward_canberry_eeframe_distance_reward = RewTerm(
         func=task_mdp.reward_canberry_eeframe_distance_reward,
         params={"canberry_eeframe_distance_key": "canberry_eeframe_distance"},
-        weight=2,
+        weight=2
     )
 
     try_to_close_reward = RewTerm(
         func=task_mdp.try_to_close_reward,
-        params={
-            "canberry_eeframe_distance_key": "canberry_eeframe_distance",
-            "chop_pose_key": "chop_pose",
-            "chop_tips_canberry_cos_angle_key": "chop_tips_canberry_cos_angle",
-        },
+        params={"canberry_eeframe_distance_key": "canberry_eeframe_distance",
+                "chop_pose_key": "chop_pose",
+                "chop_tips_canberry_cos_angle_key": "chop_tips_canberry_cos_angle"},
         weight=2,
     )
 
@@ -161,11 +176,9 @@ class RewardsCfg(SceneRewardsCfg, rd.RobotRewardsCfg):
 
     canberry_cake_distance_reward = RewTerm(
         func=task_mdp.canberry_cake_distance_reward,
-        params={
-            "canberry_cake_distance_key": "canberry_cake_distance",
-            "canberry_height_key": "canberry_height",
-            "canberry_grasp_mask_key": "canberry_grasp_mask",
-        },
+        params={"canberry_cake_distance_key": "canberry_cake_distance",
+                "canberry_height_key": "canberry_height",
+                "canberry_grasp_mask_key": "canberry_grasp_mask"},
         weight=5,
     )
 
@@ -186,15 +199,19 @@ class RewardsCfg(SceneRewardsCfg, rd.RobotRewardsCfg):
 
 
 @configclass
-class CommandsCfg(SceneCommandsCfg):
+class CommandsCfg(CakeDecorationEnv.CommandsCfg):
     """Command terms for the MDP."""
 
     pass
 
 
 @configclass
-class EventCfg(SceneEventCfg, rd.RobotRandomizationCfg):
-    pass
+class EventCfg(CakeDecorationEnv.EventCfg):
+
+    # Reset
+    reset_robot = EventTerm(
+        func=task_mdp.reset_robot_to_default, params={"robot_cfg": SceneEntityCfg("robot")}, mode="reset"
+    )
     # record_state_configuration = EventTerm(
     #     func=task_mdp.record_state_configuration,
     #     mode="interval",
@@ -210,10 +227,8 @@ class EventCfg(SceneEventCfg, rd.RobotRandomizationCfg):
 
 
 @configclass
-class TerminationsCfg(SceneTerminationsCfg, rd.RobotTerminationsCfg):
+class TerminationsCfg(CakeDecorationEnv.TerminationsCfg):
     """Termination terms for the MDP."""
-
-    time_out = DoneTerm(func=orbit_mdp.time_out, time_out=True)
     success_state = DoneTerm(
         func=task_mdp.success_state,
         params={
@@ -223,14 +238,12 @@ class TerminationsCfg(SceneTerminationsCfg, rd.RobotTerminationsCfg):
         },
     )
 
-    # berry_dropped = DoneTerm(
-    #     func=task_mdp.canberry_dropped,
-    #     params={
-    #         "canberry_cake_distance_key":"canberry_cake_distance",
-    #         "canberry_eeframe_distance_key":"canberry_eeframe_distance",
-    #         "chop_pose_key":"chop_pose",
-    #     }
-    # )
+    robot_invalid_state = DoneTerm(func=task_mdp.invalid_state, params={"asset_cfg": SceneEntityCfg("robot")})
+
+    robot_extremely_bad_posture = DoneTerm(
+        func=task_mdp.terminate_extremely_bad_posture,
+        params={"probability": 0.5, "robot_cfg": SceneEntityCfg("robot")},
+    )
 
     # non_moving_abnorm = DoneTerm(
     #     func=task_mdp.non_moving_abnormalty,
@@ -253,14 +266,14 @@ class CurriculumCfg:
     """Curriculum terms for the MDP."""
 
     change_drop_weight = CurrTerm(
-        func=orbit_mdp.modify_reward_weight, params={"term_name": "action_rate", "weight": -1e-1, "num_steps": 10000}
+        func=task_mdp.modify_reward_weight, params={"term_name": "action_rate", "weight": -1e-1, "num_steps": 10000}
     )
 
 
 @configclass
-class IdealPDHebi_JointPos_CraneberryLavaChocoCake_Env(OctiManagerBasedRLEnvCfg):
+class CakeDecorationTychoEnv(OctiManagerBasedRLEnvCfg):
     # Scene settings
-    scene: ObjectSceneCfg = IdealPDHebi_ObjectSceneCfg(num_envs=1, env_spacing=2.5, replicate_physics=False)
+    scene: ObjectSceneCfg = ObjectSceneCfg(num_envs=1, env_spacing=2.5, replicate_physics=False)
     # Basic settings
     observations: ObservationsCfg = ObservationsCfg()
     actions: ActionsCfg = MISSING  # type: ignore
@@ -277,26 +290,51 @@ class IdealPDHebi_JointPos_CraneberryLavaChocoCake_Env(OctiManagerBasedRLEnvCfg)
         self.episode_length_s = 4
         # simulation settings
         self.sim.dt = 0.02 / self.decimation  # Agent: 20Hz, Motor: 500Hz
-        self.sim.physx.min_position_iteration_count = 32
-        self.sim.physx.min_velocity_iteration_count = 16
-        self.sim.physx.bounce_threshold_velocity = 0.2
-        self.sim.physx.bounce_threshold_velocity = 0.01
-        self.sim.physx.gpu_found_lost_aggregate_pairs_capacity = 1024 * 1024 * 4
-        self.sim.physx.gpu_total_aggregate_pairs_capacity = 16 * 1024
-        self.sim.physx.friction_correlation_distance = 0.00625
         self.sim.physx.gpu_total_aggregate_pairs_capacity = 2**22
         self.sim.physx.gpu_max_rigid_patch_count = 2**20
 
 
-class PwmMotorHebi_JointPos_CraneberryLavaChocoCake_Env(IdealPDHebi_JointPos_CraneberryLavaChocoCake_Env):
-    def __post_init__(self):
-        super().__post_init__()
-        self.scene: ObjectSceneCfg = PwmMotorHebi_ObjectSceneCfg(num_envs=1, env_spacing=2.5, replicate_physics=False)
+@configclass
+class IkdeltaAction(ActionsCfg):
+    gripper_joint_pos = BINARY_GRIPPER
+    body_joint_pos = IKDELTA
 
 
-class ImplicitMotorHebi_JointPos_CraneberryLavaChocoCake_Env(IdealPDHebi_JointPos_CraneberryLavaChocoCake_Env):
+@configclass
+class IkabsoluteAction(ActionsCfg):
+    gripper_joint_pos = BINARY_GRIPPER
+    body_joint_pos = IKABSOLUTE
+
+
+@configclass
+class JointPositionAction(ActionsCfg):
+    jointpos = JOINT_POSITION
+
+
+@configclass
+class JointEffortAction(ActionsCfg):
+    jointpos = JOINT_EFFORT
+
+
+@configclass
+class CakeDecorationTychoIkdelta(CakeDecorationTychoEnv):
+    actions = IkdeltaAction()
+
+
+@configclass
+class CakeDecorationTychoIkabsolute(CakeDecorationTychoEnv):
+    actions = IkabsoluteAction()
+
+
+@configclass
+class CakeDecorationTychoJointPosition(CakeDecorationTychoEnv):
+    actions = JointPositionAction()
+
+
+@configclass
+class CakeDecorationTychoJointEffort(CakeDecorationTychoEnv):
+    actions = JointEffortAction()
+
     def __post_init__(self):
         super().__post_init__()
-        self.scene: ObjectSceneCfg = ImplicitMotorHebi_ObjectSceneCfg(
-            num_envs=1, env_spacing=2.5, replicate_physics=False
-        )
+        self.scene.robot = HEBI_EFFORT_CFG.replace(prim_path="{ENV_REGEX_NS}/Robot")
