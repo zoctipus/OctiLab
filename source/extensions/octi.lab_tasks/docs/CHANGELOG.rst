@@ -1,6 +1,16 @@
 Changelog
 ---------
 
+0.2.3 (2024-07-27)
+~~~~~~~~~~~~~~~~~~
+
+Changed
+^^^^^^^
+
+* sketched Fetching as a separate locomotion task, instead of being a part of
+  :folder:`octi.lab_tasks.tasks.locomotion.velocity`
+
+
 0.2.2 (2024-07-27)
 ~~~~~~~~~~~~~~~~~~
 

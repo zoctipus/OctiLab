@@ -6,25 +6,14 @@
 from omni.isaac.lab.utils import configclass
 
 from octi.lab_tasks.tasks.locomotion.velocity.velocity_env_cfg import LocomotionVelocityRoughEnvCfg
-from octi.lab_tasks.tasks.locomotion.velocity.position_env_cfg import LocomotionPositionRoughEnvCfg
 
 ##
 # Pre-defined configs
 ##
-from omni.isaac.lab_assets.anymal import ANYMAL_C_CFG  # isort: skip
-
+from octi.lab_assets.anymal import ANYMAL_C_CFG, ANYMAL_C_EFFORT_CFG, ANYMAL_C_IMPLICIT_CFG  # isort: skip  # noqa: F401
 
 @configclass
 class AnymalCRoughEnvCfg(LocomotionVelocityRoughEnvCfg):
-    def __post_init__(self):
-        # post init of parent
-        super().__post_init__()
-        # switch robot to anymal-c
-        self.scene.robot = ANYMAL_C_CFG.replace(prim_path="{ENV_REGEX_NS}/Robot")
-
-
-@configclass
-class AnymalCRoughPositionEnvCfg(LocomotionPositionRoughEnvCfg):
     def __post_init__(self):
         # post init of parent
         super().__post_init__()

@@ -48,10 +48,7 @@ class AnymalCRoughEnvPrmdIprmdBoxRghHfslpCfg(AnymalCRoughEnvCfg):
             ),
             "hf_pyramid_slope": terrain_gen.HfPyramidSlopedTerrainCfg(
                 proportion=0.2, slope_range=(0.0, 0.4), platform_width=2.0, border_width=0.25
-            ),
-            # "hf_pyramid_slope_inv": terrain_gen.HfInvertedPyramidSlopedTerrainCfg(
-            #     proportion=0.2, slope_range=(0.0, 0.4), platform_width=2.0, border_width=0.25
-            # ),
+            )
         }
 
 

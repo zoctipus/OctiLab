@@ -3,12 +3,10 @@
 #
 # SPDX-License-Identifier: BSD-3-Clause
 
-import math
-from dataclasses import MISSING
-
-import omni.isaac.lab.sim as sim_utils
-from omni.isaac.lab.assets import ArticulationCfg, AssetBaseCfg, RigidObjectCfg
-from omni.isaac.lab.envs import ManagerBasedRLEnvCfg
+from omni.isaac.lab.utils import configclass
+from octi.lab_tasks.tasks.locomotion.fetching import fetching_env
+from omni.isaac.lab.assets import ArticulationCfg
+from omni.isaac.lab.sensors import ContactSensorCfg, RayCasterCfg, patterns
 from omni.isaac.lab.managers import CurriculumTermCfg as CurrTerm
 from omni.isaac.lab.managers import EventTermCfg as EventTerm
 from omni.isaac.lab.managers import ObservationGroupCfg as ObsGroup
@@ -16,55 +14,22 @@ from omni.isaac.lab.managers import ObservationTermCfg as ObsTerm
 from omni.isaac.lab.managers import RewardTermCfg as RewTerm
 from omni.isaac.lab.managers import SceneEntityCfg
 from omni.isaac.lab.managers import TerminationTermCfg as DoneTerm
-from omni.isaac.lab.scene import InteractiveSceneCfg
-from omni.isaac.lab.sensors import ContactSensorCfg, RayCasterCfg, patterns
-from omni.isaac.lab.terrains import TerrainImporterCfg
-from omni.isaac.lab.sim.spawners.from_files.from_files_cfg import UsdFileCfg
-from omni.isaac.lab.utils import configclass
-from omni.isaac.lab.utils.assets import ISAAC_NUCLEUS_DIR, ISAACLAB_NUCLEUS_DIR
+import octi.lab_tasks.tasks.locomotion.fetching.mdp as mdp
+from omni.isaac.lab.envs import ManagerBasedRLEnvCfg
+# import octi.lab.envs.mdp as octi_mdp
+import math
 from omni.isaac.lab.utils.noise import AdditiveUniformNoiseCfg as Unoise
-
-import omni.isaac.lab_tasks.manager_based.locomotion.velocity.mdp as mdp
-import octi.lab_tasks.tasks.locomotion.velocity.mdp as octi_mdp
 ##
 # Pre-defined configs
 ##
-from octi.lab.terrains.config.rough import ROUGH_TERRAINS_CFG, TERRAINS_GEN_CFG  # isort: skip
-
-
-##
-# Scene definition
-##
-
+import octi.lab_assets.anymal as anymal
 
 @configclass
-class MySceneCfg(InteractiveSceneCfg):
+class MySceneCfg(fetching_env.SceneCfg):
     """Configuration for the terrain scene with a legged robot."""
 
-    # ground terrain
-    terrain = TerrainImporterCfg(
-        prim_path="/World/ground",
-        terrain_type="generator",
-        terrain_generator=ROUGH_TERRAINS_CFG,
-        # terrain_generator=TERRAINS_GEN_CFG,
-        max_init_terrain_level=5,
-        collision_group=-1,
-        physics_material=sim_utils.RigidBodyMaterialCfg(
-            friction_combine_mode="multiply",
-            restitution_combine_mode="multiply",
-            static_friction=1.0,
-            dynamic_friction=1.0,
-        ),
-        visual_material=sim_utils.MdlFileCfg(
-            mdl_path=f"{ISAACLAB_NUCLEUS_DIR}/Materials/TilesMarbleSpiderWhiteBrickBondHoned/TilesMarbleSpiderWhiteBrickBondHoned.mdl",
-            project_uvw=True,
-            texture_scale=(0.25, 0.25),
-        ),
-        debug_vis=False,
-    )
-
     # robots
-    robot: ArticulationCfg = MISSING
+    robot: ArticulationCfg = anymal.ANYMAL_C_IMPLICIT_CFG.replace(prim_path="{ENV_REGEX_NS}/Robot")
     # sensors
     height_scanner = RayCasterCfg(
         prim_path="{ENV_REGEX_NS}/Robot/base",
@@ -75,27 +40,6 @@ class MySceneCfg(InteractiveSceneCfg):
         mesh_prim_paths=["/World/ground"],
     )
     contact_forces = ContactSensorCfg(prim_path="{ENV_REGEX_NS}/Robot/.*", history_length=3, track_air_time=True)
-    # lights
-    sky_light = AssetBaseCfg(
-        prim_path="/World/skyLight",
-        spawn=sim_utils.DomeLightCfg(
-            intensity=750.0,
-            texture_file=f"{ISAAC_NUCLEUS_DIR}/Materials/Textures/Skies/PolyHaven/kloofendal_43d_clear_puresky_4k.hdr",
-        ),
-    )
-
-    object: RigidObjectCfg = RigidObjectCfg(
-        prim_path="/World/envs/env_.*/Object",
-        spawn=sim_utils.CuboidCfg(
-            size=(0.1, 0.1, 0.1),
-            rigid_props=sim_utils.RigidBodyPropertiesCfg(),
-            mass_props=sim_utils.MassPropertiesCfg(mass=1.0),
-            collision_props=sim_utils.CollisionPropertiesCfg(),
-            visual_material=sim_utils.PreviewSurfaceCfg(diffuse_color=(1.0, 0.0, 0.0), metallic=0.2),
-        ),
-        init_state=RigidObjectCfg.InitialStateCfg(pos=(0.0, 0.0, 0.0)),
-    )
-
 
 ##
 # MDP settings
@@ -110,7 +54,7 @@ class CommandsCfg:
         resampling_time_range=(10.0, 10.0),
         rel_standing_envs=0.02,
         rel_heading_envs=1.0,
-        heading_command=True,
+        heading_command=False,
         heading_control_stiffness=0.5,
         debug_vis=False,
         ranges=mdp.UniformVelocityCommandCfg.Ranges(
@@ -121,9 +65,7 @@ class CommandsCfg:
 
 @configclass
 class ActionsCfg:
-    """Action specifications for the MDP."""
-
-    joint_pos = mdp.JointPositionActionCfg(asset_name="robot", joint_names=[".*"], scale=0.5, use_default_offset=True)
+    actions = anymal.ANYMAL_C_JOINT_POSITION
 
 
 @configclass
@@ -141,7 +83,7 @@ class ObservationsCfg:
             func=mdp.projected_gravity,
             noise=Unoise(n_min=-0.05, n_max=0.05),
         )
-        object_position = ObsTerm(func=octi_mdp.object_position_in_robot_root_frame, params={})
+        object_position = ObsTerm(func=mdp.object_position_in_robot_root_frame, params={})
         joint_pos = ObsTerm(func=mdp.joint_pos_rel, noise=Unoise(n_min=-0.01, n_max=0.01))
         joint_vel = ObsTerm(func=mdp.joint_vel_rel, noise=Unoise(n_min=-1.5, n_max=1.5))
         actions = ObsTerm(func=mdp.last_action)
@@ -202,7 +144,7 @@ class EventCfg:
         func=mdp.reset_root_state_uniform,
         mode="reset",
         params={
-            "pose_range": {"x": (-0.5, 0.5), "y": (-0.5, 0.5), "yaw": (-3.14, 3.14)},
+            "pose_range": {"x": (-0.5, 0.5), "y": (-0.5, 0.5), "z": (0, 0), "yaw": (-3.14, 3.14)},
             "velocity_range": {
                 "x": (-0.5, 0.5),
                 "y": (-0.5, 0.5),
@@ -224,7 +166,7 @@ class EventCfg:
     )
 
     reset_object = EventTerm(
-        func=octi_mdp.reset_root_state_uniform,
+        func=mdp.reset_root_state_uniform,
         mode="reset",
         params={
             "pose_range": {"x": (-0.5, 0.5), "y": (-0.5, 0.5), "yaw": (-3.14, 3.14)},
@@ -242,20 +184,20 @@ class EventCfg:
     )
 
     respawn_object = EventTerm(
-        func=octi_mdp.reset_upon_close,
+        func=mdp.reset_upon_close,
         mode="interval",
         interval_range_s=(0.5, 0.5),
         params={
             "pose_range": {"x": (-4, 4), "y": (-4, 4), "z": (5, 5), "yaw": (-3.14, 3.14)},
             "velocity_range": {},
-            "reset_distance": 0.8,
+            "reset_distance": 0.9,
             "compare_asset_cfg": SceneEntityCfg("robot"),
             "reset_asset_cfg": SceneEntityCfg("object"),
         },
     )
 
     respawn_dropped_object = EventTerm(
-        func=octi_mdp.reset_below_min_height,
+        func=mdp.reset_below_min_height,
         mode="interval",
         interval_range_s=(0.2, 0.2),
         params={
@@ -273,19 +215,32 @@ class RewardsCfg:
 
     # -- task
     track_robot_goal_distance = RewTerm(
-        func=octi_mdp.reward_body1_body2_distance,
-        weight=2,
+        func=mdp.reward_body1_body2_distance,
+        weight=0.5,
         params={
             "body1_cfg": SceneEntityCfg("robot"),
             "body2_cfg": SceneEntityCfg("object"),
             "std": 1.5,
         }
     )
+    get_treat = RewTerm(
+        func=mdp.reward_body1_body2_within_distance,
+        weight=1,
+        params={
+            "body1_cfg": SceneEntityCfg("robot"),
+            "body2_cfg": SceneEntityCfg("object"),
+            "min_distance": 0.8,
+        }
+    )
+    being_alive = RewTerm(
+        func=mdp.reward_being_alive,
+        weight=1,
+    )
     track_lin_vel_xy_exp = RewTerm(
-        func=octi_mdp.track_interpolated_lin_vel_xy_exp, weight=3.0, params={"std": math.sqrt(0.25)}
+        func=mdp.track_interpolated_lin_vel_xy_exp, weight=5.0, params={"std": math.sqrt(0.25)}
     )
     # -- penalties
-    lin_vel_z_l2 = RewTerm(func=octi_mdp.lin_vel_z_l2, weight=-2.0)
+    lin_vel_z_l2 = RewTerm(func=mdp.lin_vel_z_l2, weight=-2.0)
     ang_vel_xy_l2 = RewTerm(func=mdp.ang_vel_xy_l2, weight=-0.05)
     dof_torques_l2 = RewTerm(func=mdp.joint_torques_l2, weight=-1.0e-5)
     dof_acc_l2 = RewTerm(func=mdp.joint_acc_l2, weight=-2.5e-7)
@@ -324,18 +279,22 @@ class TerminationsCfg:
 class CurriculumCfg:
     """Curriculum terms for the MDP."""
 
-    terrain_levels = CurrTerm(func=octi_mdp.terrain_levels_pos)
+    terrain_levels = CurrTerm(func=mdp.terrain_levels_pos)
 
     joint_vel = CurrTerm(
         func=mdp.modify_reward_weight,
-        params={"term_name": "track_lin_vel_xy_exp", "weight": 1, "num_steps": 1}
+        params={"term_name": "track_lin_vel_xy_exp", "weight": 1, "num_steps": 50000}
     )
 
-    track_robot_goal_distance = CurrTerm(
+    track_robot_goal_distance_phase1 = CurrTerm(
         func=mdp.modify_reward_weight,
-        params={"term_name": "track_robot_goal_distance", "weight": 3, "num_steps": 1}
+        params={"term_name": "track_robot_goal_distance", "weight": 3, "num_steps": 50000}
     )
 
+    get_treat = CurrTerm(
+        func=mdp.modify_reward_weight,
+        params={"term_name": "get_treat", "weight": 50, "num_steps": 50000}
+    )
 
 ##
 # Environment configuration
@@ -343,7 +302,7 @@ class CurriculumCfg:
 
 
 @configclass
-class LocomotionPositionRoughEnvCfg(ManagerBasedRLEnvCfg):
+class AnymalCRoughPositionEnvCfg(ManagerBasedRLEnvCfg):
     """Configuration for the locomotion velocity-tracking environment."""
 
     # Scene settings
@@ -387,3 +346,27 @@ class LocomotionPositionRoughEnvCfg(ManagerBasedRLEnvCfg):
         else:
             if self.scene.terrain.terrain_generator is not None:
                 self.scene.terrain.terrain_generator.curriculum = False
+
+
+@configclass
+class AnymalCRoughPositionEnvCfg_PLAY(AnymalCRoughPositionEnvCfg):
+    def __post_init__(self):
+        # post init of parent
+        super().__post_init__()
+
+        # make a smaller scene for play
+        self.scene.num_envs = 50
+        self.scene.env_spacing = 2.5
+        # spawn the robot randomly in the grid (instead of their terrain levels)
+        self.scene.terrain.max_init_terrain_level = None
+        # reduce the number of terrains to save memory
+        if self.scene.terrain.terrain_generator is not None:
+            self.scene.terrain.terrain_generator.num_rows = 5
+            self.scene.terrain.terrain_generator.num_cols = 5
+            self.scene.terrain.terrain_generator.curriculum = False
+
+        # disable randomization for play
+        self.observations.policy.enable_corruption = False
+        # remove random pushing event
+        self.events.base_external_force_torque = None  # type: ignore
+        self.events.push_robot = None  # type: ignore
