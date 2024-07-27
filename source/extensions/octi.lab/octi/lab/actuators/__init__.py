@@ -22,7 +22,5 @@ which defines the common interface for all actuator models. The actuator models 
 and called by the :class:`omni.isaac.lab.assets.Articulation` class.
 """
 
-from .actuator_cfg import HebiStrategy3ActuatorCfg, EffortMotorCfg, HebiStrategy4ActuatorCfg, HebiDCMotorCfg
-from .actuator_pd import HebiStrategy3Actuator, EffortMotor, HebiStrategy4Actuator, HebiDCMotor
-
-__all__ = [HebiStrategy3Actuator, HebiStrategy3Actuator, HebiStrategy4Actuator]
+from .actuator_cfg import HebiStrategy3ActuatorCfg, EffortMotorCfg, HebiStrategy4ActuatorCfg, HebiDCMotorCfg, HebiEffortMotorCfg
+from .actuator_pd import HebiStrategy3Actuator, EffortMotor, HebiStrategy4Actuator, HebiDCMotor, HebiEffortMotor

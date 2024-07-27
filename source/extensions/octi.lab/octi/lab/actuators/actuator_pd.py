@@ -14,13 +14,31 @@ from omni.isaac.core.utils.types import ArticulationActions
 from omni.isaac.lab.actuators.actuator_base import ActuatorBase
 
 if TYPE_CHECKING:
-    from .actuator_cfg import HebiStrategy3ActuatorCfg, EffortMotorCfg, HebiStrategy4ActuatorCfg, HebiDCMotorCfg
+    from .actuator_cfg import HebiStrategy3ActuatorCfg, HebiEffortMotorCfg, EffortMotorCfg, HebiStrategy4ActuatorCfg, HebiDCMotorCfg
 
 
 class EffortMotor(ActuatorBase):
     cfg: EffortMotorCfg
 
     def __init__(self, cfg: EffortMotorCfg, *args, **kwargs):
+        super().__init__(cfg, *args, **kwargs)
+
+    def compute(self, control_action: ArticulationActions, joint_pos: torch.Tensor, joint_vel: torch.Tensor):
+        self.computed_effort = torch.clip(control_action.joint_efforts, -self.effort_limit, self.effort_limit)
+        self.applied_effort = self.computed_effort
+        control_action.joint_efforts = self.applied_effort
+        control_action.joint_positions = None
+        control_action.joint_velocities = None
+        return control_action
+
+    def reset(self, env_ids: Sequence[int]):
+        pass
+
+
+class HebiEffortMotor(ActuatorBase):
+    cfg: HebiEffortMotorCfg
+
+    def __init__(self, cfg: HebiEffortMotorCfg, *args, **kwargs):
         super().__init__(cfg, *args, **kwargs)
 
         self.actuation_limit = torch.tensor(cfg.actuation_limit, device=self._device)

@@ -11,10 +11,16 @@ from omni.isaac.lab.actuators.actuator_cfg import ActuatorBaseCfg
 
 
 @configclass
+class HebiEffortMotorCfg(ActuatorBaseCfg):
+
+    class_type: type = actuator_pd.HebiEffortMotor
+    actuation_limit: list = MISSING
+
+
+@configclass
 class EffortMotorCfg(ActuatorBaseCfg):
 
     class_type: type = actuator_pd.EffortMotor
-    actuation_limit: list = MISSING
 
 
 @configclass
