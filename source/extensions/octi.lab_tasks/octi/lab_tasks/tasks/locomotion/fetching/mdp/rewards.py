@@ -10,6 +10,7 @@ from typing import TYPE_CHECKING
 
 from omni.isaac.lab.managers import SceneEntityCfg
 from omni.isaac.lab.sensors import ContactSensor
+from omni.isaac.lab.assets import RigidObject
 from omni.isaac.lab.utils.math import quat_rotate_inverse, yaw_quat
 
 if TYPE_CHECKING:
@@ -90,4 +91,44 @@ def track_ang_vel_z_world_exp(
     # extract the used quantities (to enable type-hinting)
     asset = env.scene[asset_cfg.name]
     ang_vel_error = torch.square(env.command_manager.get_command(command_name)[:, 2] - asset.data.root_ang_vel_w[:, 2])
+    return torch.exp(-ang_vel_error / std**2)
+
+
+
+def track_interpolated_lin_vel_xy_exp(
+    env: ManagerBasedRLEnv, std: float, object_cfg: SceneEntityCfg = SceneEntityCfg("object"), asset_cfg: SceneEntityCfg = SceneEntityCfg("robot")
+) -> torch.Tensor:
+    """Reward tracking of linear velocity commands (xy axes) using exponential kernel."""
+    # extract the used quantities (to enable type-hinting)
+    asset: RigidObject = env.scene[asset_cfg.name]
+    obj: RigidObject = env.scene[object_cfg.name]
+    # compute the error
+    obj_pos_w = obj.data.root_pos_w
+
+    obj_pos_b, _ = subtract_frame_transforms(
+        asset.data.root_pos_w, asset.data.root_quat_w, obj_pos_w
+    )
+    distance = torch.norm(obj_pos_b, dim=1)
+    coefficient = torch.clamp_max(distance, 1).view(-1, 1)
+    vel_command = coefficient * 1 * (obj_pos_b / distance.view(-1, 1))
+    env.command_manager.get_term('base_velocity').vel_command_b[:, :2] = vel_command[:, :2]
+    lin_vel_error = torch.sum(
+        torch.square(vel_command[:, :2] - asset.data.root_lin_vel_b[:, :2]),
+        dim=1,
+    )
+    return torch.exp(-lin_vel_error / std**2)
+
+
+def track_interpolated_ang_vel_z_exp(
+    env: ManagerBasedRLEnv, std: float, object_cfg: SceneEntityCfg = SceneEntityCfg("object"), asset_cfg: SceneEntityCfg = SceneEntityCfg("robot")
+) -> torch.Tensor:
+    """Reward tracking of angular velocity commands (yaw) using exponential kernel."""
+    # extract the used quantities (to enable type-hinting)
+    asset: RigidObject = env.scene[asset_cfg.name]
+    obj: RigidObject = env.scene[object_cfg.name]
+    # compute the error
+    asset_pos_w = asset.data.root_pos_w
+    obj_pos_w = obj.data.root_pos_w
+    vel_command = torch.clamp((asset_pos_w - obj_pos_w), -1, 1)
+    ang_vel_error = torch.square(vel_command[:, 2] - asset.data.root_ang_vel_b[:, 2])
     return torch.exp(-ang_vel_error / std**2)

@@ -1,6 +1,49 @@
 Changelog
 ---------
 
+0.4.1 (2024-07-27)
+~~~~~~~~~~~~~~~~~~
+
+Changed
+^^^^^^^
+* added fetching task specific reward at :func:`octi.lab_tasks.locomotion.fetching.mdp.track_interpolated_lin_vel_xy_exp`
+  and :func:`octi.lab_tasks.locomotion.fetching.mdp.track_interpolated_ang_vel_z_exp`
+
+
+0.4.1 (2024-07-27)
+~~~~~~~~~~~~~~~~~~
+
+Changed
+^^^^^^^
+
+* update track_goal tasks under folder :folder:`octi.lab_tasks.tasks.manipulation.track_goal`
+
+
+0.4.0 (2024-07-27)
+~~~~~~~~~~~~~~~~~~
+
+Changed
+^^^^^^^
+
+* renaming :folder:`octi.lab_tasks.tasks.manipulation.lift_cube` as 
+  :folder:`octi.lab_tasks.tasks.manipulation.lift_objects`
+* separates lift_cube and lift_multiobjects as two different environments
+
+* adopting new environment structure for task lift_objects
+
+
+0.3.0 (2024-07-27)
+~~~~~~~~~~~~~~~~~~
+
+Changed
+^^^^^^^
+
+* renaming :folder:`octi.lab_tasks.tasks.manipulation.craneberryLavaChocoCake` as 
+  :folder:`octi.lab_tasks.tasks.manipulation.cake_decoration`
+
+* adopting new environment structure for task cake_decoration
+
+
 0.2.3 (2024-07-27)
 ~~~~~~~~~~~~~~~~~~
 
