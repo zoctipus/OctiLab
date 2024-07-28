@@ -177,3 +177,8 @@ class LiftObejctsLeapXarmJointPosition(LiftObejctsLeapXarm):
 @configclass
 class LiftObejctsLeapXarmMcIkAbs(LiftObejctsLeapXarm):
     actions = leap.LeapXarmMcIkAbsoluteAction()
+
+
+@configclass
+class LiftObejctsLeapXarmMcIkDel(LiftObejctsLeapXarm):
+    actions = leap.LeapXarmMcIkDeltaAction()

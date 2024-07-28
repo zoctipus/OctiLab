@@ -1,7 +1,33 @@
 Changelog
 ---------
 
-0.4.1 (2024-07-27)
+
+0.5.1 (2024-07-28)
+~~~~~~~~~~~~~~~~~~
+
+Changed
+^^^^^^^
+* support IkDelta action for environment LiftObjectsLeapXarm at 
+  :folder:`octi.lab_tasks.tasks.manipulation.lift_objects`
+
+
+0.5.0 (2024-07-28)
+~~~~~~~~~~~~~~~~~~
+
+Changed
+^^^^^^^
+* adopting new environment structure for task track_goal
+
+
+0.4.3 (2024-07-28)
+~~~~~~~~~~~~~~~~~~
+
+Changed
+^^^^^^^
+* fix several minor bugs that introduced when migrating for new environment structure for tasks lift_objects
+
+
+0.4.2 (2024-07-28)
 ~~~~~~~~~~~~~~~~~~
 
 Changed
