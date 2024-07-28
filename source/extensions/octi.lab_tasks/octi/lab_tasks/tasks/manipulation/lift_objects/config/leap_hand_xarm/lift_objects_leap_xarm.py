@@ -13,8 +13,7 @@ from omni.isaac.lab.managers import ObservationTermCfg as ObsTerm
 from omni.isaac.lab.managers import EventTermCfg as EventTerm  # noqa: F401
 from dataclasses import MISSING
 from octi.lab.envs import OctiManagerBasedRLEnvCfg
-# import octi.lab_tasks.cfgs.robots.leap_hand_xarm.mdp as leap_hand_xarm_mdp
-import octi.lab_tasks.tasks.manipulation.lift_cube.mdp as task_mdp
+import octi.lab_tasks.tasks.manipulation.lift_objects.mdp as task_mdp
 import octi.lab_assets.leap as leap
 import octi.lab_assets.leap.mdp as leap_mdp
 
@@ -147,7 +146,7 @@ class CurriculumCfg:
 
 
 @configclass
-class LiftObejctsLeapXarmEnv(OctiManagerBasedRLEnvCfg):
+class LiftObejctsLeapXarm(OctiManagerBasedRLEnvCfg):
 
     scene: ObjectSceneCfg = ObjectSceneCfg(num_envs=1, env_spacing=2.5, replicate_physics=False)
     observations: ObservationsCfg = ObservationsCfg()
@@ -171,10 +170,10 @@ class LiftObejctsLeapXarmEnv(OctiManagerBasedRLEnvCfg):
 
 
 @configclass
-class ObejctsLiftLeapXarmJointPosition(LiftObejctsLeapXarmEnv):
+class LiftObejctsLeapXarmJointPosition(LiftObejctsLeapXarm):
     actions = leap.LeapXarmJointPositionAction()
 
 
 @configclass
-class ObejctsLiftLeapXarmMcIkAbs(LiftObejctsLeapXarmEnv):
-    actions = leap.LeapXarmMcIkabsoluteAction()
+class LiftObejctsLeapXarmMcIkAbs(LiftObejctsLeapXarm):
+    actions = leap.LeapXarmMcIkAbsoluteAction()
