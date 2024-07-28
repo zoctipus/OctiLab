@@ -3,7 +3,7 @@ from . import agents
 from . import lift_cube_tycho
 
 gym.register(
-    id="Octi-Lift-Cube-Tycho-IkDel-v0",
+    id="Octi-LiftCube-Tycho-IkDel-v0",
     entry_point="octi.lab.envs.octi_manager_based_rl:OctiManagerBasedRLEnv",
     kwargs={
         "env_cfg_entry_point": lift_cube_tycho.LiftCubeTychoIkdelta,
@@ -15,7 +15,7 @@ gym.register(
 )
 
 gym.register(
-    id="Octi-Lift-Cube-Tycho-IkAbs-v0",
+    id="Octi-LiftCube-Tycho-IkAbs-v0",
     entry_point="octi.lab.envs.octi_manager_based_rl:OctiManagerBasedRLEnv",
     kwargs={
         "env_cfg_entry_point": lift_cube_tycho.LiftCubeTychoIkabsolute,
@@ -27,7 +27,7 @@ gym.register(
 )
 
 gym.register(
-    id="Octi-Lift-Cube-Tycho-JointPos-v0",
+    id="Octi-LiftCube-Tycho-JointPos-v0",
     entry_point="octi.lab.envs.octi_manager_based_rl:OctiManagerBasedRLEnv",
     kwargs={
         "env_cfg_entry_point": lift_cube_tycho.LiftCubeTychoJointPosition,
@@ -39,7 +39,7 @@ gym.register(
 )
 
 gym.register(
-    id="Octi-Lift-Cube-Tycho-JointEff-v0",
+    id="Octi-LiftCube-Tycho-JointEff-v0",
     entry_point="octi.lab.envs.octi_manager_based_rl:OctiManagerBasedRLEnv",
     kwargs={
         "env_cfg_entry_point": lift_cube_tycho.LiftCubeTychoJointEffort,

@@ -3,7 +3,7 @@ from . import agents
 from . import lift_objects_leap_xarm
 
 gym.register(
-    id="Octi-Lift-Objects-LeapXarm-JointPos-v0",
+    id="Octi-LiftObjects-LeapXarm-JointPos-v0",
     entry_point="octi.lab.envs.octi_manager_based_rl:OctiManagerBasedRLEnv",
     kwargs={
         "env_cfg_entry_point": lift_objects_leap_xarm.LiftObejctsLeapXarmJointPosition,
@@ -14,7 +14,7 @@ gym.register(
 )
 
 gym.register(
-    id="Octi-Lift-Objects-LeapXarm-IkAbs-v0",
+    id="Octi-LiftObjects-LeapXarm-IkAbs-v0",
     entry_point="octi.lab.envs.octi_manager_based_rl:OctiManagerBasedRLEnv",
     kwargs={
         "env_cfg_entry_point": lift_objects_leap_xarm.LiftObejctsLeapXarmMcIkAbs,
@@ -26,7 +26,7 @@ gym.register(
 
 
 gym.register(
-    id="Octi-Lift-Objects-LeapXarm-IkDel-v0",
+    id="Octi-LiftObjects-LeapXarm-IkDel-v0",
     entry_point="octi.lab.envs.octi_manager_based_rl:OctiManagerBasedRLEnv",
     kwargs={
         "env_cfg_entry_point": lift_objects_leap_xarm.LiftObejctsLeapXarmMcIkDel,

@@ -6,7 +6,7 @@ from . import track_goal_leap_xarm, track_goal_leap
 LeapXarm
 """
 gym.register(
-    id="Octi-Track-Goal-LeapXarm-JointPos-v0",
+    id="Octi-TrackGoal-LeapXarm-JointPos-v0",
     entry_point="octi.lab.envs.octi_manager_based_rl:OctiManagerBasedRLEnv",
     kwargs={
         "env_cfg_entry_point": track_goal_leap_xarm.TrackGoalLeapXarmJointPosition,
@@ -17,7 +17,7 @@ gym.register(
 )
 
 gym.register(
-    id="Octi-Track-Goal-LeapXarm-McIkAbs-v0",
+    id="Octi-TrackGoal-LeapXarm-McIkAbs-v0",
     entry_point="octi.lab.envs.octi_manager_based_rl:OctiManagerBasedRLEnv",
     kwargs={
         "env_cfg_entry_point": track_goal_leap_xarm.TrackGoalLeapXarmMcIkAbs,
@@ -29,7 +29,7 @@ gym.register(
 
 
 gym.register(
-    id="Octi-Track-Goal-LeapXarm-McIkDel-v0",
+    id="Octi-TrackGoal-LeapXarm-McIkDel-v0",
     entry_point="octi.lab.envs.octi_manager_based_rl:OctiManagerBasedRLEnv",
     kwargs={
         "env_cfg_entry_point": track_goal_leap_xarm.TrackGoalLeapXarmMcIkDel,
@@ -43,7 +43,7 @@ gym.register(
 Leap
 """
 gym.register(
-    id="Octi-Track-Goal-Leap-JointPos-v0",
+    id="Octi-TrackGoal-Leap-JointPos-v0",
     entry_point="octi.lab.envs.octi_manager_based_rl:OctiManagerBasedRLEnv",
     kwargs={
         "env_cfg_entry_point": track_goal_leap.TrackGoalLeapJointPosition,
@@ -55,7 +55,7 @@ gym.register(
 
 
 gym.register(
-    id="Octi-Track-Goal-Leap-McIkAbs-v0",
+    id="Octi-TrackGoal-Leap-McIkAbs-v0",
     entry_point="octi.lab.envs.octi_manager_based_rl:OctiManagerBasedRLEnv",
     kwargs={
         "env_cfg_entry_point": track_goal_leap.TrackGoalLeapMcIkAbs,
@@ -67,7 +67,7 @@ gym.register(
 
 
 gym.register(
-    id="Octi-Track-Goal-Leap-McIkDel-v0",
+    id="Octi-TrackGoal-Leap-McIkDel-v0",
     entry_point="octi.lab.envs.octi_manager_based_rl:OctiManagerBasedRLEnv",
     kwargs={
         "env_cfg_entry_point": track_goal_leap.TrackGoalLeapMcIkDel,

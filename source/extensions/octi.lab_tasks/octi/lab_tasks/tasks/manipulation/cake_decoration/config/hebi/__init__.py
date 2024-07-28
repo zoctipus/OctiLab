@@ -12,7 +12,7 @@ from . import agents, tycho_joint_pos
 
 
 gym.register(
-    id="Octi-Cake-Decoration-Tycho-IkDel-v0",
+    id="Octi-CakeDecoration-Tycho-IkDel-v0",
     entry_point="octi.lab.envs.octi_manager_based_rl:OctiManagerBasedRLEnv",
     kwargs={
         "env_cfg_entry_point": tycho_joint_pos.CakeDecorationTychoIkdelta,
@@ -29,7 +29,7 @@ gym.register(
 
 
 gym.register(
-    id="Octi-Cake-Decoration-Tycho-IkAbs-v0",
+    id="Octi-CakeDecoration-Tycho-IkAbs-v0",
     entry_point="octi.lab.envs.octi_manager_based_rl:OctiManagerBasedRLEnv",
     kwargs={
         "env_cfg_entry_point": tycho_joint_pos.CakeDecorationTychoIkabsolute,
@@ -46,7 +46,7 @@ gym.register(
 
 
 gym.register(
-    id="Octi-Cake-Decoration-Tycho-JointPos-v0",
+    id="Octi-CakeDecoration-Tycho-JointPos-v0",
     entry_point="octi.lab.envs.octi_manager_based_rl:OctiManagerBasedRLEnv",
     kwargs={
         "env_cfg_entry_point": tycho_joint_pos.CakeDecorationTychoJointPosition,
@@ -62,7 +62,7 @@ gym.register(
 )
 
 gym.register(
-    id="Octi-Cake-Decoration-Tycho-JointEff-v0",
+    id="Octi-CakeDecoration-Tycho-JointEff-v0",
     entry_point="octi.lab.envs.octi_manager_based_rl:OctiManagerBasedRLEnv",
     kwargs={
         "env_cfg_entry_point": tycho_joint_pos.CakeDecorationTychoJointEffort,
