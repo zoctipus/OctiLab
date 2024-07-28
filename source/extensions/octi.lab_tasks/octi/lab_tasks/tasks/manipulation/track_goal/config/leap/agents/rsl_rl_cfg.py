@@ -15,11 +15,11 @@ from omni.isaac.lab_tasks.utils.wrappers.rsl_rl import (
 
 @configclass
 class Base_PPORunnerCfg(RslRlOnPolicyRunnerCfg):
-    num_steps_per_env = 96
-    max_iterations = 30000
+    num_steps_per_env = 32
+    max_iterations = 1500
     save_interval = 50
     resume = False
-    experiment_name = "hebi_base_agent"
+    experiment_name = "leap_base_agent"
     empirical_normalization = False
     policy = RslRlPpoActorCriticCfg(
         init_noise_std=1.0,
@@ -44,15 +44,10 @@ class Base_PPORunnerCfg(RslRlOnPolicyRunnerCfg):
 
 
 @configclass
-class Hebi_IkAbsoluteDls_PwmMotor_AbsoluteGoalTracking_PPORunnerCfg(Base_PPORunnerCfg):
-    experiment_name = "Hebi_IkAbsoluteDls_PwmMotor_AbsoluteGoalTracking"
+class TrackGoalLeapPPORunnerCfg(Base_PPORunnerCfg):
+    experiment_name = "track_goal_leap"
 
 
 @configclass
-class Hebi_IkDeltaDls_PwmMotor_DeltaGoalTracking_EnvPPORunnerCfg(Base_PPORunnerCfg):
-    experiment_name = "Hebi_IkDeltaDls_PwmMotor_DeltaGoalTracking"
-
-
-@configclass
-class Hebi_IkAbsoluteDls_IdealPD_AbsoluteGoalTracking_EnvPPORunnerCfg(Base_PPORunnerCfg):
-    experiment_name = "Hebi_IkAbsoluteDls_IdealPD_AbsoluteGoalTracking"
+class TrackGoalLeapXarmPPORunnerCfg(Base_PPORunnerCfg):
+    experiment_name = "track_goal_leap_xarm"

@@ -1,3 +1,2 @@
-from .hebi import *
-from .leap_hand import *
-from .leap_hand_xarm import *
+from .tycho import *
+from .leap import *
