@@ -67,7 +67,7 @@ class MultiConstraintDifferentialIKController:
         self.ee_pos_des = torch.zeros(self.num_envs, self.num_bodies, 3, device=self._device)
         self.ee_quat_des = torch.zeros(self.num_envs, self.num_bodies, 4, device=self._device)
         # -- input command
-        self._command = torch.zeros(self.num_envs, self.action_dim, device=self._device)
+        self._command = torch.zeros(self.num_envs, self.action_dim, device=self._device).view(self.num_envs, self.num_bodies, -1)
 
     """
     Properties.
@@ -117,7 +117,7 @@ class MultiConstraintDifferentialIKController:
             ValueError: If the command type is ``pose_rel`` and either :attr:`ee_pos` or :attr:`ee_quat` is None.
         """
         # store command
-        self._command[:] = command
+        self._command[:] = command.view(self._command.shape)
         # compute the desired end-effector pose
         if self.cfg.command_type == "position":
             # we need end-effector orientation even though we are in position mode
@@ -226,8 +226,8 @@ class MultiConstraintDifferentialIKController:
             delta_joint_pos = delta_joint_pos.squeeze(-1)
         elif self.cfg.ik_method == "dls":  # damped least squares
             # parameters
-            delta_pose = delta_pose.reshape(-1)
-            jacobian = jacobian.reshape(1, -1, jacobian.shape[-1])
+            delta_pose = delta_pose.reshape(self.num_envs, -1)
+            jacobian = jacobian.reshape(self.num_envs, -1, jacobian.shape[-1])
             lambda_val = self.cfg.ik_params["lambda_val"]
             # computation
             jacobian_T = torch.transpose(jacobian, dim0=1, dim1=2)
@@ -235,7 +235,7 @@ class MultiConstraintDifferentialIKController:
             delta_joint_pos = (
                 jacobian_T @ torch.inverse(jacobian @ jacobian_T + lambda_matrix) @ delta_pose.unsqueeze(-1)
             )
-            delta_joint_pos = delta_joint_pos.squeeze(-1)
+            delta_joint_pos = delta_joint_pos.view(self.num_envs, -1)
         else:
             raise ValueError(f"Unsupported inverse-kinematics method: {self.cfg.ik_method}")
 

@@ -1,6 +1,15 @@
 Changelog
 ---------
 
+0.2.7 (2024-07-28)
+~~~~~~~~~~~~~~~~~~
+
+Changed
+^^^^^^^
+* MultiConstraintDifferentialIKController now supports multi environments parallel computes
+
+
+
 0.2.6 (2024-07-27)
 ~~~~~~~~~~~~~~~~~~
 Added

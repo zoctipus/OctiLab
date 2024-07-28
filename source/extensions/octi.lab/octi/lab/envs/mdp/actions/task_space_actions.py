@@ -87,15 +87,15 @@ class MultiConstraintDifferentialInverseKinematicsAction(ActionTerm):
         # create tensors for raw and processed actions
         self._raw_actions = torch.zeros(self.num_envs, self.action_dim, device=self.device)
         self._processed_actions = torch.zeros_like(self.raw_actions)
-        self.root_pose_w = torch.zeros((len(self._body_idx), 7), device=self.device)
+        # self.root_pose_w = torch.zeros((len(self._body_idx), 7), device=self.device)
         # save the scale as tensors
         self._scale = torch.zeros((self.num_envs, self.action_dim), device=self.device)
         self._scale[:] = torch.tensor(self.cfg.scale, device=self.device)
 
         # convert the fixed offsets to torch tensors of batched shape
         if self.cfg.body_offset is not None:
-            self._offset_pos = torch.tensor(self.cfg.body_offset.pos, device=self.device).repeat(len(self._body_idx), 1)
-            self._offset_rot = torch.tensor(self.cfg.body_offset.rot, device=self.device).repeat(len(self._body_idx), 1)
+            self._offset_pos = torch.tensor(self.cfg.body_offset.pos, device=self.device).repeat(len(self._body_idx), 1).repeat(self.num_envs, 1)
+            self._offset_rot = torch.tensor(self.cfg.body_offset.rot, device=self.device).repeat(len(self._body_idx), 1).repeat(self.num_envs, 1)
         else:
             self._offset_pos, self._offset_rot = None, None
 
@@ -155,19 +155,21 @@ class MultiConstraintDifferentialInverseKinematicsAction(ActionTerm):
             A tuple of the body's position and orientation in the root frame.
         """
         # obtain quantities from simulation
-        ee_pose_w = self._asset.data.body_state_w[:, self._body_idx, :7]
-        self.root_pose_w[:] = self._asset.data.root_state_w[:, :7]
+        num_body_idx = len(self._body_idx)
+        ee_pose_w = self._asset.data.body_state_w[:, self._body_idx, :7].view(-1, 7)
+        root_pose_w = self._asset.data.root_state_w[:, :7].repeat_interleave(num_body_idx, dim=0)
         # compute the pose of the body in the root frame
-        ee_pose_b, ee_quat_b = math_utils.subtract_frame_transforms(
-            self.root_pose_w[:, 0:3], self.root_pose_w[:, 3:7], ee_pose_w[0, :, 0:3], ee_pose_w[0, :, 3:7]
-        )
+        for body_idx in self._body_idx:
+            ee_pos_b, ee_quat_b = math_utils.subtract_frame_transforms(
+                root_pose_w[:, 0:3], root_pose_w[:, 3:7], ee_pose_w[:, 0:3], ee_pose_w[:, 3:7]
+            )
         # account for the offset
         if self.cfg.body_offset is not None:
-            ee_pose_b, ee_quat_b = math_utils.combine_frame_transforms(
-                ee_pose_b, ee_quat_b, self._offset_pos, self._offset_rot
+            ee_pos_b, ee_quat_b = math_utils.combine_frame_transforms(
+                ee_pos_b, ee_quat_b, self._offset_pos, self._offset_rot
             )
 
-        return ee_pose_b, ee_quat_b
+        return ee_pos_b.view(-1, num_body_idx, 3), ee_quat_b.view(-1, num_body_idx, 4)
 
     def _compute_frame_jacobian(self):
         """Computes the geometric Jacobian of the target frame in the root frame.
