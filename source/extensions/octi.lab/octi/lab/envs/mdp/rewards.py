@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING
 from omni.isaac.lab.assets import RigidObject
 from omni.isaac.lab.managers import SceneEntityCfg
 from omni.isaac.lab.sensors import FrameTransformer
-from omni.isaac.lab.utils.math import subtract_frame_transforms
+from omni.isaac.lab.utils.math import combine_frame_transforms, quat_error_magnitude, quat_mul
 if TYPE_CHECKING:
     from omni.isaac.lab.envs import ManagerBasedRLEnv
 
@@ -67,6 +67,19 @@ def reward_body1_body2_distance(
     return 1 - torch.tanh(bodys_distance / std)
 
 
+def reward_body1_frame2_distance(
+    env: ManagerBasedRLEnv,
+    body_cfg: SceneEntityCfg,
+    frame_cfg: SceneEntityCfg,
+    body_offset: list[float] = [0.0, 0.0, 0.0],
+) -> torch.Tensor:
+    body: RigidObject = env.scene[body_cfg.name]
+    object_frame: RigidObject = env.scene[frame_cfg.name]
+    body_offset_tensor = torch.tensor(body_offset, device=env.device)
+    bodys_distance = get_frame1_body2_distance(object_frame, body, body_offset_tensor)
+    return 1 - torch.tanh(bodys_distance / 0.1)
+
+
 def reward_body1_body2_within_distance(
     env: ManagerBasedRLEnv,
     body1_cfg: SceneEntityCfg,
@@ -90,60 +103,78 @@ def reward_being_alive(
     return torch.tanh((env.episode_length_buf / env.max_episode_length) / 0.1)
 
 
-def reward_body1_frame2_distance(
-    env: ManagerBasedRLEnv,
-    body_cfg: SceneEntityCfg,
-    frame_cfg: SceneEntityCfg,
-    body_offset: list[float] = [0.0, 0.0, 0.0],
-) -> torch.Tensor:
-    body: RigidObject = env.scene[body_cfg.name]
-    object_frame: RigidObject = env.scene[frame_cfg.name]
-    body_offset_tensor = torch.tensor(body_offset, device=env.device)
-    bodys_distance = get_frame1_body2_distance(object_frame, body, body_offset_tensor)
-    return 1 - torch.tanh(bodys_distance / 0.1)
-
-
-def track_interpolated_lin_vel_xy_exp(
-    env: ManagerBasedRLEnv, std: float, object_cfg: SceneEntityCfg = SceneEntityCfg("object"), asset_cfg: SceneEntityCfg = SceneEntityCfg("robot")
-) -> torch.Tensor:
-    """Reward tracking of linear velocity commands (xy axes) using exponential kernel."""
-    # extract the used quantities (to enable type-hinting)
-    asset: RigidObject = env.scene[asset_cfg.name]
-    obj: RigidObject = env.scene[object_cfg.name]
-    # compute the error
-    obj_pos_w = obj.data.root_pos_w
-
-    obj_pos_b, _ = subtract_frame_transforms(
-        asset.data.root_pos_w, asset.data.root_quat_w, obj_pos_w
-    )
-    distance = torch.norm(obj_pos_b, dim=1)
-    coefficient = torch.clamp_max(distance, 1).view(-1, 1)
-    vel_command = coefficient * 1 * (obj_pos_b / distance.view(-1, 1))
-    env.command_manager.get_term('base_velocity').vel_command_b[:, :2] = vel_command[:, :2]
-    lin_vel_error = torch.sum(
-        torch.square(vel_command[:, :2] - asset.data.root_lin_vel_b[:, :2]),
-        dim=1,
-    )
-    return torch.exp(-lin_vel_error / std**2)
-
-
-def track_interpolated_ang_vel_z_exp(
-    env: ManagerBasedRLEnv, std: float, object_cfg: SceneEntityCfg = SceneEntityCfg("object"), asset_cfg: SceneEntityCfg = SceneEntityCfg("robot")
-) -> torch.Tensor:
-    """Reward tracking of angular velocity commands (yaw) using exponential kernel."""
-    # extract the used quantities (to enable type-hinting)
-    asset: RigidObject = env.scene[asset_cfg.name]
-    obj: RigidObject = env.scene[object_cfg.name]
-    # compute the error
-    asset_pos_w = asset.data.root_pos_w
-    obj_pos_w = obj.data.root_pos_w
-    vel_command = torch.clamp((asset_pos_w - obj_pos_w), -1, 1)
-    ang_vel_error = torch.square(vel_command[:, 2] - asset.data.root_ang_vel_b[:, 2])
-    return torch.exp(-ang_vel_error / std**2)
-
-
 def lin_vel_z_l2(env: ManagerBasedRLEnv, asset_cfg: SceneEntityCfg = SceneEntityCfg("robot")) -> torch.Tensor:
     """Penalize z-axis base linear velocity using L2-kernel."""
     # extract the used quantities (to enable type-hinting)
     asset: RigidObject = env.scene[asset_cfg.name]
     return torch.where(env.episode_length_buf > 20, torch.square(asset.data.root_lin_vel_b[:, 2]), 0)
+
+
+def position_command_error(env: ManagerBasedRLEnv, command_name: str, asset_cfg: SceneEntityCfg) -> torch.Tensor:
+    """Penalize tracking of the position error using L2-norm.
+
+    The function computes the position error between the desired position (from the command) and the
+    current position of the asset's body (in world frame). The position error is computed as the L2-norm
+    of the difference between the desired and current positions.
+    """
+    # extract the asset (to enable type hinting)
+    asset: RigidObject = env.scene[asset_cfg.name]
+    command = env.command_manager.get_command(command_name)
+    # obtain the desired and current positions
+    des_pos_b = command[:, :3]
+    des_pos_w, _ = combine_frame_transforms(asset.data.root_state_w[:, :3], asset.data.root_state_w[:, 3:7], des_pos_b)
+    curr_pos_w = asset.data.body_state_w[:, asset_cfg.body_ids[0], :3]  # type: ignore
+    return torch.norm(curr_pos_w - des_pos_w, dim=1)
+
+
+def position_command_error_tanh(
+    env: ManagerBasedRLEnv, std: float, command_name: str, asset_cfg: SceneEntityCfg
+) -> torch.Tensor:
+    """Reward tracking of the position using the tanh kernel.
+
+    The function computes the position error between the desired position (from the command) and the
+    current position of the asset's body (in world frame) and maps it with a tanh kernel.
+    """
+    # extract the asset (to enable type hinting)
+    asset: RigidObject = env.scene[asset_cfg.name]
+    command = env.command_manager.get_command(command_name)
+    # obtain the desired and current positions
+    des_pos_b = command[:, :3]
+    des_pos_w, _ = combine_frame_transforms(asset.data.root_state_w[:, :3], asset.data.root_state_w[:, 3:7], des_pos_b)
+    curr_pos_w = asset.data.body_state_w[:, asset_cfg.body_ids[0], :3]  # type: ignore
+    distance = torch.norm(curr_pos_w - des_pos_w, dim=1)
+    return 1 - torch.tanh(distance / std)
+
+
+def orientation_command_error_tanh(env: ManagerBasedRLEnv, std: float, command_name: str, asset_cfg: SceneEntityCfg) -> torch.Tensor:
+    """Penalize tracking orientation error using shortest path.
+
+    The function computes the orientation error between the desired orientation (from the command) and the
+    current orientation of the asset's body (in world frame). The orientation error is computed as the shortest
+    path between the desired and current orientations.
+    """
+    # extract the asset (to enable type hinting)
+    asset: RigidObject = env.scene[asset_cfg.name]
+    command = env.command_manager.get_command(command_name)
+    # obtain the desired and current orientations
+    des_quat_b = command[:, 3:7]
+    des_quat_w = quat_mul(asset.data.root_state_w[:, 3:7], des_quat_b)
+    curr_quat_w = asset.data.body_state_w[:, asset_cfg.body_ids[0], 3:7]  # type: ignore
+    return 1 - torch.tanh(quat_error_magnitude(curr_quat_w, des_quat_w) / std)
+
+
+def orientation_command_error(env: ManagerBasedRLEnv, command_name: str, asset_cfg: SceneEntityCfg) -> torch.Tensor:
+    """Penalize tracking orientation error using shortest path.
+
+    The function computes the orientation error between the desired orientation (from the command) and the
+    current orientation of the asset's body (in world frame). The orientation error is computed as the shortest
+    path between the desired and current orientations.
+    """
+    # extract the asset (to enable type hinting)
+    asset: RigidObject = env.scene[asset_cfg.name]
+    command = env.command_manager.get_command(command_name)
+    # obtain the desired and current orientations
+    des_quat_b = command[:, 3:7]
+    des_quat_w = quat_mul(asset.data.root_state_w[:, 3:7], des_quat_b)
+    curr_quat_w = asset.data.body_state_w[:, asset_cfg.body_ids[0], 3:7]  # type: ignore
+    return quat_error_magnitude(curr_quat_w, des_quat_w)

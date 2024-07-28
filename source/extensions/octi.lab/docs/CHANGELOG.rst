@@ -7,7 +7,11 @@ Changelog
 Changed
 ^^^^^^^
 * MultiConstraintDifferentialIKController now supports multi environments parallel computes
-
+* added reward :func:`octi.lab.envs.mdp.position_command_error`
+* added reward :func:`octi.lab.envs.mdp.position_command_error_tanh`
+* added reward :func:`octi.lab.envs.mdp.orientation_command_error_tanh`
+* removed :func:`octi.lab.envs.mdp.track_interpolated_lin_vel_xy_exp` as this is fetching task specific
+* removed :func:`octi.lab.envs.mdp.track_interpolated_ang_vel_z_exp` as this is fetching task specific
 
 
 0.2.6 (2024-07-27)
