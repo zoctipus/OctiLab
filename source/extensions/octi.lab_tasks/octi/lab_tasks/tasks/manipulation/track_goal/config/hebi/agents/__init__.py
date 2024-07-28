@@ -1,1 +1,1 @@
-from . import rsl_rl_hebi_agent_cfg
+from . import rsl_rl_cfg

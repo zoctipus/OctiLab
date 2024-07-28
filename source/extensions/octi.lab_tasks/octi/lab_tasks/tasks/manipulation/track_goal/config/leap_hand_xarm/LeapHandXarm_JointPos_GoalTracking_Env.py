@@ -26,7 +26,7 @@ from octi.lab_tasks.cfgs.scenes.empty_scene import (
     SceneTerminationsCfg,
 )
 import omni.isaac.lab_tasks.manager_based.manipulation.reach.mdp as mdp
-import octi.lab_tasks.cfgs.robots.hebi.mdp as hebimdp
+# import octi.lab_tasks.cfgs.robots.hebi.mdp as hebimdp
 
 episode_length = 50.0
 
