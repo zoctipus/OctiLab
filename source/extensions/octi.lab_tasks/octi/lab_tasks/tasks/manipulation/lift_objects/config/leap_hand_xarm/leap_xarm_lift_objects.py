@@ -11,45 +11,29 @@ from omni.isaac.lab.managers import SceneEntityCfg
 from omni.isaac.lab.managers import ObservationGroupCfg as ObsGroup
 from omni.isaac.lab.managers import ObservationTermCfg as ObsTerm
 from omni.isaac.lab.managers import EventTermCfg as EventTerm  # noqa: F401
-from octi.lab_tasks.cfgs.scenes.cube_scene import (
-    SceneObjectSceneCfg,
-    SceneCommandsCfg,
-    SceneEventCfg,
-    SceneRewardsCfg,
-    SceneTerminationsCfg,
-)
 from dataclasses import MISSING
 from octi.lab.envs import OctiManagerBasedRLEnvCfg
-import octi.lab_tasks.cfgs.robots.leap_hand_xarm.mdp as leap_hand_xarm_mdp
-import octi.lab_tasks.tasks.manipulation.lift_cube.mdp as lift_cube_mdp
-import octi.lab.envs.mdp as octilab_mdp
+# import octi.lab_tasks.cfgs.robots.leap_hand_xarm.mdp as leap_hand_xarm_mdp
+import octi.lab_tasks.tasks.manipulation.lift_cube.mdp as task_mdp
+import octi.lab_assets.leap as leap
+import octi.lab_assets.leap.mdp as leap_mdp
+
 ##
 # Pre-defined configs
 ##
-
-from octi.lab_tasks.cfgs.robots.leap_hand_xarm.robot_dynamics import (   # noqa: F401
-    RobotActionsCfg_JointPosition,
-)
-
-from octi.lab_tasks.cfgs.robots.leap_hand_xarm.robot_dynamics import RobotObservationsPolicyCfg
-from octi.lab_tasks.cfgs.robots.leap_hand_xarm.robot_dynamics import RobotRewardsCfg
-from octi.lab_tasks.cfgs.robots.leap_hand_xarm.robot_dynamics import RobotRandomizationCfg
-import octi.lab_tasks.cfgs.robots.leap_hand_xarm.robot_dynamics as rd
-from octi.lab_tasks.cfgs.robots.leap_hand_xarm.robot_cfg import FRAME_EE
+# from octi.lab_tasks.cfgs.robots.leap_hand_xarm.robot_cfg import FRAME_EE
+import octi.lab_assets.leap as leap
+from ... import lift_objects
 
 
 @configclass
-class ObjectSceneCfg:
-    pass
+class ObjectSceneCfg(lift_objects.ObjectSceneCfg):
+    robot = leap.IMPLICIT_LEAP_XARM.replace(prim_path="{ENV_REGEX_NS}/Robot")
+    ee_frame = leap.FRAME_EE
 
 
 @configclass
-class ImplicitMotorHebi_ObjectSceneCfg(SceneObjectSceneCfg, rd.RobotSceneCfg_ImplicityActuator, ObjectSceneCfg):
-    ee_frame = FRAME_EE
-
-
-@configclass
-class ActionsCfg():
+class ActionsCfg:
     """Action specifications for the MDP."""
     pass
 
@@ -65,12 +49,14 @@ class ObservationsCfg:
     """Observation specifications for the MDP."""
 
     @configclass
-    class PolicyCfg(ObsGroup, RobotObservationsPolicyCfg):
+    class PolicyCfg(ObsGroup):
         """Observations for policy group."""
-
-        object_position = ObsTerm(func=lift_cube_mdp.object_position_in_robot_root_frame)
-        # object_frame_position = ObsTerm(func=lift_cube_mdp.object_frame_position_in_robot_root_frame)
-        target_object_position = ObsTerm(func=orbit_mdp.generated_commands, params={"command_name": "object_pose"})
+        robot_actions = ObsTerm(func=task_mdp.last_action)
+        robot_joint_pos = ObsTerm(func=task_mdp.joint_pos_rel)
+        robot_joint_vel = ObsTerm(func=task_mdp.joint_vel_rel)
+        object_position = ObsTerm(func=task_mdp.object_position_in_robot_root_frame)
+        # object_frame_position = ObsTerm(func=task_mdp.object_frame_position_in_robot_root_frame)
+        target_object_position = ObsTerm(func=task_mdp.generated_commands, params={"command_name": "object_pose"})
 
         def __post_init__(self):
             self.enable_corruption = True
@@ -81,11 +67,18 @@ class ObservationsCfg:
 
 
 @configclass
-class RewardsCfg(SceneRewardsCfg, RobotRewardsCfg):
+class RewardsCfg(lift_objects.RewardsCfg):
     """Reward terms for the MDP."""
+    action_rate = RewTerm(func=task_mdp.action_rate_l2, weight=-0.01)
+
+    joint_vel = RewTerm(
+        func=task_mdp.joint_vel_l2,
+        weight=-0.0001,
+        params={"asset_cfg": SceneEntityCfg("robot")},
+    )
 
     reward_object_ee_distance = RewTerm(
-        func=octilab_mdp.reward_body1_frame2_distance,
+        func=task_mdp.reward_body1_frame2_distance,
         params={
             "body_cfg": SceneEntityCfg("object"),
             "frame_cfg": SceneEntityCfg("ee_frame"),
@@ -94,30 +87,26 @@ class RewardsCfg(SceneRewardsCfg, RobotRewardsCfg):
     )
 
     reward_fingers_object_distance = RewTerm(
-        func=leap_hand_xarm_mdp.reward_fingers_object_distance,
+        func=leap_mdp.reward_fingers_object_distance,
         params={"object_cfg": SceneEntityCfg("object")},
         weight=10.0,
     )
 
-    lifting_object = RewTerm(func=lift_cube_mdp.object_is_lifted,
-                             params={"minimal_height": 0.07, "object_cfg": SceneEntityCfg("object")},
-                             weight=40.0)
-
     object_goal_tracking = RewTerm(
-        func=lift_cube_mdp.object_goal_distance,
-        params={"std": 0.3, "minimal_height": 0.07, "command_name": "object_pose"},
+        func=task_mdp.object_goal_distance,
+        params={"std": 0.3, "minimal_height": 0.082, "command_name": "object_pose"},
         weight=40.0,
     )
 
     object_goal_tracking_fine_grained = RewTerm(
-        func=lift_cube_mdp.object_goal_distance,
-        params={"std": 0.05, "minimal_height": 0.07, "command_name": "object_pose"},
+        func=task_mdp.object_goal_distance,
+        params={"std": 0.05, "minimal_height": 0.082, "command_name": "object_pose"},
         weight=80.0,
     )
 
 
 @configclass
-class CommandsCfg(SceneCommandsCfg):
+class CommandsCfg:
     """Command terms for the MDP."""
 
     object_pose = orbit_mdp.UniformPoseCommandCfg(
@@ -132,31 +121,38 @@ class CommandsCfg(SceneCommandsCfg):
 
 
 @configclass
-class EventCfg(SceneEventCfg, RobotRandomizationCfg):
-    pass
+class EventCfg(lift_objects.EventCfg):
+    reset_robot_joint = EventTerm(
+        func=leap_mdp.reset_joints_by_offset,
+        params={
+            "asset_cfg": SceneEntityCfg("robot"),
+            "position_range": [0.0, 1.5],
+            "velocity_range": [-0.1, 0.1],
+            "joint_ids": [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
+        },
+        mode="reset",
+    )
 
 
 @configclass
-class TerminationsCfg(SceneTerminationsCfg):
+class TerminationsCfg(lift_objects.TerminationsCfg):
     """Termination terms for the MDP."""
-
     pass
 
 
 @configclass
 class CurriculumCfg:
     """Curriculum terms for the MDP."""
-
     pass
 
 
 @configclass
-class ImplicitMotorLeapXarm_JointPos_LiftCube_Env(OctiManagerBasedRLEnvCfg):
+class LiftObejctsLeapXarmEnv(OctiManagerBasedRLEnvCfg):
 
-    scene: ObjectSceneCfg = ImplicitMotorHebi_ObjectSceneCfg(num_envs=1, env_spacing=2.5, replicate_physics=False)
+    scene: ObjectSceneCfg = ObjectSceneCfg(num_envs=1, env_spacing=2.5, replicate_physics=False)
     observations: ObservationsCfg = ObservationsCfg()
     datas: DataCfg = DataCfg()
-    actions: ActionsCfg = MISSING
+    actions: ActionsCfg = MISSING  # type: ignore
     commands: CommandsCfg = CommandsCfg()
     # MDP settings
     rewards: RewardsCfg = RewardsCfg()
@@ -172,3 +168,13 @@ class ImplicitMotorLeapXarm_JointPos_LiftCube_Env(OctiManagerBasedRLEnvCfg):
         self.sim.physx.gpu_found_lost_aggregate_pairs_capacity = 1024 * 1024 * 4
         self.sim.physx.gpu_total_aggregate_pairs_capacity = 16 * 1024
         self.sim.physx.gpu_max_rigid_patch_count = 5 * 2 ** 16
+
+
+@configclass
+class ObejctsLiftLeapXarmJointPosition(LiftObejctsLeapXarmEnv):
+    actions = leap.LeapXarmJointPositionAction()
+
+
+@configclass
+class ObejctsLiftLeapXarmMcIkAbs(LiftObejctsLeapXarmEnv):
+    actions = leap.LeapXarmMcIkabsoluteAction()
