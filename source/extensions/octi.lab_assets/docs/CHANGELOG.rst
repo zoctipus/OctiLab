@@ -1,6 +1,20 @@
 Changelog
 ---------
 
+0.1.3 (2024-07-27)
+~~~~~~~~~~~~~~~~~~
+
+Changed
+^^^^^^^
+
+* Bug fix at :const:`octi.lab_assets.leap.actions.LEAP_JOINT_POSITION`
+  and :const:`octi.lab_assets.leap.actions.LEAP_JOINT_EFFORT` because
+  previous version did not include all joint name. it used to be 
+  `joint_names=["j.*"]` now becomes `joint_names=["w.*", "j.*"]`
+
+
+
+
 0.1.2 (2024-07-27)
 ~~~~~~~~~~~~~~~~~~
 

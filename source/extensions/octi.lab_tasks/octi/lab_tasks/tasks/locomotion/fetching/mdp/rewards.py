@@ -11,7 +11,7 @@ from typing import TYPE_CHECKING
 from omni.isaac.lab.managers import SceneEntityCfg
 from omni.isaac.lab.sensors import ContactSensor
 from omni.isaac.lab.assets import RigidObject
-from omni.isaac.lab.utils.math import quat_rotate_inverse, yaw_quat
+from omni.isaac.lab.utils.math import quat_rotate_inverse, yaw_quat, subtract_frame_transforms
 
 if TYPE_CHECKING:
     from omni.isaac.lab.envs import ManagerBasedRLEnv
@@ -93,6 +93,17 @@ def track_ang_vel_z_world_exp(
     ang_vel_error = torch.square(env.command_manager.get_command(command_name)[:, 2] - asset.data.root_ang_vel_w[:, 2])
     return torch.exp(-ang_vel_error / std**2)
 
+
+def reward_forward_velocity(
+    env: ManagerBasedRLEnv, std: float, forward_vector, asset_cfg: SceneEntityCfg = SceneEntityCfg("robot")
+) -> torch.Tensor:
+    """Reward tracking of linear velocity commands (xy axes) using exponential kernel."""
+    # extract the used quantities (to enable type-hinting)
+    asset: RigidObject = env.scene[asset_cfg.name]
+    root_lin_vel_b = asset.data.root_lin_vel_b
+    forward_velocity = root_lin_vel_b * torch.tensor(forward_vector, device=env.device, dtype=root_lin_vel_b.dtype)
+    forward_reward = torch.sum(forward_velocity, dim=1)
+    return torch.tanh(forward_reward/std)
 
 
 def track_interpolated_lin_vel_xy_exp(

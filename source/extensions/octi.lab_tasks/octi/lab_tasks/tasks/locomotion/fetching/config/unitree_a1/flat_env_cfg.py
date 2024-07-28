@@ -5,11 +5,11 @@
 
 from omni.isaac.lab.utils import configclass
 
-from .rough_env_cfg import AnymalCRoughPositionEnvCfg
+from .rough_env_cfg import UnitreeA1FetchingRoughCfg
 
 
 @configclass
-class AnymalCFlatPositionEnvCfg(AnymalCRoughPositionEnvCfg):
+class UnitreeA1FetchingFlatCfg(UnitreeA1FetchingRoughCfg):
     def __post_init__(self):
         # post init of parent
         super().__post_init__()

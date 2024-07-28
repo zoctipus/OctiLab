@@ -1,6 +1,22 @@
 Changelog
 ---------
+0.6.0 (2024-07-28)
+~~~~~~~~~~~~~~~~~~
 
+Changed
+^^^^^^^
+* restructured fetching task to new architecture and added Unitree A1
+  for fetching task
+
+
+0.5.2 (2024-07-28)
+~~~~~~~~~~~~~~~~~~
+
+Changed
+^^^^^^^
+* merge all gym registering tasks to one whole name unseparated by "-"
+  what used to be 'Octi-Lift-Objects-LeapXarm-IkDel-v0' now becomes
+  'Octi-LiftObjects-LeapXarm-IkDel-v0'
 
 0.5.1 (2024-07-28)
 ~~~~~~~~~~~~~~~~~~
