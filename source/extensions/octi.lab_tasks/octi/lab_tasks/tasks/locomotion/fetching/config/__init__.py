@@ -9,4 +9,7 @@
 # We still need this file to import the "config" module in the parent package.
 
 from .anymal_c import *
+from .spot import *
 from .unitree_a1 import *
+from .unitree_go1 import *
+from .unitree_go2 import *

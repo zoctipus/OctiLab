@@ -1,5 +1,24 @@
 Changelog
 ---------
+
+0.7.0 (2024-07-29)
+~~~~~~~~~~~~~~~~~~
+
+Added
+^^^^^^^
+* added Unitree Go1 Go2 and spot for Fetching task at 
+  :folder:`octi.lab_tasks.tasks.locomotion.fetching`
+
+
+0.6.1 (2024-07-29)
+~~~~~~~~~~~~~~~~~~
+
+Changed
+^^^^^^^
+* bug fix in logging name unitree a1 agent, flat config should log flat instead of rough at 
+  at :class:`octi.lab_tasks.tasks.locomotion.fetching.config.unitree_a1.agents.rsl_rl_cfg.UnitreeA1FlatPPORunnerCfg`
+
+
 0.6.0 (2024-07-28)
 ~~~~~~~~~~~~~~~~~~
 
