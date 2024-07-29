@@ -1,6 +1,15 @@
 Changelog
 ---------
 
+0.4.0 (2024-07-29)
+~~~~~~~~~~~~~~~~~~
+
+Added
+^^^^^
+
+* updated dependency and meta information to isaac sim 4.1.0
+
+
 0.3.0 (2024-07-28)
 ~~~~~~~~~~~~~~~~~~
 

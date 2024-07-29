@@ -1,11 +1,21 @@
 Changelog
 ---------
 
+
+0.8.0 (2024-07-29)
+~~~~~~~~~~~~~~~~~~
+
+Added
+^^^^^
+* updated dependency and meta information to isaac sim 4.1.0
+
+
+
 0.7.0 (2024-07-29)
 ~~~~~~~~~~~~~~~~~~
 
 Added
-^^^^^^^
+^^^^^
 * added Unitree Go1 Go2 and spot for Fetching task at 
   :folder:`octi.lab_tasks.tasks.locomotion.fetching`
 
