@@ -1,6 +1,16 @@
 Changelog
 ---------
 
+0.2.0 (2024-07-29)
+~~~~~~~~~~~~~~~~~~
+
+Added
+^^^^^^^
+
+* Created new folder storing `octi.lab_asset.unitree` extensions
+
+
+
 0.1.3 (2024-07-27)
 ~~~~~~~~~~~~~~~~~~
 
