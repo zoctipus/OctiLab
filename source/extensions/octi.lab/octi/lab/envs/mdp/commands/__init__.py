@@ -1,0 +1,1 @@
+from .commands_cfg import CategoricalCommandCfg

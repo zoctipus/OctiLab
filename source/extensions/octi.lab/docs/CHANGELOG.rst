@@ -1,6 +1,15 @@
 Changelog
 ---------
 
+0.3.0 (2024-07-28)
+~~~~~~~~~~~~~~~~~~
+
+Added
+^^^^^^^
+Added experiment feature categorical command type for commanding anything that can be represented
+by integer at :folder:`octi.lab.envs.mdp.commands`
+
+
 0.2.7 (2024-07-28)
 ~~~~~~~~~~~~~~~~~~
 
