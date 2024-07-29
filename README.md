@@ -1,4 +1,4 @@
-# Extension Template for Orbit
+# Extension Template for Isaac Lab
 
 [![IsaacSim](https://img.shields.io/badge/IsaacSim-2023.4.1-silver.svg)](https://docs.omniverse.nvidia.com/isaacsim/latest/overview.html)
 [![Orbit](https://img.shields.io/badge/IsaacLab-1.0.0-silver)](https://isaac-sim.github.io/IsaacLab/)
