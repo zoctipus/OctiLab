@@ -1,6 +1,14 @@
 Changelog
 ---------
 
+0.8.0 (2024-07-29)
+~~~~~~~~~~~~~~~~~~
+
+Fixed
+^^^^^
+* :file:`octi.lab_tasks.octi.lab_tasks.__init__.py` did not import tasks folder
+  now it is imported
+
 
 0.8.0 (2024-07-29)
 ~~~~~~~~~~~~~~~~~~
