@@ -140,6 +140,6 @@ class OctiManagerBasedRLEnv(ManagerBasedRLEnv):
         return super()._reset_idx(env_ids)
 
     def close(self):
-        for key, val in self.extension.items():
+        for key, val in self.extensions.items():
             del val
         super().close()

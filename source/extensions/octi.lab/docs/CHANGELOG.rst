@@ -1,6 +1,15 @@
 Changelog
 ---------
 
+0.4.1 (2024-08-06)
+~~~~~~~~~~~~~~~~~~
+
+Changed
+^^^^^^^
+
+* Bug fix for :func:`octi.lab.envs.OctiManagerBasedRl.close` is self.extensions not self.extension
+
+
 0.4.0 (2024-07-29)
 ~~~~~~~~~~~~~~~~~~
 
