@@ -1,6 +1,15 @@
 Changelog
 ---------
 
+0.9.3 (2024-08-06)
+~~~~~~~~~~~~~~~~~~
+
+Changed
+^^^^^^^
+* rename unitree_a1, unitree_go1, unitree_go2 to a1, a2, a3 under 
+  :file:`octi.lab_tasks.tasks.locomotion`
+
+
 0.8.3 (2024-08-06)
 ~~~~~~~~~~~~~~~~~~
 

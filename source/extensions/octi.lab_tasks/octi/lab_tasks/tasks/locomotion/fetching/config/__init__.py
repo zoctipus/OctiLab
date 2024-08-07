@@ -10,6 +10,6 @@
 
 from .anymal_c import *
 from .spot import *
-from .unitree_a1 import *
-from .unitree_go1 import *
-from .unitree_go2 import *
+from .a1 import *
+from .go1 import *
+from .go2 import *

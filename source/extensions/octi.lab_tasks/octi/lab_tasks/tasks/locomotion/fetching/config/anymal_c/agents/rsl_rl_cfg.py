@@ -43,10 +43,22 @@ class AnymalCRoughPPORunnerCfg(RslRlOnPolicyRunnerCfg):
 
 
 @configclass
-class AnymalCRoughPositionPPORunnerCfg(AnymalCRoughPPORunnerCfg):
+class AnymalCRoughFetchingPPORunnerCfg(AnymalCRoughPPORunnerCfg):
     def __post_init__(self):
         super().__post_init__()
-        self.experiment_name = "anymal_c_rough_position"
+        self.experiment_name = "anymal_c_rough_fetching"
+        
+@configclass
+class AnymalCFlatFetchingPPORunnerCfg(AnymalCRoughPPORunnerCfg):
+    def __post_init__(self):
+        super().__post_init__()
+        self.experiment_name = "anymal_c_flat_fetching"
+
+@configclass
+class AnymalCGeneratorFetchingPPORunnerCfg(AnymalCRoughPPORunnerCfg):
+    def __post_init__(self):
+        super().__post_init__()
+        self.experiment_name = "anymal_c_generator_fetching"
 
 @configclass
 class AnymalCRoughPPORunnerPrmdIprmdBoxRghHfslpCfg(AnymalCRoughPPORunnerCfg):

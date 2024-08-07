@@ -35,3 +35,29 @@ gym.register(
         "skrl_cfg_entry_point": f"{agents.__name__}:skrl_rough_ppo_cfg.yaml",
     },
 )
+
+
+gym.register(
+    id="Octi-Fetching-Rough-Unitree-A1-Play-v0",
+    entry_point="octi.lab.envs:OctiManagerBasedRLEnv",
+    disable_env_checker=True,
+    kwargs={
+        "env_cfg_entry_point": rough_env_cfg.UnitreeA1FetchingRoughCfg_PLAY,
+        "rl_games_cfg_entry_point": f"{agents.__name__}:rl_games_rough_ppo_cfg.yaml",
+        "rsl_rl_cfg_entry_point": agents.rsl_rl_cfg.UnitreeA1RoughPPORunnerCfg,
+        "skrl_cfg_entry_point": f"{agents.__name__}:skrl_rough_ppo_cfg.yaml",
+    },
+)
+
+
+gym.register(
+    id="Octi-Fetching-Flat-Unitree-A1-Play-v0",
+    entry_point="octi.lab.envs:OctiManagerBasedRLEnv",
+    disable_env_checker=True,
+    kwargs={
+        "env_cfg_entry_point": flat_env_cfg.UnitreeA1FetchingFlatCfg_PLAY,
+        "rl_games_cfg_entry_point": f"{agents.__name__}:rl_games_rough_ppo_cfg.yaml",
+        "rsl_rl_cfg_entry_point": agents.rsl_rl_cfg.UnitreeA1FlatPPORunnerCfg,
+        "skrl_cfg_entry_point": f"{agents.__name__}:skrl_rough_ppo_cfg.yaml",
+    },
+)
