@@ -1,12 +1,21 @@
 Changelog
 ---------
 
-0.8.0 (2024-07-29)
+0.8.2 (2024-08-06)
+~~~~~~~~~~~~~~~~~~
+
+Added
+^^^^^
+* added coefficient as input argument in 
+  :func:`octi.lab_tasks.tasks.locomotion.fetching.mdp.rewards.track_interpolated_lin_vel_xy_exp`
+
+
+0.8.1 (2024-08-06)
 ~~~~~~~~~~~~~~~~~~
 
 Fixed
 ^^^^^
-* ui_extension is currently deleteted
+* ui_extension is deleteted to prevent the buggy import
 * :file:`octi.lab_tasks.octi.lab_tasks.__init__.py` does not import ui_extension
 
 

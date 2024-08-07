@@ -40,7 +40,6 @@ class MySceneCfg(InteractiveSceneCfg):
         prim_path="/World/ground",
         terrain_type="generator",
         terrain_generator=ROUGH_TERRAINS_CFG,
-        # terrain_generator=TERRAINS_GEN_CFG,
         max_init_terrain_level=5,
         collision_group=-1,
         physics_material=sim_utils.RigidBodyMaterialCfg(
@@ -296,7 +295,7 @@ class RewardsCfg:
         }
     )
     track_interpolated_lin_vel_xy_exp = RewTerm(
-        func=mdp.track_interpolated_lin_vel_xy_exp, weight=5.0, params={"std": math.sqrt(0.25)}
+        func=mdp.track_interpolated_lin_vel_xy_exp, weight=5.0, params={"std": math.sqrt(0.25), "coefficient": 0.7}
     )
     # -- penalties
     lin_vel_z_l2 = RewTerm(func=mdp.lin_vel_z_l2, weight=-2.0)
@@ -321,6 +320,7 @@ class RewardsCfg:
     # -- optional penalties
     flat_orientation_l2 = RewTerm(func=mdp.flat_orientation_l2, weight=0.0)
     dof_pos_limits = RewTerm(func=mdp.joint_pos_limits, weight=0.0)
+    
 
 
 @configclass
@@ -340,10 +340,10 @@ class CurriculumCfg:
 
     terrain_levels = CurrTerm(func=mdp.terrain_levels_pos)
 
-    joint_vel = CurrTerm(
-        func=mdp.modify_reward_weight,
-        params={"term_name": "track_interpolated_lin_vel_xy_exp", "weight": 1, "num_steps": 30000}
-    )
+    # joint_vel = CurrTerm(
+    #     func=mdp.modify_reward_weight,
+    #     params={"term_name": "track_interpolated_lin_vel_xy_exp", "weight": 1, "num_steps": 30000}
+    # )
 
     track_robot_goal_distance_phase1 = CurrTerm(
         func=mdp.modify_reward_weight,
