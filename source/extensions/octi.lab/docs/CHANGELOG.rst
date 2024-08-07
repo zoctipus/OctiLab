@@ -1,7 +1,16 @@
 Changelog
 ---------
 
-0.4.2 (2024-08-06)
+0.5.0 (2024-08-06)
+~~~~~~~~~~~~~~~~~~
+
+Added
+^^^^^
+
+* Added features that support obj typed sub-terrain, and custom supply of the spawning locations 
+
+
+0.4.3 (2024-08-06)
 ~~~~~~~~~~~~~~~~~~
 
 Changed

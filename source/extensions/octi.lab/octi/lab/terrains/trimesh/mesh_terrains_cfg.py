@@ -21,3 +21,5 @@ class MeshObjTerrainCfg(SubTerrainBaseCfg):
     function = mesh_terrains.obj_terrain
 
     obj_path : str = MISSING
+    
+    spawn_origin_path : str = MISSING
