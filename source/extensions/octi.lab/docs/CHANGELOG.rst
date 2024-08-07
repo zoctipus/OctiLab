@@ -1,6 +1,16 @@
 Changelog
 ---------
 
+0.4.2 (2024-08-06)
+~~~~~~~~~~~~~~~~~~
+
+Changed
+^^^^^^^
+
+* Removed :func:`octi.lab.envs.mdp.events.reset_root_state_uniform` instead, reset_root_state_uniform is imported
+  from isaac lab
+
+
 0.4.1 (2024-08-06)
 ~~~~~~~~~~~~~~~~~~
 
