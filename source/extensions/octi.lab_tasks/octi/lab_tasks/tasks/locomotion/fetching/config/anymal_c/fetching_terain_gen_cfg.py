@@ -4,12 +4,28 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 from omni.isaac.lab.utils import configclass
+from ... import fetching_terrain_gen_env
+##
+# Pre-defined configs
+##
+import octi.lab_assets.anymal as anymal
 
-from .rough_env_cfg import AnymalCRoughPositionEnvCfg
+@configclass
+class ActionsCfg:
+    actions = anymal.ANYMAL_C_JOINT_POSITION
+
+@configclass
+class AnymalCGeneratorFetchingEnvCfg(fetching_terrain_gen_env.LocomotionFetchingRoughEnvCfg):
+    actions:ActionsCfg = ActionsCfg()
+    def __post_init__(self):
+        # post init of parent
+        super().__post_init__()
+        # switch robot to anymal-c
+        self.scene.robot = anymal.ANYMAL_C_CFG.replace(prim_path="{ENV_REGEX_NS}/Robot")
 
 
 @configclass
-class AnymalCFlatPositionEnvCfg(AnymalCRoughPositionEnvCfg):
+class AnymalCFlatPositionEnvCfg(AnymalCGeneratorFetchingEnvCfg):
     def __post_init__(self):
         # post init of parent
         super().__post_init__()
@@ -26,4 +42,3 @@ class AnymalCFlatPositionEnvCfg(AnymalCRoughPositionEnvCfg):
         self.observations.policy.height_scan = None
         # no terrain curriculum
         self.curriculum.terrain_levels = None
-

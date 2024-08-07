@@ -1,6 +1,20 @@
 Changelog
 ---------
 
+0.8.3 (2024-08-06)
+~~~~~~~~~~~~~~~~~~
+
+Added
+^^^^^
+* added terrain_gen environment as separate task in 
+  :file:`octi.lab_tasks.tasks.locomotion.fetching.fetching_terrain_gen_env`
+
+Changed
+^^^^^^^
+* renamed `octi.lab_tasks.tasks.locomotion.fetching.rough_env_cfg` to 
+  `fetching_env_cfg` to show its difference from locomotion Velocity tasks
+
+
 0.8.2 (2024-08-06)
 ~~~~~~~~~~~~~~~~~~
 
