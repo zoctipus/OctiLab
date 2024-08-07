@@ -7,6 +7,15 @@ Changelog
 Changed
 ^^^^^^^
 
+* Removed :file:`octi.lab.terrains.enhanced_terrain_importer.py` as it is ended up not being a solution
+
+
+0.4.2 (2024-08-06)
+~~~~~~~~~~~~~~~~~~
+
+Changed
+^^^^^^^
+
 * Removed :func:`octi.lab.envs.mdp.events.reset_root_state_uniform` instead, reset_root_state_uniform is imported
   from isaac lab
 
