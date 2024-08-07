@@ -6,11 +6,14 @@
 """Script to train RL agent with RSL-RL."""
 
 """Launch Isaac Sim Simulator first."""
+
 import argparse
+
 from omni.isaac.lab.app import AppLauncher
 
 # local imports
 import cli_args  # isort: skip
+
 
 # add argparse arguments
 parser = argparse.ArgumentParser(description="Train an RL agent with RSL-RL.")
@@ -30,6 +33,9 @@ cli_args.add_rsl_rl_args(parser)
 # append AppLauncher cli args
 AppLauncher.add_app_launcher_args(parser)
 args_cli = parser.parse_args()
+# always enable cameras to record video
+if args_cli.video:
+    args_cli.enable_cameras = True
 
 # launch omniverse app
 app_launcher = AppLauncher(args_cli)
@@ -52,8 +58,7 @@ import omni.isaac.lab_tasks  # noqa: F401
 
 import octi.lab_tasks.tasks  # noqa: F401
 from omni.isaac.lab_tasks.utils import get_checkpoint_path, parse_env_cfg
-from omni.isaac.lab_tasks.utils.wrappers.rsl_rl import RslRlOnPolicyRunnerCfg
-import rsl_rl_wrapper
+from omni.isaac.lab_tasks.utils.wrappers.rsl_rl import RslRlOnPolicyRunnerCfg, RslRlVecEnvWrapper
 
 torch.backends.cuda.matmul.allow_tf32 = True
 torch.backends.cudnn.allow_tf32 = True
@@ -78,15 +83,17 @@ def main():
     if agent_cfg.run_name:
         log_dir += f"_{agent_cfg.run_name}"
     log_dir = os.path.join(log_root_path, log_dir)
+
     # max iterations for training
     if args_cli.max_iterations:
         agent_cfg.max_iterations = args_cli.max_iterations
+
     # create isaac environment
     env = gym.make(args_cli.task, cfg=env_cfg, render_mode="rgb_array" if args_cli.video else None)
     # wrap for video recording
     if args_cli.video:
         video_kwargs = {
-            "video_folder": os.path.join(log_dir, "videos"),
+            "video_folder": os.path.join(log_dir, "videos", "train"),
             "step_trigger": lambda step: step % args_cli.video_interval == 0,
             "video_length": args_cli.video_length,
             "disable_logger": True,
@@ -95,7 +102,7 @@ def main():
         print_dict(video_kwargs, nesting=4)
         env = gym.wrappers.RecordVideo(env, **video_kwargs)  # type: ignore
     # wrap around environment for rsl-rl
-    env = rsl_rl_wrapper.RslActionClipWrapper(env)  # type: ignore
+    env = RslRlVecEnvWrapper(env)  # type: ignore
 
     # create runner from rsl-rl
     runner = OnPolicyRunner(env, agent_cfg.to_dict(), log_dir=log_dir, device=agent_cfg.device)  # type: ignore
