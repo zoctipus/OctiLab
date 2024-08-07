@@ -107,7 +107,7 @@ def reward_forward_velocity(
 
 
 def track_interpolated_lin_vel_xy_exp(
-    env: ManagerBasedRLEnv, std: float, object_cfg: SceneEntityCfg = SceneEntityCfg("object"), asset_cfg: SceneEntityCfg = SceneEntityCfg("robot")
+    env: ManagerBasedRLEnv, std: float, coefficient: float, object_cfg: SceneEntityCfg = SceneEntityCfg("object"), asset_cfg: SceneEntityCfg = SceneEntityCfg("robot")
 ) -> torch.Tensor:
     """Reward tracking of linear velocity commands (xy axes) using exponential kernel."""
     # extract the used quantities (to enable type-hinting)
@@ -120,8 +120,8 @@ def track_interpolated_lin_vel_xy_exp(
         asset.data.root_pos_w, asset.data.root_quat_w, obj_pos_w
     )
     distance = torch.norm(obj_pos_b, dim=1)
-    coefficient = torch.clamp_max(distance, 1).view(-1, 1)
-    vel_command = coefficient * 1 * (obj_pos_b / distance.view(-1, 1))
+    fraction = torch.clamp_max(distance, 1).view(-1, 1)
+    vel_command = fraction * coefficient * (obj_pos_b / distance.view(-1, 1))
     env.command_manager.get_term('base_velocity').vel_command_b[:, :2] = vel_command[:, :2]
     lin_vel_error = torch.sum(
         torch.square(vel_command[:, :2] - asset.data.root_lin_vel_b[:, :2]),

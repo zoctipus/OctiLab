@@ -1,7 +1,14 @@
 Changelog
 ---------
 
-0.9.3 (2024-08-06)
+0.9.1 (2024-08-06)
+~~~~~~~~~~~~~~~~~~
+
+Added
+^^^^^^^
+* Added necessary mdps for :folder:`octi.lab_tasks.tasks.locomotion` tasks
+
+0.9.0 (2024-08-06)
 ~~~~~~~~~~~~~~~~~~
 
 Changed
