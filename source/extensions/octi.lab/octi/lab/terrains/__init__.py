@@ -1,1 +1,5 @@
 from .trimesh import *
+from .terrain_importer import MultiOriginTerrainImporter
+from .terrain_generator import MultiOriginTerrainGenerator
+from .terrain_generator_cfg import MultiOriginTerrainGeneratorCfg
+from .terrain_importer_cfg import MultiOriginTerrainImporterCfg

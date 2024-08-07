@@ -8,6 +8,7 @@ Added
 ^^^^^
 
 * Added features that support obj typed sub-terrain, and custom supply of the spawning locations 
+  please check :folder:`octi.lab.lab.terrains`
 
 
 0.4.3 (2024-08-06)
